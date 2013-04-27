@@ -81,7 +81,10 @@ function OnLoad() {
 	queue.addEventListener("complete",Init);
 	queue.addEventListener("fileload", createjs.proxy(handleFileLoad,(this)));
 	
-	queue.loadFile({id:"man", src:"art/man.png"});
+//	queue.loadFile({id:"man", src:"art/man.png"});
+	for ( var idx = 0; idx < ArtFiles.length; idx++ ) {
+		queue.loadFile({id:ArtFiles[idx].name, src:ArtFiles[idx].value});
+	}
 	queue.loadFile({id:"music", src:"audio/byetone-capturethis.ogg|audio/byetone-capturethis.mp3"});
 	
 	queue.load();
