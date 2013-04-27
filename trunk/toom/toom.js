@@ -18,21 +18,21 @@ function LoseFocus() {
 var Stepper = 0;
 function Step() {
 	Stepper++;
-	
-	BaseX = canvas.width>>1;
-	BaseY = canvas.height>>1;
-	
-	BaseX -= Math.floor(((Mouse.x-BaseX)/BaseX)*40.0);
-	BaseY -= Math.floor(((Mouse.y-BaseY)/BaseY)*40.0);
+		
+	CameraX = Math.floor(((Mouse.x-BaseX)/BaseX)*32.0);
+	CameraY = Math.floor(((Mouse.y-BaseY)/BaseY)*32.0);
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 function Draw() {
 //	gfxClear( RGB(0,0,0) );
+
+	BX = BaseX-CameraX;
+	BY = BaseY-CameraY;
 	
 	gfxDrawLayer( BGLayer );
-	gfxDraw( Art.Man, 0, 78, 4 );//(Stepper>>3)&3 );
+	gfxDraw( Art.Man, -CameraX+0, -CameraY+78, 4 );//(Stepper>>3)&3 );
 	gfxDrawLayer( FGLayer );
 	
 	if ( Mouse.Visible ) {
@@ -44,14 +44,14 @@ function Draw() {
 	ctx.font = '20px Pixel';
 	var Text = 'Drek,';
 	var TD = ctx.measureText(Text);
-	ctx.fillText(Text, BaseX-(TD.width>>1), BaseY-78+48-20);
+	ctx.fillText(Text, BX-(TD.width>>1), BY-78+48-20);
 
 	Text = "Why are you ignoring me?";
 	TD = ctx.measureText(Text);
 	if ( (Stepper >> 5)&1 ) {
 		Text = "Why are you ignoring me?_";
 	}
-	ctx.fillText(Text, BaseX-(TD.width>>1), BaseY-78+48);
+	ctx.fillText(Text, BX-(TD.width>>1), BY-78+48);
 
 }
 // - ------------------------------------------------------------------------------------------ - //
