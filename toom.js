@@ -26,13 +26,15 @@ function Draw() {
 	
 	ctx.fillStyle = "#FFFFFF";
 	ctx.font = '20px Pixel';
-	var Text = 'Hello Drek';
-	ctx.fillText(Text, BaseX-65, BaseY-48-20);
+	var Text = 'Drek,';
+	var TD = ctx.measureText(Text);
+	ctx.fillText(Text, BaseX-(TD.width>>1), BaseY-48-20);
 
-	Text = "I've been protecting you_";
+	Text = "Why are you ignoring me?";
+	TD = ctx.measureText(Text);
 	if ( (Stepper >> 5)&1 ) {
-		Text = "I've been protecting you";
+		Text = "Why are you ignoring me?_";
 	}
-	ctx.fillText(Text, BaseX-130, BaseY-48);
+	ctx.fillText(Text, BaseX-(TD.width>>1), BaseY-48);
 
 }
