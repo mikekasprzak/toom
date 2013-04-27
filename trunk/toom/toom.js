@@ -19,19 +19,26 @@ var Stepper = 0;
 function Step() {
 	Stepper++;
 	
+	BaseX = canvas.width>>1;
+	BaseY = canvas.height>>1;
+	
+	BaseX -= Math.floor(((Mouse.x-BaseX)/BaseX)*40.0);
+	BaseY -= Math.floor(((Mouse.y-BaseY)/BaseY)*40.0);
 }
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 function Draw() {
-//	gfxClear( RGB(255,0,255) );
+//	gfxClear( RGB(0,0,0) );
 	
 	gfxDrawLayer( BGLayer );
 	gfxDraw( Art.Man, 0, 78, 4 );//(Stepper>>3)&3 );
 	gfxDrawLayer( FGLayer );
 	
-	ctx.fillStyle = RGB(255,255,255);
-	ctx.fillRect( Mouse.x-10,Mouse.y-10,20,20 );	
+	if ( Mouse.Visible ) {
+		ctx.fillStyle = RGB(255,255,255);
+		ctx.fillRect( Mouse.x-10,Mouse.y-10,20,20 );
+	}
 	
 	ctx.fillStyle = RGB(255,255,255);
 	ctx.font = '20px Pixel';
