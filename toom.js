@@ -20,7 +20,7 @@ function Draw() {
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	
 	DrawLayer( BGLayer );
-	imgDraw( Art.Man, 0, 64, (Stepper>>3)&3 );
+	imgDraw( Art.Man, 0, 78, (Stepper>>3)&3 );
 	DrawLayer( FGLayer );
 	
 	
