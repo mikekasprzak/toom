@@ -30,8 +30,10 @@ function Draw() {
 	gfxDraw( Art.Man, 0, 78, 4 );//(Stepper>>3)&3 );
 	gfxDrawLayer( FGLayer );
 	
+	ctx.fillStyle = RGB(255,255,255);
+	ctx.fillRect( Mouse.x-10,Mouse.y-10,20,20 );	
 	
-	ctx.fillStyle = "#FFFFFF";
+	ctx.fillStyle = RGB(255,255,255);
 	ctx.font = '20px Pixel';
 	var Text = 'Drek,';
 	var TD = ctx.measureText(Text);
