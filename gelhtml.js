@@ -76,6 +76,13 @@ function imgDraw( Img, x, y, Index ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
+function imgDrawLayer( layer ) {
+	for ( var idx = 0; idx < layer.length; idx++ ) {
+		imgDraw( Art[layer[idx].img], layer[idx].x, layer[idx].y );
+	}
+
+}
+// - ------------------------------------------------------------------------------------------ - //
 function sndPlay( SoundName ) {
 	return createjs.Sound.play( SoundName, createjs.Sound.INTERRUPT_ANY );
 }
@@ -139,6 +146,21 @@ function Main_GainFocus() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+var ThingsLoaded = 0;
+// - ------------------------------------------------------------------------------------------ - //
+function ShowProgress() {
+	ctx.fillStyle = "#000000";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);	
+
+	ctx.fillStyle = "#FFFFFF";
+	for ( var idx = 0; idx < ThingsLoaded; idx++ ) {
+		var x = (20*idx)-(20*ThingsLoaded>>1);
+		var y = 0;
+		
+		ctx.fillRect(BaseX+x,BaseY+y,18,18);
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
 function handleFileLoad(event) {
 	var item = event.item; // A reference to the item that was passed in
 	var type = item.type;
@@ -147,6 +169,9 @@ function handleFileLoad(event) {
 		console.log(event);
 		Art[event.item.id] = event.result;
 	}
+	
+	ThingsLoaded++;
+	ShowProgress();
 }
 // - ------------------------------------------------------------------------------------------ - //
 function OnLoad() {
@@ -171,8 +196,9 @@ function OnLoad() {
 	for ( var idx = 0; idx < ArtFiles.length; idx++ ) {
 		queue.loadFile({id:ArtFiles[idx].name, src:ArtFiles[idx].value});
 	}
-	// TODO: Move to Content //
-	queue.loadFile({id:"music", src:"audio/byetone-capturethis.ogg|audio/byetone-capturethis.mp3"});
+	for ( var idx = 0; idx < AudioFiles.length; idx++ ) {
+		queue.loadFile({id:AudioFiles[idx].name, src:AudioFiles[idx].value});
+	}
 	
 	queue.load();
 }

@@ -1,22 +1,4 @@
-
-var C_IMG	= 1;
-var C_TEXT	= 2;
-
-var Content = [
-	{ 
-		type:C_IMG,
-		value:"art/man.png",
-		x:0,
-		y:0
-	},
-	{
-		type:C_TEXT,
-		value:"Hello Derek",
-		x:0,
-		y:-64
-	}
-];
-
+// - ------------------------------------------------------------------------------------------ - //
 // Specify a 'tile_w' and 'tile_h' to define the size of each tile/frame //
 // Specify an 'anchor_x' and 'anchor_y' to describe where his bottom/base point is, if not center //
 var ArtFiles = [
@@ -39,7 +21,14 @@ var ArtFiles = [
 	{ name:"FG1", value:"art/toombg_fg_01.png" },
 	{ name:"FG2", value:"art/toombg_fg_02.png", anchor_y:304-400 }
 ];
+// - ------------------------------------------------------------------------------------------ - //
+var AudioFiles = [
+	{ name:"Music", value:"audio/byetone-capturethis.ogg|audio/byetone-capturethis.mp3" },
+];
+// - ------------------------------------------------------------------------------------------ - //
 
+
+// - ------------------------------------------------------------------------------------------ - //
 var BGLayer = [
 	{ img:"BG1",x:0,y:0 },
 	{ img:"BG4",x:0,y:0 },
@@ -48,8 +37,9 @@ var BGLayer = [
 	{ img:"Fog",x:0,y:0 },
 	{ img:"Room",x:0,y:0 }
 ];
-
+// - ------------------------------------------------------------------------------------------ - //
 var FGLayer = [
 	{ img:"FG1",x:0,y:0 },
 	{ img:"FG2",x:0,y:0 },
 ];
+// - ------------------------------------------------------------------------------------------ - //
