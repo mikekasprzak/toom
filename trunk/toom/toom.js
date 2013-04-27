@@ -18,9 +18,15 @@ function LoseFocus() {
 var Stepper = 0;
 function Step() {
 	Stepper++;
-		
-	CameraX = Math.floor(((Mouse.x-BaseX)/BaseX)*32.0);
-	CameraY = Math.floor(((Mouse.y-BaseY)/BaseY)*32.0);
+	
+	var TargetX = ((Mouse.x-BaseX)/BaseX)*32.0;
+	var TargetY = ((Mouse.y-BaseY)/BaseY)*32.0;
+	
+	CameraX -= (CameraX-TargetX)*0.1;
+	CameraY -= (CameraY-TargetY)*0.1;
+	
+	FCameraX = Math.floor(CameraX);
+	FCameraY = Math.floor(CameraY);
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -28,11 +34,11 @@ function Step() {
 function Draw() {
 //	gfxClear( RGB(0,0,0) );
 
-	BX = BaseX-CameraX;
-	BY = BaseY-CameraY;
+	BX = BaseX-FCameraX;
+	BY = BaseY-FCameraY;
 	
 	gfxDrawLayer( BGLayer );
-	gfxDraw( Art.Man, -CameraX+0, -CameraY+78, 4 );//(Stepper>>3)&3 );
+	gfxDraw( Art.Man, -FCameraX+0, -FCameraY+78, 4 );//(Stepper>>3)&3 );
 	gfxDrawLayer( FGLayer );
 	
 	if ( Mouse.Visible ) {
