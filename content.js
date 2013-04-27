@@ -27,39 +27,26 @@ var ArtFiles = [
 		tile_h:128,
 		anchor_y:128
 	},
-	{
-		name:"BG1",
-		value:"art/toombg_bg_01.png"
-	},
-	{
-		name:"BG2",
-		value:"art/toombg_para_01.png"
-	},
-	{
-		name:"BG3",
-		value:"art/toombg_para_02.png"
-	},
-	{
-		name:"BG4",
-		value:"art/toombg_para_03.png"
-	},
+	{ name:"BG1", value:"art/toombg_bg_01.png" },
+	{ name:"BG2", value:"art/toombg_para_01.png" },
+	{ name:"BG3", value:"art/toombg_para_02.png" },
+	{ name:"BG4", value:"art/toombg_para_03.png" },
 
-	{
-		name:"Room",
-		value:"art/toombg_room.png"
-	},
+	{ name:"Room", value:"art/toombg_room.png" },
 
-	{
-		name:"FG1",
-		value:"art/toombg_fg_01.png"
-	},
-	{
-		name:"FG2",
-		value:"art/toombg_fg_02.png"
-	}
+	{ name:"FG1", value:"art/toombg_fg_01.png" },
+	{ name:"FG2", value:"art/toombg_fg_02.png" }
 ];
 
-var MainLayer = [
+var BGLayer = [
 	{ img:"BG1",x:0,y:0 },
-	{ img:"Room",x:0,y:0 }
+	{ img:"BG2",x:0,y:0 },
+	{ img:"BG3",x:0,y:0 },
+	{ img:"BG4",x:0,y:0 },
+	{ img:"Room",x:0,y:96+8 }
+];
+
+var FGLayer = [
+	{ img:"FG1",x:0,y:0 },
+	{ img:"FG2",x:0,y:0 },
 ];
