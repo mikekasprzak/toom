@@ -13,6 +13,8 @@ var BaseY = 0;
 
 var CameraX = 0;
 var CameraY = 0;
+var FCameraX = 0;
+var FCameraY = 0;
 // - ------------------------------------------------------------------------------------------ - //
 var canvas;
 var ctx;
@@ -92,8 +94,8 @@ function gfxDrawLayer( layer ) {
 	for ( var idx = 0; idx < layer.length; idx++ ) {
 		gfxDraw( 
 			Art[layer[idx].img], 
-			Math.floor(-CameraX * layer[idx].scalex) + layer[idx].x, 
-			Math.floor(-CameraY * layer[idx].scaley) + layer[idx].y 
+			Math.floor(-FCameraX * layer[idx].scalex) + layer[idx].x, 
+			Math.floor(-FCameraY * layer[idx].scaley) + layer[idx].y 
 			);
 	}
 
