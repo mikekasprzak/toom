@@ -30,13 +30,13 @@ function Draw() {
 	ctx.fillStyle = "#FFFFFF";
 	ctx.font = '20px Pixel';
 	var Text = 'Hello Drek';
-	ctx.fillText(Text, (canvas.width>>1)-55, (canvas.height>>1)-30);
+	ctx.fillText(Text, (canvas.width>>1)-55, (canvas.height>>1)-96-20);
 
-	Text = "I've been expecting you_";
+	Text = "I've been protecting you_";
 	if ( (Stepper >> 5)&1 ) {
-		Text = "I've been expecting you";
+		Text = "I've been protecting you";
 	}
-	ctx.fillText(Text, (canvas.width>>1)-120, (canvas.height>>1)-10);
+	ctx.fillText(Text, (canvas.width>>1)-120, (canvas.height>>1)-96);
 
 }
 
