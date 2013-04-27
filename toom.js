@@ -8,8 +8,13 @@ var ctx;
 var queue;
 var Art = {};
 
-var Stepper = 0;
+function DrawCenter( var Img, var x, var y ) {
+	ctx.drawImage( Img, x-(Img.width>>1), y-(Img.height>>1) );	
+}
 
+
+
+var Stepper = 0;
 function Step() {
 	Stepper++;
 	
@@ -19,12 +24,12 @@ function Draw() {
 	ctx.fillStyle = "#221133";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	
-	ctx.drawImage( Art.Man, canvas.width>>1, canvas.height>>1 );
+	DrawCenter( Art.Man, canvas.width>>1, canvas.height>>1 );
 	
 	
 	ctx.fillStyle = "#FFFFFF";
 	ctx.font = '20px Pixel';
-	var Text = 'Hello Derek';
+	var Text = 'Hello Drek';
 	ctx.fillText(Text, (canvas.width>>1)-55, (canvas.height>>1)-30);
 
 	Text = "I've been expecting you_";
