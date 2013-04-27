@@ -24,12 +24,11 @@ function Step() {
 
 // - ------------------------------------------------------------------------------------------ - //
 function Draw() {
-	ctx.fillStyle = "#221133";
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
+//	gfxClear( RGB(255,0,255) );
 	
-	imgDrawLayer( BGLayer );
-	imgDraw( Art.Man, 0, 78, 4 );//(Stepper>>3)&3 );
-	imgDrawLayer( FGLayer );
+	gfxDrawLayer( BGLayer );
+	gfxDraw( Art.Man, 0, 78, 4 );//(Stepper>>3)&3 );
+	gfxDrawLayer( FGLayer );
 	
 	
 	ctx.fillStyle = "#FFFFFF";
