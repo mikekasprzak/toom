@@ -125,11 +125,76 @@ function OnComplete() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 function Run() {
+	Input_MouseUpdate();
 	Step();
 	Draw();	
 }
 // - ------------------------------------------------------------------------------------------ - //
 
+// - -------------------------------------------------------------------------------------------------------------- - //
+var Input_Mouse;
+var Input_MouseBits;
+var Mouse;
+
+var MOUSE_LMB = 		0x1;
+var MOUSE_RMB = 		0x2;
+// - -------------------------------------------------------------------------------------------------------------- - //
+function Input_MouseInit() {
+	Input_Mouse = new Vector2D(0,0);
+	Input_Mouse.Visible = false;
+
+	Mouse = new Vector2D(0,0);
+	Mouse.Visible = false;
+	
+	canvas.onmousemove = Input_MouseMove;
+	canvas.onmouseup = Input_MouseUp;
+	canvas.onmousedown = Input_MouseDown;
+	
+	canvas.onmouseover = Input_MouseOver;
+	canvas.onmouseout = Input_MouseOut;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function Input_MouseExit() { 
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function Input_MouseMove( e ) {
+	Input_Mouse.x = (e.clientX - canvas.offsetLeft)// / Canvas_Scale;
+	Input_Mouse.y = (e.clientY - canvas.offsetTop)// / Canvas_Scale;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function Input_MouseOver( e ) {
+	Input_Mouse.Visible = true;
+	
+	console.log( "Mouse Over" );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function Input_MouseOut( e ) {
+	Input_Mouse.Visible = false;
+
+	console.log( "Mouse Out" );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function Input_MouseUp( e ) {
+	Input_MouseBits &= ~MOUSE_LMB;
+
+	console.log( "Click Up " + Input_Mouse );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function Input_MouseDown( e ) {
+	Input_Mouse.x = (e.clientX - canvas.offsetLeft);// / Canvas_Scale;
+	Input_Mouse.y = (e.clientY - canvas.offsetTop);// / Canvas_Scale;
+	
+	Input_MouseBits |= MOUSE_LMB;
+
+	console.log( "Click Down " + Input_Mouse );
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+function Input_MouseUpdate() {
+	Mouse.x = Input_Mouse.x;
+	Mouse.y = Input_Mouse.y;
+	Mouse.Visible = Input_Mouse.Visible;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
 
 // - ------------------------------------------------------------------------------------------ - //
 function Main_LoseFocus() {
@@ -160,7 +225,7 @@ var ThingsLoaded = 0;
 function ShowProgress() {
 	gfxClear( RGB(0,0,0) );
 
-	ctx.fillStyle = "#FFFFFF";
+	ctx.fillStyle = RGB(255,255,255);
 	for ( var idx = 0; idx < ThingsLoaded; idx++ ) {
 		var x = (20*idx)-(20*ThingsLoaded>>1);
 		var y = 0;
@@ -195,6 +260,8 @@ function OnLoad() {
 
 	window.onblur = Main_LoseFocus;
 	window.onfocus = Main_GainFocus;
+	
+	Input_MouseInit();
 	
 	var queue = new createjs.LoadQueue(true); // true 
 	queue.installPlugin(createjs.Sound);
