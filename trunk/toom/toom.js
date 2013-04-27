@@ -28,15 +28,15 @@ function Draw() {
 	
 	
 	ctx.fillStyle = "#FFFFFF";
-	ctx.font = '18px Pixel';
+	ctx.font = '20px Pixel';
 	var Text = 'Hello Drek';
-	ctx.fillText(Text, (canvas.width>>1)-55, (canvas.height>>1)-96-20);
+	ctx.fillText(Text, (canvas.width>>1)-55, (canvas.height>>1)-64-20);
 
 	Text = "I've been protecting you_";
 	if ( (Stepper >> 5)&1 ) {
 		Text = "I've been protecting you";
 	}
-	ctx.fillText(Text, (canvas.width>>1)-120, (canvas.height>>1)-96);
+	ctx.fillText(Text, (canvas.width>>1)-120, (canvas.height>>1)-64);
 
 }
 
