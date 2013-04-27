@@ -16,3 +16,51 @@ var Content = [
 		y:-64
 	}
 ];
+
+// Specify a 'tile_w' and 'tile_h' to define the size of each tile/frame //
+// Specify an 'anchor_x' and 'anchor_y' to describe where his bottom/base point is, if not center //
+var ArtFiles = [
+	{
+		name:"Man",
+		value:"art/man.png",
+		tile_w:128,
+		tile_h:128,
+		anchor_x:64,
+		anchor_y:96
+	},
+	{
+		name:"BG1",
+		value:"art/toombg_bg_01.png"
+	},
+	{
+		name:"BG2",
+		value:"art/toombg_para_01.png"
+	},
+	{
+		name:"BG3",
+		value:"art/toombg_para_02.png"
+	},
+	{
+		name:"BG4",
+		value:"art/toombg_para_03.png"
+	},
+
+	{
+		name:"Room",
+		value:"art/toombg_room.png"
+	},
+
+	{
+		name:"FG1",
+		value:"art/toombg_fg_01.png"
+	},
+	{
+		name:"FG2",
+		value:"art/toombg_fg_02.png"
+	}
+};
+
+var MainLayer = [
+	{ img:"BG1",x:0,y:0 },
+	{ img:"Room",x:0,y:0 }
+];
