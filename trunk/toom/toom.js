@@ -1,5 +1,15 @@
+var Music;
+
 function Init() {
-	sndLooped("music");	
+	Music = sndLooped("music");	
+}
+
+function GainFocus() {
+	Music.resume();
+}
+
+function LoseFocus() {
+	Music.pause();
 }
 
 var Stepper = 0;
@@ -20,7 +30,7 @@ function Draw() {
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	
 	DrawLayer( BGLayer );
-	imgDraw( Art.Man, 0, 78, (Stepper>>3)&3 );
+	imgDraw( Art.Man, 0, 78, 4 );//(Stepper>>3)&3 );
 	DrawLayer( FGLayer );
 	
 	
@@ -28,13 +38,13 @@ function Draw() {
 	ctx.font = '20px Pixel';
 	var Text = 'Drek,';
 	var TD = ctx.measureText(Text);
-	ctx.fillText(Text, BaseX-(TD.width>>1), BaseY-48-20);
+	ctx.fillText(Text, BaseX-(TD.width>>1), BaseY-78+48-20);
 
 	Text = "Why are you ignoring me?";
 	TD = ctx.measureText(Text);
 	if ( (Stepper >> 5)&1 ) {
 		Text = "Why are you ignoring me?_";
 	}
-	ctx.fillText(Text, BaseX-(TD.width>>1), BaseY-48);
+	ctx.fillText(Text, BaseX-(TD.width>>1), BaseY-78+48);
 
 }
