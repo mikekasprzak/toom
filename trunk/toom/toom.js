@@ -28,7 +28,7 @@ function Draw() {
 	
 	
 	ctx.fillStyle = "#FFFFFF";
-	ctx.font = '24px Pixel';
+	ctx.font = '15px Pixel';
 	var Text = 'Hello Drek';
 	ctx.fillText(Text, (canvas.width>>1)-55, (canvas.height>>1)-96-20);
 
