@@ -10,6 +10,9 @@ var Art = {};
 // - ------------------------------------------------------------------------------------------ - //
 var BaseX = 0;
 var BaseY = 0;
+
+var CameraX = 0;
+var CameraY = 0;
 // - ------------------------------------------------------------------------------------------ - //
 var canvas;
 var ctx;
@@ -87,7 +90,11 @@ function gfxDraw( Img, x, y, Index ) {
 // - ------------------------------------------------------------------------------------------ - //
 function gfxDrawLayer( layer ) {
 	for ( var idx = 0; idx < layer.length; idx++ ) {
-		gfxDraw( Art[layer[idx].img], layer[idx].x, layer[idx].y );
+		gfxDraw( 
+			Art[layer[idx].img], 
+			Math.floor(-CameraX * layer[idx].scalex) + layer[idx].x, 
+			Math.floor(-CameraY * layer[idx].scaley) + layer[idx].y 
+			);
 	}
 
 }
