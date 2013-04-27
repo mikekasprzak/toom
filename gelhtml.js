@@ -16,7 +16,16 @@ var ctx;
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-function imgDraw( Img, x, y, Index ) {
+function RGB( r, g, b ) {
+	return "rgb("+r+","+g+","+b+")";
+}
+// - ------------------------------------------------------------------------------------------ - //
+function gfxClear( color ) {
+	ctx.fillStyle = color;
+	ctx.fillRect(0, 0, canvas.width, canvas.height);	
+}
+// - ------------------------------------------------------------------------------------------ - //
+function gfxDraw( Img, x, y, Index ) {
 	if ( typeof Index === "undefined" ) {
 		var anchor_x;
 		if ( Img.hasOwnProperty('anchor_x') )
@@ -76,9 +85,9 @@ function imgDraw( Img, x, y, Index ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-function imgDrawLayer( layer ) {
+function gfxDrawLayer( layer ) {
 	for ( var idx = 0; idx < layer.length; idx++ ) {
-		imgDraw( Art[layer[idx].img], layer[idx].x, layer[idx].y );
+		gfxDraw( Art[layer[idx].img], layer[idx].x, layer[idx].y );
 	}
 
 }
@@ -149,8 +158,7 @@ function Main_GainFocus() {
 var ThingsLoaded = 0;
 // - ------------------------------------------------------------------------------------------ - //
 function ShowProgress() {
-	ctx.fillStyle = "#000000";
-	ctx.fillRect(0, 0, canvas.width, canvas.height);	
+	gfxClear( RGB(0,0,0) );
 
 	ctx.fillStyle = "#FFFFFF";
 	for ( var idx = 0; idx < ThingsLoaded; idx++ ) {
