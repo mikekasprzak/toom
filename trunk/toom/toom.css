@@ -19,11 +19,11 @@ canvas {
 	display: block;
 /*	width:1280px;
 	height:720px;*/
-	width:800px;
+	width:1280px;
 	height:600px;
 
     position:absolute;
     left:50%;
     top:50%;
-    margin:-300px 0 0 -400px;
+    margin:-300px 0 0 -640px;
 }
