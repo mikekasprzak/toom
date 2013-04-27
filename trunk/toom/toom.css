@@ -20,10 +20,10 @@ canvas {
 /*	width:1280px;
 	height:720px;*/
 	width:1280px;
-	height:600px;
+	height:720px;
 
     position:absolute;
     left:50%;
     top:50%;
-    margin:-300px 0 0 -640px;
+    margin:-360px 0 0 -640px;
 }

@@ -29,21 +29,24 @@ var ArtFiles = [
 	},
 	{ name:"BG1", value:"art/toombg_bg_01.png" },
 	{ name:"BG2", value:"art/toombg_para_01.png" },
-	{ name:"BG3", value:"art/toombg_para_02.png" },
-	{ name:"BG4", value:"art/toombg_para_03.png" },
+	{ name:"BG3", value:"art/toombg_para_02.png", anchor_y:560-400 },
+	{ name:"BG4", value:"art/toombg_para_03.png", anchor_y:304-400 },
 
-	{ name:"Room", value:"art/toombg_room.png" },
+	{ name:"Fog", value:"art/toombg_fx_fog.png", anchor_y:276-400 },
+
+	{ name:"Room", value:"art/toombg_room.png", anchor_y:560-400 },
 
 	{ name:"FG1", value:"art/toombg_fg_01.png" },
-	{ name:"FG2", value:"art/toombg_fg_02.png" }
+	{ name:"FG2", value:"art/toombg_fg_02.png", anchor_y:304-400 }
 ];
 
 var BGLayer = [
 	{ img:"BG1",x:0,y:0 },
-	{ img:"BG2",x:0,y:0 },
-	{ img:"BG3",x:0,y:0 },
 	{ img:"BG4",x:0,y:0 },
-	{ img:"Room",x:0,y:96+8 }
+	{ img:"BG3",x:0,y:0 },
+	{ img:"BG2",x:0,y:0 },
+	{ img:"Fog",x:0,y:0 },
+	{ img:"Room",x:0,y:0 }
 ];
 
 var FGLayer = [
