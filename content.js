@@ -58,7 +58,7 @@ var ArtFiles = [
 		name:"FG2",
 		value:"art/toombg_fg_02.png"
 	}
-};
+];
 
 var MainLayer = [
 	{ img:"BG1",x:0,y:0 },
