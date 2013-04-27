@@ -8,7 +8,7 @@ var ctx;
 var queue;
 var Art = {};
 
-function DrawCenter( var Img, var x, var y ) {
+function DrawCenter( Img, x, y ) {
 	ctx.drawImage( Img, x-(Img.width>>1), y-(Img.height>>1) );	
 }
 
