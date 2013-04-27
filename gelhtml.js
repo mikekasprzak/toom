@@ -1,15 +1,21 @@
+// - ------------------------------------------------------------------------------------------ - //
 // Internet Explorer Sucks { //
 if ( ! window.console ) console = { log: function(){} };
 // } //
-
-var canvas;
-var ctx;
-
+// - ------------------------------------------------------------------------------------------ - //
+var IntervalHandle = 0;
+var FrameRate = 1000/60;
+// - ------------------------------------------------------------------------------------------ - //
 var Art = {};
-
+// - ------------------------------------------------------------------------------------------ - //
 var BaseX = 0;
 var BaseY = 0;
+// - ------------------------------------------------------------------------------------------ - //
+var canvas;
+var ctx;
+// - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
 function imgDraw( Img, x, y, Index ) {
 	if ( typeof Index === "undefined" ) {
 		var anchor_x;
@@ -69,13 +75,17 @@ function imgDraw( Img, x, y, Index ) {
 			);
 	}
 }
-
-
-function Run() {
-	Step();
-	Draw();	
+// - ------------------------------------------------------------------------------------------ - //
+function sndPlay( SoundName ) {
+	return createjs.Sound.play( SoundName, createjs.Sound.INTERRUPT_ANY );
 }
+// - ------------------------------------------------------------------------------------------ - //
+function sndLooped( SoundName ) {
+	return createjs.Sound.play( SoundName, createjs.Sound.INTERRUPT_ANY, 0, 0, -1 );
+}
+// - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
 function OnComplete() {
 	// Copy Properties //
 	for ( var idx = 0; idx < ArtFiles.length; idx++ ) {
@@ -95,16 +105,40 @@ function OnComplete() {
 	
 	console.log("begin game");
 	Init();
-	setInterval( Run, 1000 / 60 );
+	IntervalHandle = setInterval( Run, FrameRate );
 }
+// - ------------------------------------------------------------------------------------------ - //
+function Run() {
+	Step();
+	Draw();	
+}
+// - ------------------------------------------------------------------------------------------ - //
 
-function sndPlay( SoundName ) {
-	return createjs.Sound.play( SoundName, createjs.Sound.INTERRUPT_ANY );
-}
-function sndLooped( SoundName ) {
-	return createjs.Sound.play( SoundName, createjs.Sound.INTERRUPT_ANY, 0, 0, -1 );
-}
 
+// - ------------------------------------------------------------------------------------------ - //
+function Main_LoseFocus() {
+	// Stop the Clock //
+	clearInterval( IntervalHandle );
+	IntervalHandle = 0;
+	
+	if ( typeof LoseFocus != "undefined" ) {
+		LoseFocus();
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+function Main_GainFocus() {
+	if ( typeof GainFocus != "undefined" ) {
+		GainFocus();
+	}
+
+	// Restart the Clock //
+	if ( IntervalHandle == 0 ) {
+		IntervalHandle = setInterval( Run, FrameRate );
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 function handleFileLoad(event) {
 	var item = event.item; // A reference to the item that was passed in
 	var type = item.type;
@@ -114,7 +148,7 @@ function handleFileLoad(event) {
 		Art[event.item.id] = event.result;
 	}
 }
-
+// - ------------------------------------------------------------------------------------------ - //
 function OnLoad() {
 	console.log("Lets Begin");
 	
@@ -123,23 +157,23 @@ function OnLoad() {
 	
 	BaseX = canvas.width>>1;
 	BaseY = canvas.height>>1;
-	
-//	Art["son"] = new Image();
-//	Art.son.onload = function() { console.log('this is '+Art.son); };
-//	Art.son.src = "art/man.png";
 
 	createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
+
+	window.onblur = Main_LoseFocus;
+	window.onfocus = Main_GainFocus;
 	
 	var queue = new createjs.LoadQueue(true); // true 
 	queue.installPlugin(createjs.Sound);
 	queue.addEventListener("complete",OnComplete);
-	queue.addEventListener("fileload", createjs.proxy(handleFileLoad,(this)));
+	queue.addEventListener("fileload",createjs.proxy(handleFileLoad,(this)));
 	
-//	queue.loadFile({id:"man", src:"art/man.png"});
 	for ( var idx = 0; idx < ArtFiles.length; idx++ ) {
 		queue.loadFile({id:ArtFiles[idx].name, src:ArtFiles[idx].value});
 	}
+	// TODO: Move to Content //
 	queue.loadFile({id:"music", src:"audio/byetone-capturethis.ogg|audio/byetone-capturethis.mp3"});
 	
 	queue.load();
 }
+// - ------------------------------------------------------------------------------------------ - //
