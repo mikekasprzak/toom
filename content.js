@@ -25,8 +25,7 @@ var ArtFiles = [
 		value:"art/man.png",
 		tile_w:128,
 		tile_h:128,
-		anchor_x:64,
-		anchor_y:96
+//		anchor_y:128
 	},
 	{
 		name:"BG1",
