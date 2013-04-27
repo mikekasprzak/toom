@@ -19,8 +19,7 @@ function Draw() {
 	ctx.fillStyle = "#221133";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	
-//	console.log('And this is'+Art.man);
-	ctx.drawImage( Art.man, canvas.width>>1, canvas.height>>1 );
+	ctx.drawImage( Art.Man, canvas.width>>1, canvas.height>>1 );
 	
 	
 	ctx.fillStyle = "#FFFFFF";
