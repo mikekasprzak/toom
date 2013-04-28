@@ -7,32 +7,60 @@ function cRoom() {
 // - ------------------------------------------------------------------------------------------ - //
 
 
+// - ------------------------------------------------------------------------------------------ - //
 var ST_IDLE = 1;
 var ST_MOVING = 2;
+// - ------------------------------------------------------------------------------------------ - //
+var StateMap = [];
+StateMap[ST_IDLE] = "Idle";
+StateMap[ST_MOVING] = "Walk";
 // - ------------------------------------------------------------------------------------------ - //
 var Player;
 // - ------------------------------------------------------------------------------------------ - //
 function cPlayer() {
 	this.Pos = new Vector2D(0,0);
-	this.TargetPos = new Vector2D(0,0);
-	this.State = ST_IDLE;
+	this.TargetPos = this.Pos.clone();
 	this.FacingLeft = false;
+
+	this.State = ST_IDLE;
+	this.CurrentFrameStep = 0;
+	this.CurrentAnimation = "Idle";
+	this.SetState( ST_IDLE );
+}
+// - ------------------------------------------------------------------------------------------ - //
+cPlayer.prototype.SetState = function( NewState ) {
+	if ( this.State != NewState ) {
+		this.State = NewState;
+		this.CurrentFrameStep = 0;
+		this.CurrentAnimation = StateMap[this.State];
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+cPlayer.prototype.GetCurrentFrame = function() {
+	return Math.floor(this.CurrentFrameStep / 6);
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.Step = function() {
-	//this.Pos = Sub(this.Pos,MultScalar(Sub(this.Pos,this.TargetPos),0.1));
+	this.CurrentFrameStep++;
+	if ( this.GetCurrentFrame() >= ManAnim[this.CurrentAnimation].frame.length ) {
+		this.CurrentFrameStep = 0;
+		if ( typeof ManAnim[this.CurrentAnimation].onloop != "undefined" ) {
+			this.CurrentAnimation = ManAnim[this.CurrentAnimation].onloop[ Math.floor(Math.random() * ManAnim[this.CurrentAnimation].onloop.length) ];
+		}
+	}
+	//console.log( this.CurrentFrameStep );
 	
 	var Diff = Sub(this.Pos,this.TargetPos);
 	var Length = Diff.NormalizeRet();
 	if ( Length > 2 ) {
 		var Scaled = MultScalar(Diff,2);
 		this.Pos = Sub(this.Pos, Diff );
-		this.State = ST_MOVING;
+		this.SetState( ST_MOVING );
 		this.FacingLeft = Diff.x > 0;
 	}
 	else {
 		this.Pos = this.TargetPos.clone();
-		this.State = ST_IDLE;
+		this.SetState( ST_IDLE );
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -41,11 +69,12 @@ cPlayer.prototype.GetPos = function() {
 }	
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.Draw = function() {
+	var Index = 0;
+	var CurrentFrame = this.GetCurrentFrame();
+	Index = ManAnim[ this.CurrentAnimation ].frame[CurrentFrame];
+
 	var Pos = this.GetPos();
-	var Index = 4;
-	if ( this.State == ST_MOVING ) {
-		Index = (Stepper>>3)&3;
-	}
+	
 	gfxDraw( Art.Man, Pos.x, Pos.y, Index, this.FacingLeft );	
 }
 // - ------------------------------------------------------------------------------------------ - //
