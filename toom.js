@@ -75,7 +75,21 @@ cPlayer.prototype.Draw = function() {
 
 	var Pos = this.GetPos();
 	
-	gfxDraw( Art.Man, Pos.x, Pos.y, Index, this.FacingLeft );	
+	var YTweak = 0;
+	if ( this.Pos.x >= 416 ) {
+		YTweak = 10;
+	}
+	else if ( this.Pos.x >= 412 ) {
+		YTweak = 8;
+	}
+	else if ( this.Pos.x >= 403 ) {
+		YTweak = 6;
+	}
+	else if ( this.Pos.x >= 380 ) {
+		YTweak = 4;
+	}
+	
+	gfxDraw( Art.Man, Pos.x, Pos.y - YTweak, Index, this.FacingLeft );	
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -165,6 +179,14 @@ function Draw() {
 		Text = Text + "_";
 	}
 	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
+
+	Text = "Pos: " + Player.Pos.x + "," + Player.Pos.y;
+	TD = ctx.measureText(Text);
+	if ( (Stepper >> 5)&1 ) {
+		Text = Text + "_";
+	}
+	ctx.fillText(Text, BaseX-520, BaseY+280);
+
 
 	var InvFade = (255-Stepper)/255;
 	var Fade = Stepper/255;
