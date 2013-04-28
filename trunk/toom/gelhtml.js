@@ -113,11 +113,35 @@ function gfxDraw( Img, x, y, Index, FlipX, FlipY ) {
 // - ------------------------------------------------------------------------------------------ - //
 function gfxDrawLayer( layer ) {
 	for ( var idx = 0; idx < layer.length; idx++ ) {
-		gfxDraw( 
-			Art[layer[idx].img], 
-			Math.floor(-FCamera.x * layer[idx].scalex) + layer[idx].x, 
-			Math.floor(-FCamera.y * layer[idx].scaley) + layer[idx].y 
-			);
+		var ScaleX = (typeof layer[idx].scalex != "undefined") ? layer[idx].scalex : 1.0;
+		var ScaleY = (typeof layer[idx].scaley != "undefined") ? layer[idx].scaley : 1.0;
+		
+		var CurrentFrame = 0;
+		if ( typeof layer[idx].frame != "undefined" ) {
+			var Length = layer[idx].frame.length;
+			if ( typeof layer[idx].FrameStep === "undefined" ) {
+				layer[idx].FrameStep = 0;
+			}
+			else {
+				layer[idx].FrameStep++;
+			}
+			var Index = Math.floor(layer[idx].FrameStep / 6);
+			if ( Index >= Length ) {
+				Index = 0;
+				layer[idx].FrameStep = 0;
+			}
+			
+			CurrentFrame = layer[idx].frame[Index];
+		}
+		
+		if ( CurrentFrame > 0 ) {
+			gfxDraw( 
+				Art[layer[idx].img], 
+				Math.floor(-FCamera.x * ScaleX) + layer[idx].x, 
+				Math.floor(-FCamera.y * ScaleY) + layer[idx].y,
+				CurrentFrame
+				);
+		}
 	}
 
 }
