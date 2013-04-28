@@ -28,8 +28,10 @@ function gfxClear( color ) {
 	ctx.fillRect(0, 0, canvas.width, canvas.height);	
 }
 // - ------------------------------------------------------------------------------------------ - //
-function gfxDraw( Img, x, y, Index ) {
-	if ( typeof Index === "undefined" ) {
+function gfxDraw( Img, x, y, Index, FlipX, FlipY ) {
+	ctx.save();
+	
+	if ( typeof Index != "number" ) {
 		var anchor_x;
 		if ( Img.hasOwnProperty('anchor_x') )
 			anchor_x = Img.anchor_x;
@@ -42,7 +44,15 @@ function gfxDraw( Img, x, y, Index ) {
 		else
 			anchor_y = Img.height>>1;
 
-		ctx.drawImage( Img, BaseX+x-anchor_x, BaseY+y-anchor_y );
+//	ctx.translate( FlipX ? Img.width : 0, FlipY ? Img.height : 0 );
+//	ctx.scale( FlipX ? -1 : 1, FlipY ? -1 : 1 );
+
+		ctx.translate( BaseX+x-anchor_x, BaseY+y-anchor_y );
+		ctx.translate( FlipX ? Img.width : 0, FlipY ? Img.height : 0 );
+		ctx.scale( FlipX ? -1 : 1, FlipY ? -1 : 1 );
+
+		ctx.drawImage( Img, 0, 0 );
+//		ctx.drawImage( Img, BaseX+x-anchor_x, BaseY+y-anchor_y );
 	}
 	else {
 		var tile_w;
@@ -74,18 +84,35 @@ function gfxDraw( Img, x, y, Index ) {
 
 		var x_step = Math.floor(Index % x_steps);
 		var y_step = Math.floor(Index / x_steps);
-		
+
+		ctx.translate( BaseX+x-anchor_x, BaseY+y-anchor_y );
+		ctx.translate( FlipX ? Img.tile_w : 0, FlipY ? Img.tile_h : 0 );
+		ctx.scale( FlipX ? -1 : 1, FlipY ? -1 : 1 );
+
 		ctx.drawImage( Img,
 			x_step*tile_w,
 			y_step*tile_h,
 			tile_w,
 			tile_h,
-			BaseX+x-anchor_x,
-			BaseY+y-anchor_y,
+			0,
+			0,
 			tile_w,
 			tile_h
 			);
+		
+//		ctx.drawImage( Img,
+//			x_step*tile_w,
+//			y_step*tile_h,
+//			tile_w,
+//			tile_h,
+//			BaseX+x-anchor_x,
+//			BaseY+y-anchor_y,
+//			tile_w,
+//			tile_h
+//			);
 	}
+	
+	ctx.restore();
 }
 // - ------------------------------------------------------------------------------------------ - //
 function gfxDrawLayer( layer ) {

@@ -7,16 +7,33 @@ function cRoom() {
 // - ------------------------------------------------------------------------------------------ - //
 
 
+var ST_IDLE = 1;
+var ST_MOVING = 2;
 // - ------------------------------------------------------------------------------------------ - //
 var Player;
 // - ------------------------------------------------------------------------------------------ - //
 function cPlayer() {
 	this.Pos = new Vector2D(0,0);
 	this.TargetPos = new Vector2D(0,0);
+	this.State = ST_IDLE;
+	this.FacingLeft = false;
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.Step = function() {
-	this.Pos = Sub(this.Pos,MultScalar(Sub(this.Pos,this.TargetPos),0.1));
+	//this.Pos = Sub(this.Pos,MultScalar(Sub(this.Pos,this.TargetPos),0.1));
+	
+	var Diff = Sub(this.Pos,this.TargetPos);
+	var Length = Diff.NormalizeRet();
+	if ( Length > 2 ) {
+		var Scaled = MultScalar(Diff,2);
+		this.Pos = Sub(this.Pos, Diff );
+		this.State = ST_MOVING;
+		this.FacingLeft = Diff.x > 0;
+	}
+	else {
+		this.Pos = this.TargetPos.clone();
+		this.State = ST_IDLE;
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.GetPos = function() {
@@ -25,7 +42,11 @@ cPlayer.prototype.GetPos = function() {
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.Draw = function() {
 	var Pos = this.GetPos();
-	gfxDraw( Art.Man, Pos.x, Pos.y, 4 );//(Stepper>>3)&3 );	
+	var Index = 4;
+	if ( this.State == ST_MOVING ) {
+		Index = (Stepper>>3)&3;
+	}
+	gfxDraw( Art.Man, Pos.x, Pos.y, Index, this.FacingLeft );	
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -103,16 +124,16 @@ function Draw() {
 	
 	ctx.fillStyle = RGB(255,255,255);
 	ctx.font = '20px Pixel';
-	var Text = 'Drek,';
+	var Text = 'Hey Drek,';
 	var TD = ctx.measureText(Text);
-	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-96-20);
+	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100-20);
 
-	Text = "Why are you ignoring me?";
+	Text = "Is it really solitude if I'm here?";
 	TD = ctx.measureText(Text);
 	if ( (Stepper >> 5)&1 ) {
-		Text = "Why are you ignoring me?_";
+		Text = Text + "_";
 	}
-	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-96);
+	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
 
 }
 // - ------------------------------------------------------------------------------------------ - //
