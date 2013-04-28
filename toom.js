@@ -54,7 +54,7 @@ cPlayer.prototype.Draw = function() {
 var Music;
 // - ------------------------------------------------------------------------------------------ - //
 function Init() {
-	Music = sndLooped("Music");	
+	Music = sndLooped("Music",0);	
 	
 	Room = new cRoom();
 	Player = new cPlayer();
@@ -135,9 +135,11 @@ function Draw() {
 	}
 	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
 
-	var FadeIn = (255-Stepper)/255;
-	if ( FadeIn > 0 ) {
-		ctx.globalAlpha = FadeIn;
+	var InvFade = (255-Stepper)/255;
+	var Fade = Stepper/255;
+	if ( InvFade > 0 ) {
+		ctx.globalAlpha = InvFade;
+		Music.setVolume(Fade);
 		gfxClear( RGB(0,0,0) );
 		ctx.globalAlpha = 1.0;
 	}

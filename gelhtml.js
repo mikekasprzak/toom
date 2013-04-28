@@ -122,12 +122,16 @@ function gfxDrawLayer( layer ) {
 
 }
 // - ------------------------------------------------------------------------------------------ - //
-function sndPlay( SoundName ) {
-	return createjs.Sound.play( SoundName, createjs.Sound.INTERRUPT_ANY );
+function sndPlay( SoundName, Volume ) {
+	if ( typeof Volume === "undefined" )
+		Volume = 1;
+	return createjs.Sound.play( SoundName, createjs.Sound.INTERRUPT_ANY, 0, 0, 0, Volume );
 }
 // - ------------------------------------------------------------------------------------------ - //
-function sndLooped( SoundName ) {
-	return createjs.Sound.play( SoundName, createjs.Sound.INTERRUPT_ANY, 0, 0, -1 );
+function sndLooped( SoundName, Volume ) {
+	if ( typeof Volume === "undefined" )
+		Volume = 1;
+	return createjs.Sound.play( SoundName, createjs.Sound.INTERRUPT_ANY, 0, 0, -1, Volume );
 }
 // - ------------------------------------------------------------------------------------------ - //
 
