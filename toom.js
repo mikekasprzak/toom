@@ -133,6 +133,8 @@ function Step() {
 	
 	if ( Mouse.GetNew() ) {
 		Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
+		
+		AddCP( Mouse.Pos.x+Camera.x, Mouse.Pos.y+Camera.y );
 
 		var HalfLimit = (Limit>>1);
 
@@ -144,6 +146,10 @@ function Step() {
 	}
 	
 	Player.Step();
+	
+	// *** //
+
+	StepCP();
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -160,10 +166,10 @@ function Draw() {
 	gfxDrawLayer( RoomFGLayer );
 	gfxDrawLayer( FGLayer );
 	
-	if ( Mouse.Visible ) {
-		ctx.fillStyle = RGB(255,255,255);
-		ctx.fillRect( Mouse.Pos.x-10,Mouse.Pos.y-10,20,20 );
-	}
+//	if ( Mouse.Visible ) {
+//		ctx.fillStyle = RGB(255,255,255);
+//		ctx.fillRect( Mouse.Pos.x-10,Mouse.Pos.y-10,20,20 );
+//	}
 	
 	var PlayerPos = Player.GetPos();
 	
@@ -187,6 +193,11 @@ function Draw() {
 	}
 	ctx.fillText(Text, BaseX-520, BaseY+280);
 
+	// *** //
+
+	DrawCP(-FCamera.x,-FCamera.y);
+
+	// *** //
 
 	var InvFade = (255-Stepper)/255;
 	var Fade = Stepper/255;
