@@ -2,13 +2,8 @@
 // Specify a 'tile_w' and 'tile_h' to define the size of each tile/frame //
 // Specify an 'anchor_x' and 'anchor_y' to describe where his bottom/base point is, if not center //
 var ArtFiles = [
-	{
-		name:"Man",
-		value:"art/dude_anims.png",
-		tile_w:128,
-		tile_h:128,
-		anchor_y:128
-	},
+	{ name:"Man", value:"art/dude_anims.png", tile_w:128, tile_h:128, anchor_y:128 },
+	
 	{ name:"BG1", value:"art/toombg_bg_01.png" },
 	{ name:"BG2", value:"art/toombg_para_01.png" },
 	{ name:"BG3", value:"art/toombg_para_02.png", anchor_y:560-400 },
@@ -19,7 +14,11 @@ var ArtFiles = [
 	{ name:"Room", value:"art/toombg_room.png", anchor_y:560-400 },
 
 	{ name:"FG1", value:"art/toombg_fg_01.png" },
-	{ name:"FG2", value:"art/toombg_fg_02.png", anchor_y:304-400 }
+	{ name:"FG2", value:"art/toombg_fg_02.png", anchor_y:304-400 },
+	
+	{ name:"Couch", value:"item/item_couch.png", anchor_y:42 },
+	{ name:"TV", value:"item/item_tv.png", tile_w:104, anchor_y:88 },
+	{ name:"Fan", value:"item/item_fan.png", tile_w:8, anchor_y:64 },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var AudioFiles = [
@@ -35,12 +34,23 @@ var BGLayer = [
 	{ img:"BG3",x:0,y:0,scalex:0.8,scaley:0.8 },
 	{ img:"BG2",x:0,y:0,scalex:0.9,scaley:0.9 },
 	{ img:"Fog",x:0,y:0,scalex:0.9,scaley:0.9 },
-	{ img:"Room",x:0,y:0,scalex:1.0,scaley:1.0 }
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var FGLayer = [
 	{ img:"FG1",x:0,y:0,scalex:1.1,scaley:1.1 },
 	{ img:"FG2",x:0,y:0,scalex:1.2,scaley:1.2 },
+];
+// - ------------------------------------------------------------------------------------------ - //
+var RoomBGLayer = [
+	{ img:"Room",x:0,y:0,scalex:1.0,scaley:1.0 },
+	{ img:"Couch",x:-320,y:78 },
+];
+// - ------------------------------------------------------------------------------------------ - //
+var RoomFGLayer = [
+	{ img:"TV",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0] },
+	{ img:"Fan",x:-453,y:78-52,frame:[0,0,0,1,1,1,2,2,2,1,1,1] },
+//	{ img:"Fan",x:-453,y:78-52,frame:[0,1,2,1] },
+//	{ img:"Fan",x:-453,y:78-52,frame:[0,0,1,1,2,2,1,1,3,3,1,1,2,2,1,1] },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 

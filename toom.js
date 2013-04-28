@@ -141,7 +141,9 @@ function Draw() {
 	BY = BaseY-FCamera.y;
 	
 	gfxDrawLayer( BGLayer );
+	gfxDrawLayer( RoomBGLayer );
 	Player.Draw();
+	gfxDrawLayer( RoomFGLayer );
 	gfxDrawLayer( FGLayer );
 	
 	if ( Mouse.Visible ) {
@@ -153,11 +155,11 @@ function Draw() {
 	
 	ctx.fillStyle = RGB(255,255,255);
 	ctx.font = '20px Pixel';
-	var Text = 'Hey Drek,';
+	var Text = 'Whoa Drek,';
 	var TD = ctx.measureText(Text);
 	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100-20);
 
-	Text = "Is it really solitude if I'm here?";
+	Text = "I was watching that.";
 	TD = ctx.measureText(Text);
 	if ( (Stepper >> 5)&1 ) {
 		Text = Text + "_";
