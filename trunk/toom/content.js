@@ -22,14 +22,21 @@ var ArtFiles = [
 
 	{ name:"Table", value:"item/item_table.png", anchor_y:38 },
 	{ name:"Chair", value:"item/item_chair.png", anchor_y:48 },
+	{ name:"Soda", value:"item/item_soda.png", anchor_y:12 },
 
 	{ name:"Trash", value:"item/item_trashcan.png", tile_w:64, anchor_y:64 },
 
 	{ name:"Cupboards", value:"item/item_cupboards.png", anchor_y:122 },
+	{ name:"Toaster", value:"item/item_toaster.png", anchor_y:14 },
+	{ name:"CoffeeMaker", value:"item/item_coffee_maker.png", anchor_y:24 },
+	{ name:"CoffeePot", value:"item/item_coffee_pot.png", tile_w:20, anchor_y:12 },
 
 	{ name:"Fridge", value:"item/item_fridge.png", anchor_y:128 },
+	{ name:"FridgeTop", value:"item/item_fridge_freezerdoor.png", anchor_y:34 },
+	{ name:"FridgeBot", value:"item/item_fridge_fridgedoor.png", anchor_y:60 },
 
 	{ name:"Fishbowl", value:"item/item_fishbowl.png", tile_w:32, tile_h:64, anchor_y:64 },
+	{ name:"Coffee", value:"item/item_coffee_mug.png", anchor_y:10 },
 	{ name:"Desk", value:"item/item_PC.png", tile_w:128, anchor_y:96 },
 
 	{ name:"Teleporter", value:"item/item_teleporter.png", tile_w:128, anchor_y:186 },
@@ -61,26 +68,35 @@ var RoomBGLayer = [
 
 	{ img:"Table",x:-170,y:78 },
 	{ img:"Chair",x:-154,y:78 },
+	{ img:"Soda",x:-190,y:78-38 },
 
 	{ img:"Trash",x:-96,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1] },
 
 	{ img:"Fridge",x:62,y:78 },
+	{ img:"FridgeTop",x:62+14,y:78-62-4,frame:[-1,-1,-1,-1,-1,-1,0,0,0,0,0] },
+	{ img:"FridgeBot",x:62+14,y:78-4,frame:[-1,-1,-1,-1,-1,0,0,0,0,0] },
 	{ img:"Cupboards",x:-24,y:78 },
+	{ img:"Toaster",x:-46,y:78-44 },
+	{ img:"CoffeeMaker",x:13,y:78-44 },
+	{ img:"CoffeePot",x:8,y:78-44-6,frame:[0,1,2,3,4,3,2,1] },
 
 	{ img:"Desk",x:230,y:78,frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0] },
 	{ img:"Fishbowl",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
+	{ img:"Coffee",x:198,y:78-38 },
 	{ img:"Chair",x:250,y:78 },
 	
+	// Back //
 	{ img:"Teleporter",x:429,y:78,frame:[0] },
+	// Screen Light //
 	{ img:"Teleporter",x:429,y:78,frame:[1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1] },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var RoomFGLayer = [
 	{ img:"TV",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0] },
 	{ img:"Fan",x:-453,y:78-52,frame:[0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5] },
-//	{ img:"Fan",x:-453,y:78-52,frame:[0,1,2,1] },
-//	{ img:"Fan",x:-453,y:78-52,frame:[0,0,1,1,2,2,1,1,3,3,1,1,2,2,1,1] },
+	// Front Tube //
 	{ img:"Teleporter",x:429,y:78,frame:[3] },
+	// Glow //
 	{ img:"Teleporter",x:429,y:78,frame:[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,2,2,2,2,2,2,2,2,2,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1] },
 ];
 // - ------------------------------------------------------------------------------------------ - //
