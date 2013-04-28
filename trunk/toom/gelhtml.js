@@ -134,7 +134,7 @@ function gfxDrawLayer( layer ) {
 			CurrentFrame = layer[idx].frame[Index];
 		}
 		
-		if ( CurrentFrame > 0 ) {
+		if ( CurrentFrame >= 0 ) {
 			gfxDraw( 
 				Art[layer[idx].img], 
 				Math.floor(-FCamera.x * ScaleX) + layer[idx].x, 
