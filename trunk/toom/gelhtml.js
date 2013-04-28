@@ -190,9 +190,34 @@ function Run() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - -------------------------------------------------------------------------------------------------------------- - //
+function cMouse() {
+	this.Pos = new Vector2D(0,0);
+	this.Old = this.Pos.clone();
+	this.Visible = false;
+	this.OldBits = 0;
+	this.CurrentBits = 0;
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+cMouse.prototype.GetNew = function() {
+	return (this.CurrentBits ^ this.OldBits) & this.CurrentBits;
+}
+cMouse.prototype.GetOld = function() {
+	return (this.CurrentBits ^ this.OldBits) & this.OldBits;
+}
+cMouse.prototype.GetChange = function() {
+	return (this.CurrentBits ^ this.OldBits);
+}
+cMouse.prototype.Get = function() {
+	return this.CurrentBits;
+}
+cMouse.prototype.Diff = function() {
+	return Sub(this.Old,this.Pos);
+}
+// - -------------------------------------------------------------------------------------------------------------- - //
+var Mouse = new cMouse();
+// - -------------------------------------------------------------------------------------------------------------- - //
 var Input_Mouse;
 var Input_MouseBits;
-var Mouse;
 
 var MOUSE_LMB = 		0x1;
 var MOUSE_RMB = 		0x2;
@@ -200,9 +225,7 @@ var MOUSE_RMB = 		0x2;
 function Input_MouseInit() {
 	Input_Mouse = new Vector2D(0,0);
 	Input_Mouse.Visible = false;
-
-	Mouse = new Vector2D(0,0);
-	Mouse.Visible = false;
+	Input_MouseBits = 0;
 	
 	canvas.onmousemove = Input_MouseMove;
 	canvas.onmouseup = Input_MouseUp;
@@ -248,9 +271,13 @@ function Input_MouseDown( e ) {
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
 function Input_MouseUpdate() {
-	Mouse.x = Input_Mouse.x;
-	Mouse.y = Input_Mouse.y;
+	Mouse.Old.x = Mouse.Pos.x;
+	Mouse.Old.y = Mouse.Pos.y;
+	Mouse.Pos.x = Input_Mouse.x;
+	Mouse.Pos.y = Input_Mouse.y;
 	Mouse.Visible = Input_Mouse.Visible;
+	Mouse.OldBits = Mouse.CurrentBits;
+	Mouse.CurrentBits = Input_MouseBits;
 }
 // - -------------------------------------------------------------------------------------------------------------- - //
 
