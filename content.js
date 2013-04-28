@@ -16,9 +16,21 @@ var ArtFiles = [
 	{ name:"FG1", value:"art/toombg_fg_01.png" },
 	{ name:"FG2", value:"art/toombg_fg_02.png", anchor_y:304-400 },
 	
-	{ name:"Couch", value:"item/item_couch.png", anchor_y:42 },
-	{ name:"TV", value:"item/item_tv.png", tile_w:104, anchor_y:88 },
 	{ name:"Fan", value:"item/item_fan.png", tile_w:8, anchor_y:64 },
+	{ name:"TV", value:"item/item_tv.png", tile_w:104, anchor_y:88 },
+	{ name:"Couch", value:"item/item_couch.png", anchor_y:42 },
+
+	{ name:"Table", value:"item/item_table.png", anchor_y:38 },
+	{ name:"Chair", value:"item/item_chair.png", anchor_y:48 },
+
+	{ name:"Trash", value:"item/item_trashcan.png", tile_w:64, anchor_y:64 },
+
+	{ name:"Cupboards", value:"item/item_cupboards.png", anchor_y:122 },
+
+	{ name:"Fridge", value:"item/item_fridge.png", anchor_y:128 },
+
+	{ name:"Fishbowl", value:"item/item_fishbowl.png", tile_w:32, tile_h:64, anchor_y:64 },
+	{ name:"Desk", value:"item/item_PC.png", tile_w:128, anchor_y:96 },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var AudioFiles = [
@@ -44,6 +56,18 @@ var FGLayer = [
 var RoomBGLayer = [
 	{ img:"Room",x:0,y:0,scalex:1.0,scaley:1.0 },
 	{ img:"Couch",x:-320,y:78 },
+
+	{ img:"Table",x:-170,y:78 },
+	{ img:"Chair",x:-154,y:78 },
+
+	{ img:"Trash",x:-96,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1] },
+
+	{ img:"Fridge",x:62,y:78 },
+	{ img:"Cupboards",x:-24,y:78 },
+
+	{ img:"Desk",x:230,y:78,frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0] },
+	{ img:"Fishbowl",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
+	{ img:"Chair",x:250,y:78 },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var RoomFGLayer = [
