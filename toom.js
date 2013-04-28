@@ -135,5 +135,11 @@ function Draw() {
 	}
 	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
 
+	var FadeIn = (255-Stepper)/255;
+	if ( FadeIn > 0 ) {
+		ctx.globalAlpha = FadeIn;
+		gfxClear( RGB(0,0,0) );
+		ctx.globalAlpha = 1.0;
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
