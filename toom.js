@@ -118,8 +118,8 @@ function Step() {
 	Stepper++;
 	
 	// Mouse Cursor Part //
-	var TargetX = ((Mouse.x-BaseX)/BaseX)*32.0;
-	var TargetY = ((Mouse.y-BaseY)/BaseY)*32.0;
+	var TargetX = ((Mouse.Pos.x-BaseX)/BaseX)*32.0;
+	var TargetY = ((Mouse.Pos.y-BaseY)/BaseY)*32.0;
 
 	// Player Position Part //
 	var Limit = 1010; // 1010 wide, 54 pixels inward //
@@ -131,8 +131,8 @@ function Step() {
 	FCamera.x = Math.floor(Camera.x);
 	FCamera.y = Math.floor(Camera.y);
 	
-	if ( Input_MouseBits ) {
-		Player.TargetPos.x = (Mouse.x+Camera.x-BaseX);
+	if ( Mouse.GetNew() ) {
+		Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
 
 		var HalfLimit = (Limit>>1);
 
@@ -162,7 +162,7 @@ function Draw() {
 	
 	if ( Mouse.Visible ) {
 		ctx.fillStyle = RGB(255,255,255);
-		ctx.fillRect( Mouse.x-10,Mouse.y-10,20,20 );
+		ctx.fillRect( Mouse.Pos.x-10,Mouse.Pos.y-10,20,20 );
 	}
 	
 	var PlayerPos = Player.GetPos();
