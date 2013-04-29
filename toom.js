@@ -32,6 +32,8 @@ function cPlayer() {
 	this.SetState( ST_IDLE );
 	
 	this.Focus = null;
+	
+	this.Inventory = [];
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.SetState = function( NewState, FacingLeft ) {
@@ -53,6 +55,25 @@ cPlayer.prototype.SetAnimation = function( NewAnim, FacingLeft ) {
 	if ( typeof FacingLeft != "undefined" ) {
 		this.FacingLeft = FacingLeft;
 	}	
+}
+// - ------------------------------------------------------------------------------------------ - //
+cPlayer.prototype.AddItem = function( id ) {
+	this.Inventory.push( id );
+}
+// - ------------------------------------------------------------------------------------------ - //
+cPlayer.prototype.FindItem = function( id ) {
+	for ( var idx = 0; idx < this.Inventory.length; idx++ ) {
+		if ( this.Inventory[idx] == id )
+			return idx;
+	}
+	return null;
+}
+// - ------------------------------------------------------------------------------------------ - //
+cPlayer.prototype.RemoveItem = function( id ) {
+	var Index = this.FindItem( id );
+	if ( Index != null ) {
+		this.Inventory.splice(Index,1);
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.GetCurrentFrame = function() {
@@ -438,6 +459,15 @@ function Draw() {
 	}
 	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
 
+	// *** //
+
+	{
+		var BX = 640-100;
+		var BY = 360-80;
+		for ( var idx = 0; idx < Player.Inventory.length; idx++ ) {
+			gfxDraw( Art.Items, BX-(idx*Art.Items.tile_w), BY, Player.Inventory[idx] );
+		}
+	}
 
 	// *** //
 
