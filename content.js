@@ -42,6 +42,9 @@ var ArtFiles = [
 	{ name:"Coffee", value:"item/item_coffee_mug.png", anchor_y:10 },
 	{ name:"Desk", value:"item/item_PC.png", tile_w:128, anchor_y:96, margin_left:-12,margin_right:-12,margin_top:-24 },
 
+	{ name:"Printer", value:"item/item_3Dprinter.png", anchor_y:80 },
+
+
 	{ name:"Head", value:"item/item_frozenhead.png", anchor_y:14 },
 
 	{ name:"Teleporter", value:"item/item_teleporter.png", tile_w:128, anchor_y:186, margin_left:-42,margin_right:-18,margin_top:-34 },
@@ -106,6 +109,7 @@ function CabToggleState() {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
+// Use here instead of CloseState //
 function ItToggleState(State) {
 	ToggleState.call(this);
 	if ( this.state ) {
@@ -133,11 +137,11 @@ function ItOpenState(State) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
+// Use elsewhere (no state changes) //
 function ItCloseState() {
 	this.state = 0;
 
 	sndPlay("Cab_Close");
-//	Player.SetState(ST.IDLE);
 
 	if ( this.hasOwnProperty('onupdatecall') ) {
 		this.onupdatecall();
@@ -201,6 +205,7 @@ var RoomBGLayer = [
 	{ img:"CoffeeMaker",x:13,y:78-44 },
 	{ img:"CoffeePot",nice:"Coffee Pot",x:8,y:78-44-6,state:4,states:[{frame:[0]},{frame:[1]},{frame:[2]},{frame:[3]},{frame:[4]}] },
 
+	{ img:"Printer",nice:"Hogwash 4000",x:303,y:78 },
 	{ img:"Desk",x:230,y:78,frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0] },
 	{ img:"Fishbowl",nice:"Fish Bowl",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
 	{ img:"Coffee",nice:"Mug",x:198,y:78-38 },
@@ -214,10 +219,9 @@ var RoomBGLayer = [
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var RoomFGLayer = [
-	{ img:"TV",nice:"Television",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0],
+	{ img:"TV",nice:"Television",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0] },
+	{ img:"Fan",nice:"Fan",x:-453,y:78-52,frame:[0,1,2,3,4,5],
 		onactioncall:function(){Player.RemoveItem(IT.HEAD);} },
-//	{ img:"Fan",nice:"Fan",x:-453,y:78-52,frame:[0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5] },
-	{ img:"Fan",nice:"Fan",x:-453,y:78-52,frame:[0,1,2,3,4,5] },
 	// Front Tube //
 	{ img:"Teleporter",nice:"Tube",x:429,y:78,frame:[3] },
 	// Glow //
