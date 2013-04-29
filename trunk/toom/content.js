@@ -45,6 +45,8 @@ var ArtFiles = [
 	{ name:"Head", value:"item/item_frozenhead.png", anchor_y:14 },
 
 	{ name:"Teleporter", value:"item/item_teleporter.png", tile_w:128, anchor_y:186, margin_left:-42,margin_right:-18,margin_top:-34 },
+
+	{ name:"Items", value:"item/inventory_items.png", tile_w:42*2, tile_h:35*2 },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var AudioFiles = [
@@ -53,6 +55,29 @@ var AudioFiles = [
 	{ name:"Cab_Open", value:"audio/cab_open.ogg|audio/cab_open.mp3" },
 	{ name:"Cab_Close", value:"audio/cab_close.ogg|audio/cab_close.mp3" },
 ];
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+// Item Enumeration //
+var IT = {
+	KEY:0,
+//	DUPE_POTATO:1,
+	REMOTE:2,
+	COFFEE:3,
+	HEAD:4,
+	SODA:5,
+	FISH_FOOD:6,
+	POISON:7,
+
+	COOKED_MEAT:8,
+	MANUAL:9,
+	TOAST:10,
+	BREAD:11,
+	POTATO:12,
+	COOKED_POTATO:13,
+	MEAT:14,
+	DISK:15,
+};
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
@@ -100,6 +125,8 @@ var RoomBGLayer = [
 		onaction:function(){FindById("Head1").hidden=(this.state==1); CabToggleState.call(this);} },
 	{ img:"FridgeBot",nice:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
 
+	{ img:"Head",nice:"Frozen Head",id:"Head1",x:66,y:78-78,hidden:true,onaction:function(){this.active=false;Player.AddItem(IT.HEAD);} },
+
 	{ img:"Cupboards",x:-24,y:78 },
 	{ img:"CupboardTop",nice:"Cupboard",x:-47,y:78-80,states:[{frame:[-1]},{frame:[0]}],
 		onaction:function(){if (this.state == 0) Player.SetAnimation("Cupboard1_Open",true); else Player.SetAnimation("Cupboard1_Close",true); CabToggleState.call(this);} },
@@ -116,7 +143,6 @@ var RoomBGLayer = [
 	{ img:"Coffee",nice:"Mug",x:198,y:78-38 },
 	{ img:"Chair",nice:"Chair",x:250,y:78,onaction:function(){Player.SetState(ST_SIT_CHAIR,false);} },
 
-	{ img:"Head",nice:"Frozen Head",id:"Head1",x:66,y:78-78,hidden:true },
 	
 	// Back //
 	{ img:"Teleporter",x:429,y:78,frame:[0] },

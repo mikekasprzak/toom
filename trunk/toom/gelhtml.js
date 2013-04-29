@@ -16,6 +16,7 @@ var FCamera = new Vector2D(0,0);
 // - ------------------------------------------------------------------------------------------ - //
 var canvas;
 var ctx;
+var IsLoading = true;
 // - ------------------------------------------------------------------------------------------ - //
 
 
@@ -244,6 +245,8 @@ function FindById( id ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 function OnComplete() {
+	IsLoading = false;
+	
 	// Initialize some defaults in Layers //
 	for ( var layer = 0; layer < AllLayers.length; layer++ ) {
 		for ( var idx = 0; idx < AllLayers[layer].length; idx++ ) {
@@ -414,23 +417,27 @@ function Input_MouseUpdate() {
 
 // - ------------------------------------------------------------------------------------------ - //
 function Main_LoseFocus() {
-	// Stop the Clock //
-	clearInterval( IntervalHandle );
-	IntervalHandle = 0;
-	
-	if ( typeof LoseFocus != "undefined" ) {
-		LoseFocus();
+	if ( !IsLoading ) {
+		// Stop the Clock //
+		clearInterval( IntervalHandle );
+		IntervalHandle = 0;
+		
+		if ( typeof LoseFocus != "undefined" ) {
+			LoseFocus();
+		}
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 function Main_GainFocus() {
-	if ( typeof GainFocus != "undefined" ) {
-		GainFocus();
-	}
-
-	// Restart the Clock //
-	if ( IntervalHandle == 0 ) {
-		IntervalHandle = setInterval( Run, FrameRate );
+	if ( !IsLoading ) {
+		if ( typeof GainFocus != "undefined" ) {
+			GainFocus();
+		}
+	
+		// Restart the Clock //
+		if ( IntervalHandle == 0 ) {
+			IntervalHandle = setInterval( Run, FrameRate );
+		}
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -497,6 +504,7 @@ function handleFileLoad(event) {
 // - ------------------------------------------------------------------------------------------ - //
 function OnLoad() {
 	console.log("Lets Begin");
+	IsLoading = true;
 	
 	canvas = document.getElementById("TheCanvas"),
 	ctx = canvas.getContext("2d");
