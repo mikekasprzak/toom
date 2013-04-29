@@ -159,5 +159,11 @@ var ManAnim = {
 	PC_Idle:{frame:[59],onaction:["PC_Stand"]},
 	PC_Work:{frame:[59,59,59,59,60,59,60,59,60,59,60,59,60,59,60,59,60,59,60,59,9,59,59,59,9,59,59],onaction:["PC_Stand"]},
 	PC_Coffee:{frame:[61,61,62,62,63,63,64,64,64,64,64,64,64,64,64,64,63,63,62,62],onaction:["PC_Stand"]},
+	PC_Desk:{frame:[51,51,51,51,51,51,74,74,74,74,74,74],priority:true,onloop:["Idle"]},
+	Table_Sit:{frame:[51,51,51,51,51,55,55],priority:true,onloop:["Table_Idle"]},
+	Table_Stand:{frame:[55,55,51,51],priority:true,onloop:["Idle"]},
+	Table_Idle:{frame:[59],onaction:["Table_Stand"]},
+	Table_Eat:{frame:[59,59,59,59,59,59,59,59,59,59,64,65,65,66,66,67,67,68,67,67,69,69,70],onaction:["Table_Stand"]},
+	Table_Drink:{frame:[59,59,59,59,59,59,59,59,59,59,71,71,72,72,72,72,72,71,71,,71,73,73,73,73,73,73,73,73,73,73,71,71,72,72,72,72,72],onaction:["Table_Stand"]},	
 };
 // - ------------------------------------------------------------------------------------------ - //
