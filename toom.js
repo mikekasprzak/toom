@@ -261,7 +261,7 @@ function Draw() {
 //		ctx.fillText(Text, Mouse.Pos.x+Camera.x-(TD.width>>1), Mouse.Pos.y+Camera.y-20);
 	}
 
-	{
+	if ( ShowDebug ) {
 		var OldAlpha = ctx.globalAlpha;
 		ctx.globalAlpha = 0.8;
 		for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
@@ -291,6 +291,17 @@ function Draw() {
 			}
 		}
 		ctx.globalAlpha = OldAlpha;
+				
+		{
+			ctx.fillStyle = RGB(255,255,255);
+			ctx.font = '20px Pixel';
+			var Text = "Pos: " + Player.Pos.x + "," + Player.Pos.y;
+			TD = ctx.measureText(Text);
+			if ( (Stepper >> 5)&1 ) {
+				Text = Text + "_";
+			}
+			ctx.fillText(Text, BaseX-520, BaseY+280);
+		}		
 	}
 	
 	var PlayerPos = Player.GetPos();
@@ -308,12 +319,6 @@ function Draw() {
 	}
 	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
 
-	Text = "Pos: " + Player.Pos.x + "," + Player.Pos.y;
-	TD = ctx.measureText(Text);
-	if ( (Stepper >> 5)&1 ) {
-		Text = Text + "_";
-	}
-	ctx.fillText(Text, BaseX-520, BaseY+280);
 
 	// *** //
 
