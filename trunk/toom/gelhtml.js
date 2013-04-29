@@ -370,6 +370,38 @@ function Main_GainFocus() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+var ShowDebug = false;
+// - ------------------------------------------------------------------------------------------ - //
+function Input_KeyUpEvent( e ) {
+	switch (e.keyCode) {
+		case 49: /* 1 */
+			ShowDebug = !ShowDebug;
+			break;
+//		case 38:  /* Up arrow was pressed */
+//			Input_KeyBits &= ~KEY_UP;
+//			break;
+//		case 40:  /* Down arrow was pressed */
+//			Input_KeyBits &= ~KEY_DOWN;
+//			break;
+//		case 37:  /* Left arrow was pressed */
+//			Input_KeyBits &= ~KEY_LEFT;
+//			break;
+//		case 39:  /* Right arrow was pressed */
+//			Input_KeyBits &= ~KEY_RIGHT;
+//			break;
+//		case 13: // Enter //
+//		case 17: // CTRL //
+//		case 32: // Space Bar //
+//			Input_KeyBits &= ~KEY_ACTION;
+//			break;
+//		case 27: // ESC //
+//			Input_KeyBits &= ~KEY_MENU;
+//			break;
+	};
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 var ThingsLoaded = 0;
 // - ------------------------------------------------------------------------------------------ - //
 function ShowProgress() {
@@ -410,7 +442,11 @@ function OnLoad() {
 
 	window.onblur = Main_LoseFocus;
 	window.onfocus = Main_GainFocus;
-	
+
+//	window.addEventListener( 'keydown', Input_KeyDownEvent, true );
+	window.addEventListener( 'keyup', Input_KeyUpEvent, true );
+//	window.addEventListener( 'keypress', Input_KeyPressEvent, true );
+
 	Input_MouseInit();
 	
 	var queue = new createjs.LoadQueue(true); // true 
