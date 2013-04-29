@@ -48,9 +48,28 @@ var ArtFiles = [
 // - ------------------------------------------------------------------------------------------ - //
 var AudioFiles = [
 	{ name:"Music", value:"audio/byetone-capturethis.ogg|audio/byetone-capturethis.mp3" },
+	{ name:"Click", value:"audio/click.ogg|audio/click.mp3" },
+	{ name:"Cab_Open", value:"audio/cab_open.ogg|audio/cab_open.mp3" },
+	{ name:"Cab_Close", value:"audio/cab_close.ogg|audio/cab_close.mp3" },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 
+// - ------------------------------------------------------------------------------------------ - //
+// Common onaction functions //
+// - ------------------------------------------------------------------------------------------ - //
+function ToggleState() {
+	this.state ^= 1;
+}
+// - ------------------------------------------------------------------------------------------ - //
+function CabToggleState() {
+	//ToggleState();
+	this.state ^= 1;
+	if ( this.state )
+		sndPlay("Cab_Open");
+	else 
+		sndPlay("Cab_Close");
+}
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 var BGLayer = [
@@ -68,34 +87,34 @@ var FGLayer = [
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var RoomBGLayer = [
-	{ img:"Couch",x:-320,y:78 },
+	{ img:"Couch",nice:"Couch",x:-320,y:78 },
 
 	{ img:"Table",x:-170,y:78 },
-	{ img:"Chair",x:-154,y:78 },
-	{ img:"Soda",x:-190,y:78-38 },
+	{ img:"Chair",nice:"Chair",x:-154,y:78 },
+	{ img:"Soda",nice:"Soda",x:-190,y:78-38 },
 
-	{ img:"Trash",x:-96,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1] },
+	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onaction:CabToggleState },
 
 	{ img:"Fridge",x:62,y:78 },
-	{ img:"FridgeTop",x:62+14,y:78-62-4,frame:[-1,-1,-1,-1,-1,-1,0,0,0,0,0] },
-	{ img:"FridgeBot",x:62+14,y:78-4,frame:[-1,-1,-1,-1,-1,0,0,0,0,0] },
+	{ img:"FridgeTop",nice:"Freezer",x:62+14,y:78-62-4,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
+	{ img:"FridgeBot",nice:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
 
 	{ img:"Cupboards",x:-24,y:78 },
-	{ img:"CupboardTop",x:-47,y:78-80,frame:[-1,-1,-1,-1,-1,0,0,0,0,0] },
-	{ img:"CupboardTop",x:-47+52,y:78-80,frame:[0,0,0,0,0,-1,-1,-1,-1,-1] },
-	{ img:"CupboardBot",x:-47,y:78-2,frame:[0,0,0,0,0,-1,-1,-1,-1,-1] },
-	{ img:"CupboardBot",x:-47+52,y:78-2,frame:[-1,-1,-1,-1,-1,0,0,0,0,0] },
+	{ img:"CupboardTop",nice:"Cupboard",x:-47,y:78-80,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
+	{ img:"CupboardTop",nice:"Cupboard",x:-47+52,y:78-80,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
+	{ img:"CupboardBot",nice:"Cupboard",x:-47,y:78-2,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
+	{ img:"CupboardBot",nice:"Oven",x:-47+52,y:78-2,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
 	
-	{ img:"Toaster",x:-46,y:78-44 },
+	{ img:"Toaster",nice:"Toaster",x:-46,y:78-44 },
 	{ img:"CoffeeMaker",x:13,y:78-44 },
-	{ img:"CoffeePot",x:8,y:78-44-6,frame:[0,1,2,3,4,3,2,1] },
+	{ img:"CoffeePot",nice:"Coffee Pot",x:8,y:78-44-6,frame:[0,1,2,3,4,3,2,1] },
 
 	{ img:"Desk",x:230,y:78,frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0] },
-	{ img:"Fishbowl",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
-	{ img:"Coffee",x:198,y:78-38 },
-	{ img:"Chair",x:250,y:78 },
+	{ img:"Fishbowl",nice:"Fish Bowl",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
+	{ img:"Coffee",nice:"Mug",x:198,y:78-38 },
+	{ img:"Chair",nice:"Chair",x:250,y:78 },
 
-	{ img:"Head",x:350,y:78 },
+	{ img:"Head",nice:"Frozen Head",x:350,y:78 },
 	
 	// Back //
 	{ img:"Teleporter",x:429,y:78,frame:[0] },
@@ -104,10 +123,10 @@ var RoomBGLayer = [
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var RoomFGLayer = [
-	{ img:"TV",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0] },
-	{ img:"Fan",x:-453,y:78-52,frame:[0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5] },
+	{ img:"TV",nice:"Television",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0] },
+	{ img:"Fan",nice:"Fan",x:-453,y:78-52,frame:[0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5] },
 	// Front Tube //
-	{ img:"Teleporter",x:429,y:78,frame:[3] },
+	{ img:"Teleporter",nice:"Tube",x:429,y:78,frame:[3] },
 	// Glow //
 	{ img:"Teleporter",x:429,y:78,frame:[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,2,2,2,2,2,2,2,2,2,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1] },
 ];
