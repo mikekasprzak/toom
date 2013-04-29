@@ -51,6 +51,7 @@ var ArtFiles = [
 	{ name:"Teleporter", value:"item/item_teleporter.png", tile_w:128, anchor_y:186, margin_left:-42,margin_right:-18,margin_top:-34 },
 
 	{ name:"Items", value:"item/inventory_items.png", tile_w:42*2, tile_h:35*2 },
+	{ name:"ItemsLit", value:"item/inventory_items_highlight.png", tile_w:42*2, tile_h:35*2 },
 	{ name:"Inventory", value:"item/inventory_bar.png", tile_w:42*2, tile_h:42*2 },
 ];
 // - ------------------------------------------------------------------------------------------ - //

@@ -233,7 +233,18 @@ var MouseClickedCount = 0;
 // - ------------------------------------------------------------------------------------------ - //
 var Stepper = 0;
 function Step() {
+	var BMouse = Mouse.Pos.clone();
+	BMouse.x -= BaseX;
+	BMouse.y -= BaseY;
+	var BCMouse = BMouse.clone();
+	BCMouse.x += FCamera.x;
+	BCMouse.y += FCamera.y;
+
+	// *** //
+
 	Stepper++;
+
+	// *** //
 	
 	// Mouse Cursor Part //
 	var TargetX = ((Mouse.Pos.x-BaseX)/BaseX)*32.0;
@@ -262,20 +273,21 @@ function Step() {
 	if ( MouseClickedCount )
 		MouseClickedCount--;
 
-	var BMouse = Mouse.Pos.clone();
-	BMouse.x -= BaseX;
-	BMouse.y -= BaseY;
-	var BCMouse = BMouse.clone();
-	BCMouse.x -= FCamera.x;
-	BCMouse.y -= FCamera.y;
+
+	var BX = 640-100;
+	var BY = 360-80;
+	var BW = Art.Items.tile_w;
+	var BH = Art.Items.tile_h;
+	var HALF_BW = BW>>1;
+	var HALF_BH = BH>>1;
 
 	var UILength = Player.Inventory.length;
-	var UIX = 640-100-(42*2*UILength);
-	var UIY = 360-80-(35);
-	var UIW = 42*2*(UILength+1);
-	var UIH = 35*2;
-
-	// Check what we're hovering over //
+	var UIX = BX-(BW*(UILength))+HALF_BW;
+	var UIY = BY-HALF_BW;
+	var UIW = BW*(UILength);
+	var UIH = BH;
+		
+	// Check what we're hovering over Things //
 	MouseFocus = null;
 	for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
 		for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
@@ -294,11 +306,22 @@ function Step() {
 			}
 		}
 	}
-	
+		
 	// Check if a button was pressed //
 	if ( Mouse.GetNew() ) {
 		if ( Test_Sphere_vs_AABB( BMouse, 2, UIX, UIY, UIW, UIH ) ) {
+			var Lit = null;
+			
+			if ( Test_Sphere_vs_AABB( BMouse, 2, UIX, UIY, UIW, UIH ) ) {
+				Lit = Math.floor((BMouse.x-UIX)/BW);
+				if ( Lit < 0 )
+					Lit = null;
+				if ( Lit >= UILength )
+					Lit = null;
+			}
+
 			sndPlay("Cab_Open");
+			Player.RemoveItem( Player.Inventory[Lit] );
 		}
 		else {	
 			sndPlay( "Click", 0.5 );
@@ -344,10 +367,21 @@ function Step() {
 
 // - ------------------------------------------------------------------------------------------ - //
 function Draw() {
-//	gfxClear( RGB(0,0,0) );
+	var BMouse = Mouse.Pos.clone();
+	BMouse.x -= BaseX;
+	BMouse.y -= BaseY;
+	var BCMouse = BMouse.clone();
+	BCMouse.x += FCamera.x;
+	BCMouse.y += FCamera.y;
+
+	// *** //
 
 	BX = BaseX-FCamera.x;
 	BY = BaseY-FCamera.y;
+
+	// *** //
+
+//	gfxClear( RGB(0,0,0) );
 	
 	gfxDrawLayer( BGLayer );
 	gfxDrawLayer( RoomBGLayer );
@@ -355,19 +389,6 @@ function Draw() {
 	gfxDrawLayer( RoomFGLayer );
 	gfxDrawLayer( FGLayer );
 	
-	var BMouse = Mouse.Pos.clone();
-	BMouse.x -= BaseX;
-	BMouse.y -= BaseY;
-	var BCMouse = BMouse.clone();
-	BCMouse.x -= FCamera.x;
-	BCMouse.y -= FCamera.y;
-	
-	
-	if ( Mouse.Visible ) {
-		ctx.fillStyle = RGB(255,255,255);
-		ctx.fillRect( BaseX+BMouse.x-10,BaseY+BMouse.y-10,20,20 );
-	}
-
 	if ( MouseFocus != null ) {
 		//console.log(MouseFocus);
 		var Item = MouseFocus;
@@ -420,6 +441,14 @@ function Draw() {
 	if ( ShowDebug ) {
 		var OldAlpha = ctx.globalAlpha;
 		ctx.globalAlpha = 0.8;
+
+		if ( Mouse.Visible ) {
+			ctx.fillStyle = RGB(255,255,255);
+			ctx.fillRect( BaseX+BMouse.x-5,BaseY+BMouse.y-5,10,10 );
+			ctx.fillStyle = RGB(255,0,255);
+			ctx.fillRect( BaseX+BCMouse.x-5,BaseY+BCMouse.y-5,10,10 );
+		}
+
 		for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
 			for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
 				var Item = ItemLayers[layer][idx];
@@ -493,19 +522,33 @@ function Draw() {
 	{
 		var BX = 640-100;
 		var BY = 360-80;
-		var Length = Player.Inventory.length;
+		var BW = Art.Items.tile_w;
+		var BH = Art.Items.tile_h;
+		var HALF_BW = BW>>1;
+		var HALF_BH = BH>>1;
 
-		gfxDraw( Art.Inventory, BX+(21<<1), BY, 2 );
-		for ( var idx = 0; idx < Length; idx++ ) {
-			gfxDraw( Art.Inventory, BX-(idx*Art.Items.tile_w), BY, 1 );
-			gfxDraw( Art.Items, BX-(idx*Art.Items.tile_w), BY-(42-35), Player.Inventory[idx] );
+		var UILength = Player.Inventory.length;
+		var UIX = BX-(BW*(UILength))+HALF_BW;
+		var UIY = BY-HALF_BW;
+		var UIW = BW*(UILength);
+		var UIH = BH;
+		
+		var Lit = null;
+		
+		if ( Test_Sphere_vs_AABB( BMouse, 2, UIX, UIY, UIW, UIH ) ) {
+			Lit = Math.floor((BMouse.x-UIX)/BW);
+			if ( Lit < 0 )
+				Lit = null;
+			if ( Lit >= UILength )
+				Lit = null;
 		}
-		if ( Length == 0 ) {
-			gfxDraw( Art.Inventory, BX-(0*Art.Items.tile_w), BY, 1 );
-			gfxDraw( Art.Inventory, BX-(0*Art.Items.tile_w)-(21<<1), BY, 0 );
+
+		gfxDraw( Art.Inventory, BX+HALF_BW, BY, 2 );
+		for ( var idx = 0; idx < UILength; idx++ ) {
+			gfxDraw( Art.Inventory, UIX+HALF_BW+(idx*BW), BY, 1 );
+			gfxDraw( (Lit == idx) ? Art.ItemsLit : Art.Items, UIX+HALF_BW+(idx*BW), BY-(HALF_BW-HALF_BH), Player.Inventory[idx] );
 		}
-		else
-			gfxDraw( Art.Inventory, BX-((Length-1)*Art.Items.tile_w)-(21<<1), BY, 0 );
+		gfxDraw( Art.Inventory, BX-((UILength-1)*BW)-HALF_BW, BY, 0 );
 	}
 
 	// *** //
