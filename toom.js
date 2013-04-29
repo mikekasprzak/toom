@@ -25,19 +25,22 @@ var ST = {
 };
 // - ------------------------------------------------------------------------------------------ - //
 var StateMap = [
-	{anim:"Idle"},	// Null //
-	{anim:"Idle"},
-	{anim:"Walk"},
-	{anim:"PC_Sit"},
-	{anim:"Table_Sit"},
-	{anim:"Couch_Sit"},
-	{anim:"Turn"},
-	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Freezer"));}},
-	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Fridge"));}},
-	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Cab1"));}},
-	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Cab2"));}},
-	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Cab3"));}},
-	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Oven"));}},
+	{state:0,anim:"Idle"},	// Null //
+	{state:1,anim:"Idle"},
+	{state:2,anim:"Walk"},
+	{state:3,anim:"PC_Sit"},
+	{state:4,anim:"Table_Sit"},
+	{state:5,anim:"Couch_Sit"},
+	{state:6,anim:"Turn"},
+	{state:7,anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Freezer"));}},
+	{state:8,anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Fridge"));}},
+	{state:9,anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Cab1"));}},
+	{state:10,anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Cab2"));}},
+	{state:11,anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Cab3"));}},
+	{state:12,anim:"Turn",
+		onexitcall:function(){ItCloseState.call(FindById("Oven"));},
+		onusecall:function(item){ if ( item == IT.MEAT ) { Player.RemoveItem(IT.MEAT); FindById("RawMeat2").active=true; } }
+		},
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var Player;
@@ -321,7 +324,12 @@ function Step() {
 			}
 
 			sndPlay("Cab_Open");
-			Player.RemoveItem( Player.Inventory[Lit] );
+			//Player.RemoveItem( Player.Inventory[Lit] );
+			
+			if ( Lit != null ) {
+				if ( StateMap[Player.State].hasOwnProperty('onusecall') )
+					StateMap[Player.State].onusecall(Player.Inventory[Lit]);
+			}
 		}
 		else {	
 			sndPlay( "Click", 0.5 );

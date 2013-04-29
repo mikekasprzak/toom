@@ -210,14 +210,22 @@ var RoomBGLayer = [
 	{ img:"Oven",nice:"Oven",id:"Oven",x:6,y:78,states:[{frame:[-1]},{frame:[0]}],
 		onactioncall:function(){ItToggleState.call(this,ST.TURN_OVEN);}, 
 		onupdatecall:function(){
-			FindById("RawMeat2").hidden=(this.state==0);
-			FindById("Meat1").hidden=(this.state==0);
+				var Meat1 = FindById("RawMeat2");
+				var Meat2 = FindById("Meat1");
+				Meat1.hidden=(this.state==0);
+				Meat2.hidden=(this.state==0);
+				if ( this.state == 0 ) {
+					if ( Meat1.active == true ) {
+						Meat1.active = false;
+						Meat2.active = true;
+					}
+				}
 			},
 		},
 	{ img:"RawMeat",id:"RawMeat2",x:6,y:78-26,active:false,hidden:true,
 		onactioncall:function(){this.active=false;Player.AddItem(IT.MEAT);}
 		},
-	{ img:"Meat",nice:"Cooked Meat",id:"Meat1",x:6,y:78-26,active:true,hidden:true,
+	{ img:"Meat",nice:"Cooked Meat",id:"Meat1",x:6,y:78-26,active:false,hidden:true,
 		onactioncall:function(){this.active=false;Player.AddItem(IT.COOKED_MEAT);},
 		},
 	
