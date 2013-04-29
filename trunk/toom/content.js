@@ -120,7 +120,7 @@ var RoomBGLayer = [
 	{ img:"Soda",nice:"Soda",id:"Soda1",x:-190,y:78-38,active:false,
 		onaction:function(){this.active=false;Player.AddItem(IT.SODA);} },
 
-	//{ img:"Soda",nice:"Soda",id:"Soda1",x:-190,y:78-38,hidden:false },
+	{ img:"Soda",id:"Soda2",x:-138,y:78-38,active:false },
 
 	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onaction:CabToggleState },
 
@@ -202,9 +202,17 @@ var ManAnim = {
 	PC_Coffee:{frame:[61,61,62,62,63,63,64,64,64,64,64,64,64,64,64,64,63,63,62,62],onaction:["PC_Stand"]},
 	PC_Desk:{frame:[51,51,51,51,51,51,74,74,74,74,74,74],priority:true,onloop:["Idle"]},
 	Table_Sit:{frame:[51,51,51,51,51,55,55],priority:true,onloop:["Table_Idle"]},
-	Table_Stand:{frame:[55,55,51,51],priority:true,onloop:["Idle"]},
-	Table_Idle:{frame:[59,59],onaction:["Table_Stand"],onloopcall:function(){if (Player.FindItem(IT.SODA)!=null) Player.SetAnimation("Table_Drink");}},
+	Table_Stand:{frame:[55,55,51,51],priority:true,onloop:["Idle"],
+		onstopcall:function(){ FindById("Soda2").active = false; },
+		},
+	Table_Idle:{frame:[59,59],onaction:["Table_Stand"],
+		onloopcall:function(){if (Player.FindItem(IT.SODA)!=null) Player.SetAnimation("Table_Drink");},
+		onstartcall:function(){if (Player.FindItem(IT.SODA)!=null) FindById("Soda2").active = true; },
+		},
 	Table_Eat:{frame:[59,59,59,59,59,59,59,59,59,59,64,65,65,66,66,67,67,68,67,67,69,69,70],onaction:["Table_Stand"],onloop:["Table_Idle"]},
-	Table_Drink:{frame:[59,59,59,59,59,59,59,59,59,59,71,71,72,72,72,72,72,71,71,71,73,73,73,73,73,73,73,73,73,73,71,71,72,72,72,72,72],onaction:["Table_Stand"],onloop:["Table_Idle"]},	
+	Table_Drink:{frame:[59,59,59,59,59,59,71,71,72,72,72,72,72,71,71,71,73,73,73,73,73,73,73,73,73,73,71,71,72,72,72,72,72],onaction:["Table_Stand"],onloop:["Table_Idle"],
+		onstartcall:function(){ FindById("Soda2").active = false; },
+		onstopcall:function(){if (Player.FindItem(IT.SODA)!=null) FindById("Soda2").active = true; },
+		},	
 };
 // - ------------------------------------------------------------------------------------------ - //

@@ -44,8 +44,9 @@ function cPlayer() {
 cPlayer.prototype.SetState = function( NewState, FacingLeft ) {
 	if ( this.State != NewState ) {
 		this.State = NewState;
-		this.CurrentFrameStep = 0;
-		this.CurrentAnimation = StateMap[this.State];
+		this.SetAnimation( StateMap[this.State] );
+//		this.CurrentFrameStep = 0;
+//		this.CurrentAnimation = StateMap[this.State];
 	}
 	
 	if ( typeof FacingLeft != "undefined" ) {
@@ -54,12 +55,20 @@ cPlayer.prototype.SetState = function( NewState, FacingLeft ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.SetAnimation = function( NewAnim, FacingLeft ) {
+	if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onstopcall') ) {
+		ManAnim[this.CurrentAnimation].onstopcall();
+	}
+
 	this.CurrentFrameStep = 0;
 	this.CurrentAnimation = NewAnim;
 	
 	if ( typeof FacingLeft != "undefined" ) {
 		this.FacingLeft = FacingLeft;
 	}	
+
+	if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onstartcall') ) {
+		ManAnim[this.CurrentAnimation].onstartcall();
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.AddItem = function( id ) {
@@ -90,15 +99,20 @@ cPlayer.prototype.GetCurrentFrame = function() {
 cPlayer.prototype.Step = function() {
 	this.CurrentFrameStep++;
 	if ( this.GetCurrentFrame() >= ManAnim[this.CurrentAnimation].frame.length ) {
+		// Start Looped Animation Here //
 		this.CurrentFrameStep = 0;
 		var PriorAnim = this.CurrentAnimation;
 		if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onloopcall') ) {
-			console.log("hey");
 			ManAnim[this.CurrentAnimation].onloopcall();
 		}
 		// Make sure onloopcall didn't change the animation //
 		if ( PriorAnim == this.CurrentAnimation ) {
 			if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onloop') ) {
+				// Call Stop Function //
+				if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onstopcall') ) {
+					ManAnim[this.CurrentAnimation].onstopcall();
+				}
+				// Change Animation //
 				this.CurrentAnimation = ManAnim[this.CurrentAnimation].onloop[ Math.floor(Math.random() * ManAnim[this.CurrentAnimation].onloop.length) ];
 			}
 		}
@@ -110,8 +124,9 @@ cPlayer.prototype.Step = function() {
 
 	if ( Length > 2 ) {
 		if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onaction') ) {
-			this.CurrentFrameStep = 0;
-			this.CurrentAnimation = ManAnim[this.CurrentAnimation].onaction[0];
+			this.SetAnimation( ManAnim[this.CurrentAnimation].onaction[0] );
+//			this.CurrentFrameStep = 0;
+//			this.CurrentAnimation = ManAnim[this.CurrentAnimation].onaction[0];
 		}
 	}
 	
