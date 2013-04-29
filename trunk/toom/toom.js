@@ -264,6 +264,7 @@ function Step() {
 		
 		if ( MouseFocus == null ) {
 			Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
+			Player.Focus = MouseFocus;
 		}
 		else {
 			var Item = MouseFocus;

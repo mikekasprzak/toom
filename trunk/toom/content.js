@@ -120,6 +120,8 @@ var RoomBGLayer = [
 	{ img:"Soda",nice:"Soda",id:"Soda1",x:-190,y:78-38,active:false,
 		onaction:function(){this.active=false;Player.AddItem(IT.SODA);} },
 
+	//{ img:"Soda",nice:"Soda",id:"Soda1",x:-190,y:78-38,hidden:false },
+
 	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onaction:CabToggleState },
 
 	{ img:"Fridge",x:62,y:78 },
