@@ -17,14 +17,14 @@ var ArtFiles = [
 	{ name:"FG2", value:"art/toombg_fg_02.png", anchor_y:304-400 },
 	
 	{ name:"Fan", value:"item/item_fan.png", tile_w:8, anchor_y:64 },
-	{ name:"TV", value:"item/item_tv.png", tile_w:104, anchor_y:88 },
+	{ name:"TV", value:"item/item_tv.png", tile_w:104, anchor_y:88, margin_left:-24,margin_right:-24,margin_top:-24 },
 	{ name:"Couch", value:"item/item_couch.png", anchor_y:42 },
 
 	{ name:"Table", value:"item/item_table.png", anchor_y:38 },
 	{ name:"Chair", value:"item/item_chair.png", anchor_y:48 },
 	{ name:"Soda", value:"item/item_soda.png", anchor_y:12 },
 
-	{ name:"Trash", value:"item/item_trashcan.png", tile_w:64, anchor_y:64 },
+	{ name:"Trash", value:"item/item_trashcan.png", tile_w:64, anchor_y:64, margin_left:-16,margin_right:-16,margin_top:-16 },
 
 	{ name:"Cupboards", value:"item/item_cupboards.png", anchor_y:122 },
 	{ name:"CupboardTop", value:"item/item_cupboards_upper.png", anchor_y:38 },
@@ -39,11 +39,11 @@ var ArtFiles = [
 
 	{ name:"Fishbowl", value:"item/item_fishbowl.png", tile_w:32, tile_h:64, anchor_y:64 },
 	{ name:"Coffee", value:"item/item_coffee_mug.png", anchor_y:10 },
-	{ name:"Desk", value:"item/item_PC.png", tile_w:128, anchor_y:96 },
+	{ name:"Desk", value:"item/item_PC.png", tile_w:128, anchor_y:96, margin_left:-12,margin_right:-12,margin_top:-24 },
 
 	{ name:"Head", value:"item/item_frozenhead.png", anchor_y:14 },
 
-	{ name:"Teleporter", value:"item/item_teleporter.png", tile_w:128, anchor_y:186 },
+	{ name:"Teleporter", value:"item/item_teleporter.png", tile_w:128, anchor_y:186, margin_left:-42,margin_right:-18,margin_top:-34 },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var AudioFiles = [

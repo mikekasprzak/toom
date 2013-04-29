@@ -132,14 +132,19 @@ function Step() {
 		for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
 			var Item = ItemLayers[layer][idx];
 			var ArtFile = Art[Item.img];
+
+			var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
+			var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
+			var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
+			var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
 			
 			if ( Test_Sphere_vs_AABB(
 					BMouse,
 					4,
-					Item.x-ArtFile.anchor_x,
-					Item.y-ArtFile.anchor_y,
-					ArtFile.tile_w,
-					ArtFile.tile_h 
+					IX,
+					IY,
+					IW,
+					IH 
 				)
 			)
 			{
@@ -247,14 +252,18 @@ function Draw() {
 		var Item = MouseFocus;
 		var ArtFile = Art[Item.img];
 
+		var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
+		var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
+		var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
+		var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
+
 		ctx.fillStyle = RGB(0,255,255);
 		ctx.font = '20px Pixel';
 		var Text = Item.img; // should be nice name
 		var TD = ctx.measureText(Text);
 		ctx.fillText(Text, 
-			BX+Item.x-ArtFile.anchor_x+(ArtFile.tile_w>>1) - (TD.width>>1),
-			BY+Item.y-ArtFile.anchor_y - 15
-//			BY+Item.y-ArtFile.anchor_y+(ArtFile.tile_h>>1) - 15
+			BX+IX+(IW>>1) - (TD.width>>1),
+			BY+IY - 15
 			);
 //			Mouse.Pos.x-(TD.width>>1), 
 //			Mouse.Pos.y-15
@@ -268,6 +277,12 @@ function Draw() {
 			for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
 				var Item = ItemLayers[layer][idx];
 				var ArtFile = Art[Item.img];
+				
+				var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
+				var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
+				var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
+				var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
+				
 				// Position //
 				ctx.strokeStyle = RGB(255,255,0);
 				ctx.strokeRect( 
@@ -277,15 +292,15 @@ function Draw() {
 				// Rectangle //
 				ctx.strokeStyle = RGB(128,0,0);
 				ctx.strokeRect( 
-					BX+Item.x-ArtFile.anchor_x,
-					BY+Item.y-ArtFile.anchor_y,
-					ArtFile.tile_w,
-					ArtFile.tile_h );
+					BX+IX,
+					BY+IY,
+					IW,
+					IH );
 				// New Center //
 				ctx.strokeStyle = RGB(255,255,255);
 				ctx.strokeRect( 
-					BX+Item.x-ArtFile.anchor_x+(ArtFile.tile_w>>1),
-					BY+Item.y-ArtFile.anchor_y+(ArtFile.tile_h>>1),
+					BX+IX+(IW>>1),
+					BY+IY+(IW>>1),
 					4,
 					4 );
 			}
