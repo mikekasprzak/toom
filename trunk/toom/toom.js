@@ -40,7 +40,10 @@ var StateMap = [
 	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Cab3"));}},
 	{anim:"Turn",
 		onexitcall:function(){ItCloseState.call(FindById("Oven"));},
-		onusecall:function(item){ if ( item == IT.MEAT ) { Player.RemoveItem(IT.MEAT); FindById("RawMeat2").active=true; } }
+		onusecall:function(item){ 
+				if ( item == IT.MEAT ) { Player.RemoveItem(item); FindById("RawMeat2").active=true; } 
+				if ( item == IT.FROZEN_HEAD ) { Player.RemoveItem(item); FindById("FrozenHead2").active=true; } 
+			}
 		},
 	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Drawer"));}},
 	
