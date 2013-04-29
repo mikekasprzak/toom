@@ -275,6 +275,15 @@ function OnComplete() {
 			Art[ArtFiles[idx].name].margin_bottom = ArtFiles[idx].margin_bottom;
 		else
 			Art[ArtFiles[idx].name].margin_bottom = 0;
+
+		if ( ArtFiles[idx].hasOwnProperty('offset_x') )
+			Art[ArtFiles[idx].name].offset_x = ArtFiles[idx].offset_x;
+		else
+			Art[ArtFiles[idx].name].offset_x = 0;
+		if ( ArtFiles[idx].hasOwnProperty('offset_y') )
+			Art[ArtFiles[idx].name].offset_y = ArtFiles[idx].offset_y;
+		else
+			Art[ArtFiles[idx].name].offset_y = 0;
 	}	
 	
 	console.log("begin game");
