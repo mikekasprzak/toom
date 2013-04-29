@@ -29,7 +29,7 @@ var ArtFiles = [
 	{ name:"Cupboards", value:"item/item_cupboards.png", anchor_y:122 },
 	{ name:"CupboardTop", value:"item/item_cupboards_upper.png", anchor_y:38, offset_x:-6 },
 	{ name:"CupboardBot", value:"item/item_cupboards_lowe.png", anchor_y:38, offset_x:-6 },
-	{ name:"Oven", value:"item/item_oven_door.png", anchor_y:40 },
+	{ name:"Oven", value:"item/item_oven_door.png", anchor_y:40, offset_x:-24 },
 	{ name:"Toaster", value:"item/item_toaster.png", anchor_y:14 },
 	{ name:"CoffeeMaker", value:"item/item_coffee_maker.png", anchor_y:24 },
 	{ name:"CoffeePot", value:"item/item_coffee_pot.png", tile_w:20, anchor_y:12 },
@@ -38,7 +38,7 @@ var ArtFiles = [
 	{ name:"FridgeTop", value:"item/item_fridge_freezerdoor.png", anchor_y:34, offset_x:-30, margin_right:-24 },
 	{ name:"FridgeBot", value:"item/item_fridge_fridgedoor.png", anchor_y:60, offset_x:-30, margin_right:-24 },
 
-	{ name:"Meat", value:"item/item_rawmeat.png", anchor_y:16 },
+	{ name:"Meat", value:"item/item_meat.png", anchor_y:16 },
 	{ name:"RawMeat", value:"item/item_rawmeat.png", anchor_y:16 },
 	{ name:"Head", value:"item/item_frozenhead.png", anchor_y:14 },
 
@@ -171,7 +171,7 @@ var RoomBGLayer = [
 	{ img:"Table",x:-170,y:78 },
 	{ img:"Chair",nice:"Chair",x:-154,y:78,onactioncall:function(){Player.SetState(ST.SIT_TABLE_CHAIR,false);} },
 
-	{ img:"RawMeat",id:"Meat2",x:-178,y:78-38,active:false },
+	{ img:"Meat",id:"Meat2",x:-178,y:78-38,active:false },
 	{ img:"Soda",id:"Soda2",x:-186,y:78-38,active:false },
 
 	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onactioncall:CabToggleState },
@@ -206,8 +206,18 @@ var RoomBGLayer = [
 	{ img:"CupboardBot",nice:"Cupboard",id:"Cab3",x:-47,y:78-2,states:[{frame:[-1]},{frame:[0]}],
 		onactioncall:function(){ItToggleState.call(this,ST.TURN_CAB3);} 
 		},
-	{ img:"Oven",nice:"Oven",id:"Oven",x:-46+52,y:78,states:[{frame:[-1]},{frame:[0]}],
-		onactioncall:function(){ItToggleState.call(this,ST.TURN_OVEN);} 
+	{ img:"Oven",nice:"Oven",id:"Oven",x:6,y:78,states:[{frame:[-1]},{frame:[0]}],
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_OVEN);}, 
+		onupdatecall:function(){
+			FindById("RawMeat2").hidden=(this.state==0);
+			FindById("Meat1").hidden=(this.state==0);
+			},
+		},
+	{ img:"RawMeat",id:"RawMeat2",x:6,y:78-26,active:false,hidden:true,
+		onactioncall:function(){this.active=false;Player.AddItem(IT.MEAT);}
+		},
+	{ img:"Meat",nice:"Cooked Meat",id:"Meat1",x:6,y:78-26,active:true,hidden:true,
+		onactioncall:function(){this.active=false;Player.AddItem(IT.COOKED_MEAT);},
 		},
 	
 	{ img:"Toaster",nice:"Toaster",x:-46,y:78-44,
@@ -280,7 +290,7 @@ var ManAnim = {
 		onloop:["Table_Idle"],
 		onstartcall:function(){
 			if (Player.FindItem(IT.SODA)!=null) FindById("Soda2").active = true; 
-			if (Player.FindItem(IT.MEAT)!=null) FindById("Meat2").active = true; 
+			if (Player.FindItem(IT.COOKED_MEAT)!=null) FindById("Meat2").active = true; 
 			},
 		},
 	Table_Stand:{frame:[55,55,51,51],priority:true,onloop:["Idle"],
@@ -294,7 +304,7 @@ var ManAnim = {
 		onloopcall:function(){
 			this.toggle = !this.toggle;
 			if ( this.toggle ) {
-				if (Player.FindItem(IT.MEAT)!=null) Player.SetAnimation("Table_Eat");
+				if (Player.FindItem(IT.COOKED_MEAT)!=null) Player.SetAnimation("Table_Eat");
 			}
 			else {
 				if (Player.FindItem(IT.SODA)!=null) Player.SetAnimation("Table_Drink");
