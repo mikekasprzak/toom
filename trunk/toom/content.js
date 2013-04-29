@@ -47,6 +47,7 @@ var ArtFiles = [
 	{ name:"Teleporter", value:"item/item_teleporter.png", tile_w:128, anchor_y:186, margin_left:-42,margin_right:-18,margin_top:-34 },
 
 	{ name:"Items", value:"item/inventory_items.png", tile_w:42*2, tile_h:35*2 },
+	{ name:"Inventory", value:"item/inventory_bar.png", tile_w:42*2, tile_h:42*2 },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var AudioFiles = [
@@ -112,11 +113,12 @@ var FGLayer = [
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var RoomBGLayer = [
-	{ img:"Couch",nice:"Couch",x:-320,y:78,onaction:function(){Player.SetState(ST_SIT_COUCH,true);} },
+	{ img:"Couch",nice:"Couch",x:-320,y:78,onaction:function(){Player.SetState(ST.SIT_COUCH,true);} },
 
 	{ img:"Table",x:-170,y:78 },
-	{ img:"Chair",nice:"Chair",x:-154,y:78,onaction:function(){Player.SetState(ST_SIT_CHAIR,false);} },
-	{ img:"Soda",nice:"Soda",id:"Soda1",x:-190,y:78-38,active:false },
+	{ img:"Chair",nice:"Chair",x:-154,y:78,onaction:function(){Player.SetState(ST.SIT_TABLE_CHAIR,false);} },
+	{ img:"Soda",nice:"Soda",id:"Soda1",x:-190,y:78-38,active:false,
+		onaction:function(){this.active=false;Player.AddItem(IT.SODA);} },
 
 	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onaction:CabToggleState },
 
@@ -125,7 +127,8 @@ var RoomBGLayer = [
 		onaction:function(){FindById("Head1").hidden=(this.state==1); CabToggleState.call(this);} },
 	{ img:"FridgeBot",nice:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
 
-	{ img:"Head",nice:"Frozen Head",id:"Head1",x:66,y:78-78,hidden:true,onaction:function(){this.active=false;Player.AddItem(IT.HEAD);} },
+	{ img:"Head",nice:"Frozen Head",id:"Head1",x:66,y:78-78,hidden:true,
+		onaction:function(){this.active=false;Player.AddItem(IT.HEAD);} },
 
 	{ img:"Cupboards",x:-24,y:78 },
 	{ img:"CupboardTop",nice:"Cupboard",x:-47,y:78-80,states:[{frame:[-1]},{frame:[0]}],
@@ -141,7 +144,7 @@ var RoomBGLayer = [
 	{ img:"Desk",x:230,y:78,frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0] },
 	{ img:"Fishbowl",nice:"Fish Bowl",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
 	{ img:"Coffee",nice:"Mug",x:198,y:78-38 },
-	{ img:"Chair",nice:"Chair",x:250,y:78,onaction:function(){Player.SetState(ST_SIT_CHAIR,false);} },
+	{ img:"Chair",nice:"Chair",x:250,y:78,onaction:function(){Player.SetState(ST.SIT_PC_CHAIR,false);} },
 
 	
 	// Back //
@@ -151,7 +154,8 @@ var RoomBGLayer = [
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var RoomFGLayer = [
-	{ img:"TV",nice:"Television",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0] },
+	{ img:"TV",nice:"Television",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0],
+		onaction:function(){Player.RemoveItem(IT.HEAD);} },
 	{ img:"Fan",nice:"Fan",x:-453,y:78-52,frame:[0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5] },
 	// Front Tube //
 	{ img:"Teleporter",nice:"Tube",x:429,y:78,frame:[3] },
@@ -197,8 +201,8 @@ var ManAnim = {
 	PC_Desk:{frame:[51,51,51,51,51,51,74,74,74,74,74,74],priority:true,onloop:["Idle"]},
 	Table_Sit:{frame:[51,51,51,51,51,55,55],priority:true,onloop:["Table_Idle"]},
 	Table_Stand:{frame:[55,55,51,51],priority:true,onloop:["Idle"]},
-	Table_Idle:{frame:[59],onaction:["Table_Stand"]},
-	Table_Eat:{frame:[59,59,59,59,59,59,59,59,59,59,64,65,65,66,66,67,67,68,67,67,69,69,70],onaction:["Table_Stand"]},
-	Table_Drink:{frame:[59,59,59,59,59,59,59,59,59,59,71,71,72,72,72,72,72,71,71,,71,73,73,73,73,73,73,73,73,73,73,71,71,72,72,72,72,72],onaction:["Table_Stand"]},	
+	Table_Idle:{frame:[59,59],onaction:["Table_Stand"],onloopcall:function(){if (Player.FindItem(IT.SODA)!=null) Player.SetAnimation("Table_Drink");}},
+	Table_Eat:{frame:[59,59,59,59,59,59,59,59,59,59,64,65,65,66,66,67,67,68,67,67,69,69,70],onaction:["Table_Stand"],onloop:["Table_Idle"]},
+	Table_Drink:{frame:[59,59,59,59,59,59,59,59,59,59,71,71,72,72,72,72,72,71,71,71,73,73,73,73,73,73,73,73,73,73,71,71,72,72,72,72,72],onaction:["Table_Stand"],onloop:["Table_Idle"]},	
 };
 // - ------------------------------------------------------------------------------------------ - //

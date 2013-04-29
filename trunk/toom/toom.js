@@ -8,16 +8,21 @@ function cRoom() {
 
 
 // - ------------------------------------------------------------------------------------------ - //
-var ST_IDLE = 1;
-var ST_MOVING = 2;
-var ST_SIT_CHAIR = 3;
-var ST_SIT_COUCH = 4;
+var ST = {
+	NULL:0,
+	IDLE:1,
+	MOVING:2,
+	SIT_PC_CHAIR:3,
+	SIT_TABLE_CHAIR:4,
+	SIT_COUCH:5,
+};
 // - ------------------------------------------------------------------------------------------ - //
 var StateMap = [];
-StateMap[ST_IDLE] = "Idle";
-StateMap[ST_MOVING] = "Walk";
-StateMap[ST_SIT_CHAIR] = "PC_Sit";
-StateMap[ST_SIT_COUCH] = "Couch_Sit";
+StateMap[ST.IDLE] = "Idle";
+StateMap[ST.MOVING] = "Walk";
+StateMap[ST.SIT_PC_CHAIR] = "PC_Sit";
+StateMap[ST.SIT_TABLE_CHAIR] = "Table_Sit";
+StateMap[ST.SIT_COUCH] = "Couch_Sit";
 // - ------------------------------------------------------------------------------------------ - //
 var Player;
 // - ------------------------------------------------------------------------------------------ - //
@@ -26,10 +31,10 @@ function cPlayer() {
 	this.TargetPos = this.Pos.clone();
 	this.FacingLeft = false;
 
-	this.State = ST_IDLE;
+	this.State = ST.IDLE;
 	this.CurrentFrameStep = 0;
 	this.CurrentAnimation = "Idle";
-	this.SetState( ST_IDLE );
+	this.SetState( ST.IDLE );
 	
 	this.Focus = null;
 	
@@ -58,6 +63,8 @@ cPlayer.prototype.SetAnimation = function( NewAnim, FacingLeft ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.AddItem = function( id ) {
+	// TODO: Play Sound Here //
+	//sndPlay("Take");
 	this.Inventory.push( id );
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -84,14 +91,19 @@ cPlayer.prototype.Step = function() {
 	this.CurrentFrameStep++;
 	if ( this.GetCurrentFrame() >= ManAnim[this.CurrentAnimation].frame.length ) {
 		this.CurrentFrameStep = 0;
+		var PriorAnim = this.CurrentAnimation;
 		if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onloopcall') ) {
+			console.log("hey");
 			ManAnim[this.CurrentAnimation].onloopcall();
 		}
-		if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onloop') ) {
-			this.CurrentAnimation = ManAnim[this.CurrentAnimation].onloop[ Math.floor(Math.random() * ManAnim[this.CurrentAnimation].onloop.length) ];
+		// Make sure onloopcall didn't change the animation //
+		if ( PriorAnim == this.CurrentAnimation ) {
+			if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onloop') ) {
+				this.CurrentAnimation = ManAnim[this.CurrentAnimation].onloop[ Math.floor(Math.random() * ManAnim[this.CurrentAnimation].onloop.length) ];
+			}
 		}
 	}
-	//console.log( this.CurrentFrameStep );
+
 
 	var Diff = Sub(this.Pos,this.TargetPos);
 	var Length = Diff.NormalizeRet();
@@ -107,13 +119,13 @@ cPlayer.prototype.Step = function() {
 		if ( Length > 2 ) {
 			var Scaled = MultScalar(Diff,2);
 			this.Pos = Sub(this.Pos, Diff );
-			this.SetState( ST_MOVING );
+			this.SetState( ST.MOVING );
 			this.FacingLeft = Diff.x > 0;
 		}
 		else {
 			this.Pos = this.TargetPos.clone();
-			if ( (this.State == ST_MOVING) || (this.State == ST_IDLE) ) {
-				this.SetState( ST_IDLE );
+			if ( (this.State == ST.MOVING) || (this.State == ST.IDLE) ) {
+				this.SetState( ST.IDLE );
 				
 				if ( Player.Focus != null ) {
 					if ( Player.Focus.hasOwnProperty('onaction') ) {
@@ -437,36 +449,50 @@ function Draw() {
 			ctx.font = '20px Pixel';
 			var Text = "Pos: " + Player.Pos.x + "," + Player.Pos.y;
 			TD = ctx.measureText(Text);
-			if ( (Stepper >> 5)&1 ) {
-				Text = Text + "_";
-			}
 			ctx.fillText(Text, BaseX-520, BaseY+280);
+			
+			Text = Player.CurrentAnimation + "(" + Player.CurrentFrameStep + ")";
+			TD = ctx.measureText(Text);
+			ctx.fillText(Text, BaseX-520, BaseY+280+20);
+			Text = Player.State;
+			TD = ctx.measureText(Text);
+			ctx.fillText(Text, BaseX-520, BaseY+280+40);
 		}		
 	}
 	
-	var PlayerPos = Player.GetPos();
-	
-	ctx.fillStyle = RGB(255,255,255);
-	ctx.font = '20px Pixel';
-	var Text = 'The meat space is';
-	var TD = ctx.measureText(Text);
-	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100-20);
-
-	Text = "haunted Drek. Stay.";
-	TD = ctx.measureText(Text);
-	if ( (Stepper >> 5)&1 ) {
-		Text = Text + "_";
-	}
-	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
+//	var PlayerPos = Player.GetPos();
+//	
+//	ctx.fillStyle = RGB(255,255,255);
+//	ctx.font = '20px Pixel';
+//	var Text = 'The meat space is';
+//	var TD = ctx.measureText(Text);
+//	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100-20);
+//
+//	Text = "haunted Drek. Stay.";
+//	TD = ctx.measureText(Text);
+//	if ( (Stepper >> 5)&1 ) {
+//		Text = Text + "_";
+//	}
+//	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
 
 	// *** //
 
 	{
 		var BX = 640-100;
 		var BY = 360-80;
-		for ( var idx = 0; idx < Player.Inventory.length; idx++ ) {
-			gfxDraw( Art.Items, BX-(idx*Art.Items.tile_w), BY, Player.Inventory[idx] );
+		var Length = Player.Inventory.length;
+
+		gfxDraw( Art.Inventory, BX+(21<<1), BY, 2 );
+		for ( var idx = 0; idx < Length; idx++ ) {
+			gfxDraw( Art.Inventory, BX-(idx*Art.Items.tile_w), BY, 1 );
+			gfxDraw( Art.Items, BX-(idx*Art.Items.tile_w), BY-(42-35), Player.Inventory[idx] );
 		}
+		if ( Length == 0 ) {
+			gfxDraw( Art.Inventory, BX-(0*Art.Items.tile_w), BY, 1 );
+			gfxDraw( Art.Inventory, BX-(0*Art.Items.tile_w)-(21<<1), BY, 0 );
+		}
+		else
+			gfxDraw( Art.Inventory, BX-((Length-1)*Art.Items.tile_w)-(21<<1), BY, 0 );
 	}
 
 	// *** //
