@@ -45,6 +45,8 @@ var ArtFiles = [
 	{ name:"Fishbowl", value:"item/item_fishbowl.png", tile_w:32, tile_h:64, anchor_y:64, offset_x:-20 },
 	{ name:"Coffee", value:"item/item_coffee_mug.png", anchor_y:10 },
 	{ name:"Desk", value:"item/item_PC.png", tile_w:128, anchor_y:96, margin_left:-12,margin_right:-12,margin_top:-24 },
+	{ name:"Drawer", value:"item/item_PC_drawer.png", anchor_y:28, offset_x:18 },
+	{ name:"Manual", value:"item/item_manual.png", anchor_y:16 },
 
 	{ name:"Printer", value:"item/item_3Dprinter.png", anchor_y:80 },
 
@@ -112,15 +114,15 @@ function CabToggleState() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Use here instead of CloseState //
-function ItToggleState(State) {
+function ItToggleState(State,Facing) {
 	ToggleState.call(this);
 	if ( this.state ) {
 		sndPlay("Cab_Open");
-		Player.SetState(State,true);
+		Player.SetState(State,Facing);
 	}
 	else {
 		sndPlay("Cab_Close");
-		Player.SetState(ST.IDLE);
+		Player.SetState(ST.IDLE,Facing);
 	}
 
 	if ( this.hasOwnProperty('onupdatecall') ) {
@@ -128,11 +130,11 @@ function ItToggleState(State) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
-function ItOpenState(State) {
+function ItOpenState(State,Facing) {
 	this.state = 1;
 
 	sndPlay("Cab_Open");
-	Player.SetState(State,true);
+	Player.SetState(State,Facing);
 
 	if ( this.hasOwnProperty('onupdatecall') ) {
 		this.onupdatecall();
@@ -179,11 +181,11 @@ var RoomBGLayer = [
 
 	{ img:"Fridge",x:62,y:78 },
 	{ img:"FridgeTop",nice:"Freezer",id:"Freezer",x:62+14,y:78-62-4,states:[{frame:[-1]},{frame:[0]}],
-		onactioncall:function(){ItToggleState.call(this,ST.TURN_FREEZER);},
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_FREEZER,true);},
 		onupdatecall:function(){FindById("Head1").hidden=(this.state==0);},
 		},
 	{ img:"FridgeBot",nice:"Fridge",id:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],
-		onactioncall:function(){ItToggleState.call(this,ST.TURN_FRIDGE);},
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_FRIDGE,true);},
 		onupdatecall:function(){
 			FindById("Soda1").hidden=(this.state==0);
 			FindById("RawMeat1").hidden=(this.state==0);
@@ -199,16 +201,16 @@ var RoomBGLayer = [
 
 	{ img:"Cupboards",x:-24,y:78 },
 	{ img:"CupboardTop",nice:"Cupboard",id:"Cab1",x:-47,y:78-80,states:[{frame:[-1]},{frame:[0]}],
-		onactioncall:function(){ItToggleState.call(this,ST.TURN_CAB1);} 
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_CAB1,true);} 
 		},
 	{ img:"CupboardTop",nice:"Cupboard",id:"Cab2",x:-47+52,y:78-80,states:[{frame:[-1]},{frame:[0]}],
-		onactioncall:function(){ItToggleState.call(this,ST.TURN_CAB2);} 
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_CAB2,true);} 
 		},
 	{ img:"CupboardBot",nice:"Cupboard",id:"Cab3",x:-47,y:78-2,states:[{frame:[-1]},{frame:[0]}],
-		onactioncall:function(){ItToggleState.call(this,ST.TURN_CAB3);} 
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_CAB3,true);} 
 		},
 	{ img:"Oven",nice:"Oven",id:"Oven",x:6,y:78,states:[{frame:[-1]},{frame:[0]}],
-		onactioncall:function(){ItToggleState.call(this,ST.TURN_OVEN);}, 
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_OVEN,true);}, 
 		onupdatecall:function(){
 				var Meat1 = FindById("RawMeat2");
 				var Meat2 = FindById("Meat1");
@@ -239,7 +241,25 @@ var RoomBGLayer = [
 	{ img:"Desk",x:230,y:78,frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0] },
 	{ img:"Fishbowl",nice:"Fishy Fish",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
 	{ img:"Coffee",nice:"Mug",x:198,y:78-38 },
-	{ img:"Chair",nice:"Chair",x:250,y:78,onactioncall:function(){Player.SetState(ST.SIT_PC_CHAIR,false);} },
+	{ img:"Chair",nice:"Chair",x:250,y:78,
+		onactioncall:function(){Player.SetState(ST.SIT_PC_CHAIR,false);} 
+		},
+	{ img:"Manual",nice:"Science",id:"Manual",x:208,y:78-28,active:true,hidden:true,
+		onactioncall:function(){this.active=false;Player.AddItem(IT.MANUAL);},
+		},
+	{ img:"Drawer",nice:"Secret Files",id:"Drawer",x:208,y:78-4,states:[{frame:[-1]},{frame:[0]}],
+		onactioncall:function() {
+			if ( Player.FindItem(IT.SODA) == null ) {
+				sndPlay("Cab_Open");
+			}
+			else {
+				ItToggleState.call(this,ST.TURN_DRAWER,false);
+			}
+		},
+		onupdatecall:function(){
+			FindById("Manual").hidden=(this.state==0);
+		},
+	},
 
 	
 	// Back //
