@@ -26,6 +26,8 @@ function cPlayer() {
 	this.CurrentFrameStep = 0;
 	this.CurrentAnimation = "Idle";
 	this.SetState( ST_IDLE );
+	
+	this.Focus = null;
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.SetState = function( NewState ) {
@@ -94,6 +96,10 @@ cPlayer.prototype.Draw = function() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+var MouseFocus = null;
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
 var Music;
 // - ------------------------------------------------------------------------------------------ - //
 function Init() {
@@ -116,6 +122,34 @@ function LoseFocus() {
 var Stepper = 0;
 function Step() {
 	Stepper++;
+	
+	var BMouse = Mouse.Pos.clone();
+	BMouse.x -= BaseX - FCamera.x;
+	BMouse.y -= BaseY - FCamera.y;
+
+	MouseFocus = null;
+	for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
+		for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
+			var Item = ItemLayers[layer][idx];
+			var ArtFile = Art[Item.img];
+			
+			if ( Test_Sphere_vs_AABB(
+					BMouse,
+					4,
+					Item.x-ArtFile.anchor_x,
+					Item.y-ArtFile.anchor_y,
+					ArtFile.tile_w,
+					ArtFile.tile_h 
+				)
+			)
+			{
+				MouseFocus = Item;
+//				break;
+			}
+		}
+//		if ( MouseFocus != null ) 
+//			break;
+	}
 	
 	// Mouse Cursor Part //
 	var TargetX = ((Mouse.Pos.x-BaseX)/BaseX)*32.0;
@@ -143,6 +177,41 @@ function Step() {
 			Player.TargetPos.x = -(HalfLimit-54-16);
 		if ( Player.TargetPos.x > (HalfLimit-54) )
 			Player.TargetPos.x = (HalfLimit-54);
+
+
+//		BX = BaseX;
+//		BY = BaseY;
+//
+//		MouseTarget = null;
+//		for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
+//			for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
+//				var Item = ItemLayers[layer][idx];
+//				var ArtFile = Art[Item.img];
+//				
+//				if ( Test_Sphere_vs_AABB(
+//						Mouse.Pos,
+//						0,
+//						-BX+Item.x-ArtFile.anchor_x,
+//						-BY+Item.y-ArtFile.anchor_y,
+//						ArtFile.tile_w,
+//						ArtFile.tile_h 
+//					)
+//				)
+//				{
+//					MouseTarget = ItemLayers[layer][idx];
+//				}
+//			}
+//		}
+
+		
+//		for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
+//			for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
+//				//Art[ItemLayers[layer][idx].img]
+//				if ( 
+//			}
+//			if ( MouseTarget != null ) 
+//				break;
+//		}
 	}
 	
 	Player.Step();
@@ -166,20 +235,73 @@ function Draw() {
 	gfxDrawLayer( RoomFGLayer );
 	gfxDrawLayer( FGLayer );
 	
+	
+	
 //	if ( Mouse.Visible ) {
 //		ctx.fillStyle = RGB(255,255,255);
 //		ctx.fillRect( Mouse.Pos.x-10,Mouse.Pos.y-10,20,20 );
 //	}
+
+	if ( MouseFocus != null ) {
+		//console.log(MouseFocus);
+		var Item = MouseFocus;
+		var ArtFile = Art[Item.img];
+
+		ctx.fillStyle = RGB(0,255,255);
+		ctx.font = '20px Pixel';
+		var Text = Item.img; // should be nice name
+		var TD = ctx.measureText(Text);
+		ctx.fillText(Text, 
+			BX+Item.x-ArtFile.anchor_x+(ArtFile.tile_w>>1) - (TD.width>>1),
+			BY+Item.y-ArtFile.anchor_y - 15
+//			BY+Item.y-ArtFile.anchor_y+(ArtFile.tile_h>>1) - 15
+			);
+//			Mouse.Pos.x-(TD.width>>1), 
+//			Mouse.Pos.y-15
+//		ctx.fillText(Text, Mouse.Pos.x+Camera.x-(TD.width>>1), Mouse.Pos.y+Camera.y-20);
+	}
+
+	{
+		var OldAlpha = ctx.globalAlpha;
+		ctx.globalAlpha = 0.8;
+		for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
+			for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
+				var Item = ItemLayers[layer][idx];
+				var ArtFile = Art[Item.img];
+				// Position //
+				ctx.strokeStyle = RGB(255,255,0);
+				ctx.strokeRect( 
+					BX+Item.x-2,
+					BY+Item.y-2,
+					4,4 );
+				// Rectangle //
+				ctx.strokeStyle = RGB(128,0,0);
+				ctx.strokeRect( 
+					BX+Item.x-ArtFile.anchor_x,
+					BY+Item.y-ArtFile.anchor_y,
+					ArtFile.tile_w,
+					ArtFile.tile_h );
+				// New Center //
+				ctx.strokeStyle = RGB(255,255,255);
+				ctx.strokeRect( 
+					BX+Item.x-ArtFile.anchor_x+(ArtFile.tile_w>>1),
+					BY+Item.y-ArtFile.anchor_y+(ArtFile.tile_h>>1),
+					4,
+					4 );
+			}
+		}
+		ctx.globalAlpha = OldAlpha;
+	}
 	
 	var PlayerPos = Player.GetPos();
 	
 	ctx.fillStyle = RGB(255,255,255);
 	ctx.font = '20px Pixel';
-	var Text = 'Whoa Drek,';
+	var Text = 'The meat space is';
 	var TD = ctx.measureText(Text);
 	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100-20);
 
-	Text = "I was watching that.";
+	Text = "haunted Drek. Stay.";
 	TD = ctx.measureText(Text);
 	if ( (Stepper >> 5)&1 ) {
 		Text = Text + "_";
