@@ -228,7 +228,7 @@ var RoomBGLayer = [
 
 	{ img:"Printer",nice:"Hogwash 4000",x:303,y:78 },
 	{ img:"Desk",x:230,y:78,frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0] },
-	{ img:"Fishbowl",nice:"Fish Bowl",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
+	{ img:"Fishbowl",nice:"Fishy Fish",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
 	{ img:"Coffee",nice:"Mug",x:198,y:78-38 },
 	{ img:"Chair",nice:"Chair",x:250,y:78,onactioncall:function(){Player.SetState(ST.SIT_PC_CHAIR,false);} },
 
@@ -244,7 +244,7 @@ var RoomFGLayer = [
 	{ img:"Fan",nice:"Fan",x:-453,y:78-52,frame:[0,1,2,3,4,5],
 		onactioncall:function(){Player.RemoveItem(IT.HEAD);} },
 	// Front Tube //
-	{ img:"Teleporter",nice:"Tube",x:429,y:78,frame:[3] },
+	{ img:"Teleporter",nice:"Hyper Tube",x:429,y:78,frame:[3] },
 	// Glow //
 	{ img:"Teleporter",x:429,y:78,frame:[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,2,2,2,2,2,2,2,2,2,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1] },
 ];

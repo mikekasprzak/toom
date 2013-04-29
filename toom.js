@@ -108,6 +108,9 @@ cPlayer.prototype.FindItem = function( id ) {
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.RemoveItem = function( id ) {
+	// TODO: Play Sound Here //
+	//sndPlay("Use");
+
 	var Index = this.FindItem( id );
 	if ( Index != null ) {
 		this.Inventory.splice(Index,1);
@@ -143,8 +146,6 @@ cPlayer.prototype.Step = function() {
 	var Diff = Sub(this.Pos,this.TargetPos);
 	var Length = Diff.NormalizeRet();
 
-//	if ( MouseClickedCount == 128 ) {
-//	if ( Mouse.GetNew() ) {
 	if ( Length > 2 ) {
 		if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onaction') ) {
 			this.SetAnimation( ManAnim[this.CurrentAnimation].onaction[0] );
@@ -262,8 +263,17 @@ function Step() {
 		MouseClickedCount--;
 
 	var BMouse = Mouse.Pos.clone();
-	BMouse.x -= BaseX - FCamera.x;
-	BMouse.y -= BaseY - FCamera.y;
+	BMouse.x -= BaseX;
+	BMouse.y -= BaseY;
+	var BCMouse = BMouse.clone();
+	BCMouse.x -= FCamera.x;
+	BCMouse.y -= FCamera.y;
+
+	var UILength = Player.Inventory.length;
+	var UIX = 640-100-(42*2*UILength);
+	var UIY = 360-80-(35);
+	var UIW = 42*2*(UILength+1);
+	var UIH = 35*2;
 
 	// Check what we're hovering over //
 	MouseFocus = null;
@@ -278,16 +288,7 @@ function Step() {
 				var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
 				var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
 				
-				if ( Test_Sphere_vs_AABB(
-						BMouse,
-						4,
-						IX,
-						IY,
-						IW,
-						IH 
-					)
-				)
-				{
+				if ( Test_Sphere_vs_AABB( BCMouse, 4, IX, IY, IW, IH ) ) {
 					MouseFocus = Item;
 				}
 			}
@@ -296,35 +297,40 @@ function Step() {
 	
 	// Check if a button was pressed //
 	if ( Mouse.GetNew() ) {
-		sndPlay( "Click", 0.5 );
-		
-		if ( MouseFocus == null ) {
-			Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
+		if ( Test_Sphere_vs_AABB( BMouse, 2, UIX, UIY, UIW, UIH ) ) {
+			sndPlay("Cab_Open");
 		}
-		else {
-			var Item = MouseFocus;
-			var ArtFile = Art[Item.img];
-
-			var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
-			var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
-			var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
-			var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
-
-			Player.TargetPos.x = IX+(IW>>1)+ArtFile.offset_x;
+		else {	
+			sndPlay( "Click", 0.5 );
+			
+			if ( MouseFocus == null ) {
+				Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
+			}
+			else {
+				var Item = MouseFocus;
+				var ArtFile = Art[Item.img];
+	
+				var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
+				var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
+				var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
+				var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
+	
+				Player.TargetPos.x = IX+(IW>>1)+ArtFile.offset_x;
+			}
+	
+			Player.Focus = MouseFocus;
+			MouseClickedCount = 128;
+			
+			AddCP( Mouse.Pos.x+Camera.x, Mouse.Pos.y+Camera.y );
+	
+			var HalfLimit = (Limit>>1);
+	
+			// Constrain Player Pos //
+			if ( Player.TargetPos.x < -(HalfLimit-54-16) )
+				Player.TargetPos.x = -(HalfLimit-54-16);
+			if ( Player.TargetPos.x > (HalfLimit-54) )
+				Player.TargetPos.x = (HalfLimit-54);
 		}
-
-		Player.Focus = MouseFocus;
-		MouseClickedCount = 128;
-		
-		AddCP( Mouse.Pos.x+Camera.x, Mouse.Pos.y+Camera.y );
-
-		var HalfLimit = (Limit>>1);
-
-		// Constrain Player Pos //
-		if ( Player.TargetPos.x < -(HalfLimit-54-16) )
-			Player.TargetPos.x = -(HalfLimit-54-16);
-		if ( Player.TargetPos.x > (HalfLimit-54) )
-			Player.TargetPos.x = (HalfLimit-54);
 	}
 
 		
@@ -349,12 +355,18 @@ function Draw() {
 	gfxDrawLayer( RoomFGLayer );
 	gfxDrawLayer( FGLayer );
 	
+	var BMouse = Mouse.Pos.clone();
+	BMouse.x -= BaseX;
+	BMouse.y -= BaseY;
+	var BCMouse = BMouse.clone();
+	BCMouse.x -= FCamera.x;
+	BCMouse.y -= FCamera.y;
 	
 	
-//	if ( Mouse.Visible ) {
-//		ctx.fillStyle = RGB(255,255,255);
-//		ctx.fillRect( Mouse.Pos.x-10,Mouse.Pos.y-10,20,20 );
-//	}
+	if ( Mouse.Visible ) {
+		ctx.fillStyle = RGB(255,255,255);
+		ctx.fillRect( BaseX+BMouse.x-10,BaseY+BMouse.y-10,20,20 );
+	}
 
 	if ( MouseFocus != null ) {
 		//console.log(MouseFocus);
@@ -377,9 +389,6 @@ function Draw() {
 			BX+IX+(IW>>1) - (TD.width>>1),
 			BY+IY - 15
 			);
-//			Mouse.Pos.x-(TD.width>>1), 
-//			Mouse.Pos.y-15
-//		ctx.fillText(Text, Mouse.Pos.x+Camera.x-(TD.width>>1), Mouse.Pos.y+Camera.y-20);
 
 		ctx.globalAlpha = OldAlpha;
 	}
@@ -458,6 +467,9 @@ function Draw() {
 			Text = Player.State;
 			TD = ctx.measureText(Text);
 			ctx.fillText(Text, BaseX-520, BaseY+280+40);
+			Text = Mouse.Pos.toString()+" "+BMouse.toString()+" "+BCMouse.toString();
+			TD = ctx.measureText(Text);
+			ctx.fillText(Text, BaseX-520, BaseY+280+60);
 		}		
 	}
 	
