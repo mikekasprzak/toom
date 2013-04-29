@@ -40,7 +40,8 @@ var ArtFiles = [
 
 	{ name:"Meat", value:"item/item_meat.png", anchor_y:16 },
 	{ name:"RawMeat", value:"item/item_rawmeat.png", anchor_y:16 },
-	{ name:"Head", value:"item/item_frozenhead.png", anchor_y:14 },
+	{ name:"FrozenHead", value:"item/item_frozenhead.png", anchor_y:14 },
+	{ name:"Head", value:"item/item_head.png", anchor_y:14 },
 
 	{ name:"Fishbowl", value:"item/item_fishbowl.png", tile_w:32, tile_h:64, anchor_y:64, offset_x:-20 },
 	{ name:"Coffee", value:"item/item_coffee_mug.png", anchor_y:10 },
@@ -72,7 +73,7 @@ var IT = {
 //	DUPE_POTATO:1,
 	REMOTE:2,
 	COFFEE:3,
-	HEAD:4,
+	FROZEN_HEAD:4,
 	SODA:5,
 	FISH_FOOD:6,
 	POISON:7,
@@ -85,6 +86,9 @@ var IT = {
 	COOKED_POTATO:13,
 	MEAT:14,
 	DISK:15,
+	
+	FROZEN_MEAT:16,
+	HEAD:17,
 };
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -182,7 +186,7 @@ var RoomBGLayer = [
 	{ img:"Fridge",x:62,y:78 },
 	{ img:"FridgeTop",nice:"Freezer",id:"Freezer",x:62+14,y:78-62-4,states:[{frame:[-1]},{frame:[0]}],
 		onactioncall:function(){ItToggleState.call(this,ST.TURN_FREEZER,true);},
-		onupdatecall:function(){FindById("Head1").hidden=(this.state==0);},
+		onupdatecall:function(){FindById("FrozenHead1").hidden=(this.state==0);},
 		},
 	{ img:"FridgeBot",nice:"Fridge",id:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],
 		onactioncall:function(){ItToggleState.call(this,ST.TURN_FRIDGE,true);},
@@ -192,8 +196,8 @@ var RoomBGLayer = [
 			},
 		},
 
-	{ img:"Head",nice:"Frozen Head",id:"Head1",x:66,y:78-78,hidden:true,
-		onactioncall:function(){this.active=false;Player.AddItem(IT.HEAD);} },
+	{ img:"FrozenHead",nice:"Frozen Head",id:"FrozenHead1",x:66,y:78-78,hidden:true,
+		onactioncall:function(){this.active=false;Player.AddItem(IT.FROZEN_HEAD);} },
 	{ img:"Soda",nice:"Soda",id:"Soda1",x:76,y:78-18,hidden:true,
 		onactioncall:function(){this.active=false;Player.AddItem(IT.SODA);} },
 	{ img:"RawMeat",nice:"Raw Meat",id:"RawMeat1",x:60,y:78-44,hidden:true,
@@ -222,6 +226,17 @@ var RoomBGLayer = [
 						Meat2.active = true;
 					}
 				}
+				var Head1 = FindById("FrozenHead2");
+				var Head2 = FindById("Head1");
+				Head1.hidden=(this.state==0);
+				Head2.hidden=(this.state==0);
+				if ( this.state == 0 ) {
+					if ( Head1.active == true ) {
+						Head1.active = false;
+						Head2.active = true;
+					}
+				}
+
 			},
 		},
 	{ img:"RawMeat",id:"RawMeat2",x:6,y:78-26,active:false,hidden:true,
@@ -229,6 +244,12 @@ var RoomBGLayer = [
 		},
 	{ img:"Meat",nice:"Cooked Meat",id:"Meat1",x:6,y:78-26,active:false,hidden:true,
 		onactioncall:function(){this.active=false;Player.AddItem(IT.COOKED_MEAT);},
+		},
+	{ img:"FrozenHead",id:"FrozenHead2",x:6,y:78-26,active:false,hidden:true,
+		onactioncall:function(){this.active=false;Player.AddItem(IT.FROZEN_HEAD);}
+		},
+	{ img:"Head",nice:"Head",id:"Head1",x:6,y:78-26,active:false,hidden:true,
+		onactioncall:function(){this.active=false;Player.AddItem(IT.HEAD);},
 		},
 	
 	{ img:"Toaster",nice:"Toaster",x:-46,y:78-44,
@@ -238,7 +259,9 @@ var RoomBGLayer = [
 	{ img:"CoffeePot",nice:"Coffee Pot",x:8,y:78-44-6,state:4,states:[{frame:[0]},{frame:[1]},{frame:[2]},{frame:[3]},{frame:[4]}] },
 
 	{ img:"Printer",nice:"Hogwash 4000",x:303,y:78 },
-	{ img:"Desk",x:230,y:78,frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0] },
+	{ img:"Desk",id:"Desk",x:230,y:78,
+		states:[{frame:[0]},{frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0]}],
+	},
 	{ img:"Fishbowl",nice:"Fishy Fish",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
 	{ img:"Coffee",nice:"Mug",x:198,y:78-38 },
 	{ img:"Chair",nice:"Chair",x:250,y:78,
@@ -309,8 +332,14 @@ var ManAnim = {
 	Cupboard1_Close:{frame:[51,51,51,51,51,51,51,51,51,51,52,53,53,53,53,53,52,52,52,52,52,51,51,51,51],priority:true,onloop:["Idle"]},
 	Cupboard2_Open:{frame:[51,51,51,51,51,51,51,51,51,51,55,56,56,56,56,56,57,57,57,57,57,57,57,57,57,57,55,55,51,51,51,51],priority:true,onloop:["Idle"]},
 	Cupboard2_Close:{frame:[51,51,51,51,51,51,51,51,51,51,55,57,57,57,57,57,52,52,52,52,52,55,51,51,51,51],priority:true,onloop:["Idle"]},
-	PC_Sit:{frame:[51,51,51,51,51,55,55],priority:true,onloop:["PC_Idle"]},
-	PC_Stand:{frame:[55,55,51,51],priority:true,onloop:["Idle"]},
+	PC_Sit:{frame:[51,51,51,51,51,55,55],priority:true,
+		onloop:["PC_Idle"],
+		onstartcall:function(){ if (Player.FindItem(IT.DISK)!=null) FindById("Desk").state=1; }
+		},
+	PC_Stand:{frame:[55,55,51,51],priority:true,
+		onloop:["Idle"],
+		onstopcall:function(){ FindById("Desk").state=0; }
+		},
 	PC_Idle:{frame:[59],onaction:["PC_Stand"]},
 	PC_Work:{frame:[59,59,59,59,60,59,60,59,60,59,60,59,60,59,60,59,60,59,60,59,9,59,59,59,9,59,59],onaction:["PC_Stand"]},
 	PC_Coffee:{frame:[61,61,62,62,63,63,64,64,64,64,64,64,64,64,64,64,63,63,62,62],onaction:["PC_Stand"]},
