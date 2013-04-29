@@ -274,7 +274,10 @@ var ManAnim = {
 		onstartcall:function(){if (Player.FindItem(IT.SODA)!=null) FindById("Soda2").active = true; },
 		},
 	Table_Eat:{frame:[59,59,59,59,59,59,59,59,59,59,64,65,65,66,66,67,67,68,67,67,69,69,70],onaction:["Table_Stand"],onloop:["Table_Idle"]},
-	Table_Drink:{frame:[59,59,59,59,59,59,71,71,72,72,72,72,72,71,71,71,73,73,73,73,73,73,73,73,73,73,71,71,72,72,72,72,72],onaction:["Table_Stand"],onloop:["Table_Idle"],
+
+//	Table_Drink:{frame:[59,59,59,59,59,59,71,71,72,72,72,72,72,71,71,71,73,73,73,73,73,73,73,73,73,73,71,71,72,72,72,72,72],
+	Table_Drink:{frame:[59,59,59,59,59,81,81,82,82,83,83,83,83,83,83,83,83,83,83,82,82,81,81,59,59,59,59],
+		onaction:["Table_Stand"],onloop:["Table_Idle"],
 		onstartcall:function(){ FindById("Soda2").active = false; },
 		onstopcall:function(){if (Player.FindItem(IT.SODA)!=null) FindById("Soda2").active = true; },
 		},	
