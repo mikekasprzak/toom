@@ -166,53 +166,54 @@ function gfxDraw( Img, x, y, Index, FlipX, FlipY ) {
 // - ------------------------------------------------------------------------------------------ - //
 function gfxDrawLayer( layer ) {
 	for ( var idx = 0; idx < layer.length; idx++ ) {
-		var ScaleX = (typeof layer[idx].scalex != "undefined") ? layer[idx].scalex : 1.0;
-		var ScaleY = (typeof layer[idx].scaley != "undefined") ? layer[idx].scaley : 1.0;
-		
-		var CurrentFrame = 0;
-		if ( typeof layer[idx].frame != "undefined" ) {
-			var Length = layer[idx].frame.length;
-			if ( typeof layer[idx].FrameStep === "undefined" ) {
-				layer[idx].FrameStep = 0;
+		if ( layer[idx].active ) {
+			var ScaleX = (typeof layer[idx].scalex != "undefined") ? layer[idx].scalex : 1.0;
+			var ScaleY = (typeof layer[idx].scaley != "undefined") ? layer[idx].scaley : 1.0;
+			
+			var CurrentFrame = 0;
+			if ( typeof layer[idx].frame != "undefined" ) {
+				var Length = layer[idx].frame.length;
+				if ( typeof layer[idx].FrameStep === "undefined" ) {
+					layer[idx].FrameStep = 0;
+				}
+				else {
+					layer[idx].FrameStep++;
+				}
+				var Index = Math.floor(layer[idx].FrameStep / 6);
+				if ( Index >= Length ) {
+					Index = 0;
+					layer[idx].FrameStep = 0;
+				}
+				
+				CurrentFrame = layer[idx].frame[Index];
 			}
-			else {
-				layer[idx].FrameStep++;
-			}
-			var Index = Math.floor(layer[idx].FrameStep / 6);
-			if ( Index >= Length ) {
-				Index = 0;
-				layer[idx].FrameStep = 0;
+			else if ( typeof layer[idx].states != "undefined" ) {
+				var Length = layer[idx].states[layer[idx].state].frame.length;
+				if ( typeof layer[idx].FrameStep === "undefined" ) {
+					layer[idx].FrameStep = 0;
+				}
+				else {
+					layer[idx].FrameStep++;
+				}
+				var Index = Math.floor(layer[idx].FrameStep / 6);
+				if ( Index >= Length ) {
+					Index = 0;
+					layer[idx].FrameStep = 0;
+				}
+				
+				CurrentFrame = layer[idx].states[layer[idx].state].frame[Index];			
 			}
 			
-			CurrentFrame = layer[idx].frame[Index];
-		}
-		else if ( typeof layer[idx].states != "undefined" ) {
-			var Length = layer[idx].states[layer[idx].state].frame.length;
-			if ( typeof layer[idx].FrameStep === "undefined" ) {
-				layer[idx].FrameStep = 0;
+			if ( CurrentFrame >= 0 ) {
+				gfxDraw( 
+					Art[layer[idx].img], 
+					Math.floor(-FCamera.x * ScaleX) + layer[idx].x, 
+					Math.floor(-FCamera.y * ScaleY) + layer[idx].y,
+					CurrentFrame
+					);
 			}
-			else {
-				layer[idx].FrameStep++;
-			}
-			var Index = Math.floor(layer[idx].FrameStep / 6);
-			if ( Index >= Length ) {
-				Index = 0;
-				layer[idx].FrameStep = 0;
-			}
-			
-			CurrentFrame = layer[idx].states[layer[idx].state].frame[Index];			
-		}
-		
-		if ( CurrentFrame >= 0 ) {
-			gfxDraw( 
-				Art[layer[idx].img], 
-				Math.floor(-FCamera.x * ScaleX) + layer[idx].x, 
-				Math.floor(-FCamera.y * ScaleY) + layer[idx].y,
-				CurrentFrame
-				);
 		}
 	}
-
 }
 // - ------------------------------------------------------------------------------------------ - //
 function sndPlay( SoundName, Volume ) {
@@ -229,13 +230,29 @@ function sndLooped( SoundName, Volume ) {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
-function OnComplete() {
-	// Initialize some defaults in Layers //
+function FindById( id ) {
 	for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
 		for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
-			if ( !ItemLayers[layer][idx].hasOwnProperty('state') ) {
-				ItemLayers[layer][idx].state = 0;
+			if ( ItemLayers[layer][idx].hasOwnProperty('id') ) {
+				if ( ItemLayers[layer][idx].id == id )
+					return ItemLayers[layer][idx]; 
 			}
+		}
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+
+// - ------------------------------------------------------------------------------------------ - //
+function OnComplete() {
+	// Initialize some defaults in Layers //
+	for ( var layer = 0; layer < AllLayers.length; layer++ ) {
+		for ( var idx = 0; idx < AllLayers[layer].length; idx++ ) {
+			if ( !AllLayers[layer][idx].hasOwnProperty('state') ) {
+				AllLayers[layer][idx].state = 0;
+			}
+			if ( !AllLayers[layer][idx].hasOwnProperty('active') ) {
+				AllLayers[layer][idx].active = true;
+			}			
 		}
 	}
 	
