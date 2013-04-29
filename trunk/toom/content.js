@@ -18,10 +18,10 @@ var ArtFiles = [
 	
 	{ name:"Fan", value:"item/item_fan.png", tile_w:8, anchor_y:64 },
 	{ name:"TV", value:"item/item_tv.png", tile_w:104, anchor_y:88, margin_left:-24,margin_right:-24,margin_top:-24 },
-	{ name:"Couch", value:"item/item_couch.png", anchor_y:42 },
+	{ name:"Couch", value:"item/item_couch.png", anchor_y:42, offset_x:-6 },
 
 	{ name:"Table", value:"item/item_table.png", anchor_y:38 },
-	{ name:"Chair", value:"item/item_chair.png", anchor_y:48 },
+	{ name:"Chair", value:"item/item_chair.png", anchor_y:48, offset_x:-7 },
 	{ name:"Soda", value:"item/item_soda.png", anchor_y:12 },
 
 	{ name:"Trash", value:"item/item_trashcan.png", tile_w:64, anchor_y:64, margin_left:-16,margin_right:-16,margin_top:-16 },
@@ -87,10 +87,10 @@ var FGLayer = [
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var RoomBGLayer = [
-	{ img:"Couch",nice:"Couch",x:-320,y:78 },
+	{ img:"Couch",nice:"Couch",x:-320,y:78,onaction:function(){Player.SetState(ST_SIT_COUCH,true);} },
 
 	{ img:"Table",x:-170,y:78 },
-	{ img:"Chair",nice:"Chair",x:-154,y:78 },
+	{ img:"Chair",nice:"Chair",x:-154,y:78,onaction:function(){Player.SetState(ST_SIT_CHAIR,false);} },
 	{ img:"Soda",nice:"Soda",x:-190,y:78-38 },
 
 	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onaction:CabToggleState },
@@ -112,7 +112,7 @@ var RoomBGLayer = [
 	{ img:"Desk",x:230,y:78,frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0] },
 	{ img:"Fishbowl",nice:"Fish Bowl",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
 	{ img:"Coffee",nice:"Mug",x:198,y:78-38 },
-	{ img:"Chair",nice:"Chair",x:250,y:78 },
+	{ img:"Chair",nice:"Chair",x:250,y:78,onaction:function(){Player.SetState(ST_SIT_CHAIR,false);} },
 
 	{ img:"Head",nice:"Frozen Head",x:350,y:78 },
 	
@@ -146,18 +146,18 @@ var ManAnim = {
 	Idle2:{frame:[13,13,14,14,15,15,16,16,17,17,18,18,17,17,18,18,19,19,20,20,21,21,21,21,22,22,23,23,24,24,25,25,26,26,21,21,21,21,22,22,23,23,24,24,25,25,26,26,21,21,21,21,22,22,23,23,24,24,25,25,26,26],onloop:["Idle"]},
 	Idle3:{frame:[27,28,29,29,30,30,31,31,32,32,33,33,33,33,33,33,33,33,33,33,28,28],onloop:["Idle"]},
 	Idle4:{frame:[34,35,35,36,36,35,35,36,36,37,38,39,40,41,41,41,41,41,41,41,41,41,41,42,43,44,45,46],onloop:["Idle"]},
-	Couch_Sit:{frame:[47,47]},
-	Couch_Stand:{frame:[47,47]},
-	Couch_Idle:{frame:[48]},
-	Couch_WatchTV:{frame:[49,49,50,50,49,49,50,50,50,50,50,50,50,50,50,50,49,50,49,49,50,49,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48]},
+	Couch_Sit:{frame:[47,47],priority:true,onloop:["Couch_Idle"]},
+	Couch_Stand:{frame:[47,47],priority:true,onloop:["Idle"]},
+	Couch_Idle:{frame:[48],onaction:["Couch_Stand"]},
+	Couch_WatchTV:{frame:[49,49,50,50,49,49,50,50,50,50,50,50,50,50,50,50,49,50,49,49,50,49,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48],onaction:["Couch_Stand"]},
 	Cupboard1_Open:{frame:[51,51,51,51,51,51,51,51,51,51,52,53,53,53,53,53,54,54,54,54,54,54,54,54,54,54,52,51,51,51,51]},
 	Cupboard1_Close:{frame:[51,51,51,51,51,51,51,51,51,51,52,53,53,53,53,53,52,52,52,52,52,51,51,51,51]},
 	Cupboard2_Open:{frame:[51,51,51,51,51,51,51,51,51,51,55,56,56,56,56,56,57,57,57,57,57,57,57,57,57,57,55,55,51,51,51,51]},
 	Cupboard2_Close:{frame:[51,51,51,51,51,51,51,51,51,51,55,57,57,57,57,57,52,52,52,52,52,55,51,51,51,51]},
-	PC_Sit:{frame:[51,51,51,51,51,55,55,59]},
-	PC_Stand:{frame:[55,55,51,51]},
-	PC_Idle:{frame:[59]},
-	PC_Work:{frame:[59,59,59,59,60,59,60,59,60,59,60,59,60,59,60,59,60,59,60,59,9,59,59,59,9,59,59]},
-	PC_Coffee:{frame:[61,61,62,62,63,63,64,64,64,64,64,64,64,64,64,64,63,63,62,62]},
+	PC_Sit:{frame:[51,51,51,51,51,55,55],priority:true,onloop:["PC_Idle"]},
+	PC_Stand:{frame:[55,55,51,51],priority:true,onloop:["Idle"]},
+	PC_Idle:{frame:[59],onaction:["PC_Stand"]},
+	PC_Work:{frame:[59,59,59,59,60,59,60,59,60,59,60,59,60,59,60,59,60,59,60,59,9,59,59,59,9,59,59],onaction:["PC_Stand"]},
+	PC_Coffee:{frame:[61,61,62,62,63,63,64,64,64,64,64,64,64,64,64,64,63,63,62,62],onaction:["PC_Stand"]},
 };
 // - ------------------------------------------------------------------------------------------ - //

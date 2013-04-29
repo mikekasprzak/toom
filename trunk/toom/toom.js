@@ -10,10 +10,14 @@ function cRoom() {
 // - ------------------------------------------------------------------------------------------ - //
 var ST_IDLE = 1;
 var ST_MOVING = 2;
+var ST_SIT_CHAIR = 3;
+var ST_SIT_COUCH = 4;
 // - ------------------------------------------------------------------------------------------ - //
 var StateMap = [];
 StateMap[ST_IDLE] = "Idle";
 StateMap[ST_MOVING] = "Walk";
+StateMap[ST_SIT_CHAIR] = "PC_Sit";
+StateMap[ST_SIT_COUCH] = "Couch_Sit";
 // - ------------------------------------------------------------------------------------------ - //
 var Player;
 // - ------------------------------------------------------------------------------------------ - //
@@ -30,11 +34,15 @@ function cPlayer() {
 	this.Focus = null;
 }
 // - ------------------------------------------------------------------------------------------ - //
-cPlayer.prototype.SetState = function( NewState ) {
+cPlayer.prototype.SetState = function( NewState, FacingLeft ) {
 	if ( this.State != NewState ) {
 		this.State = NewState;
 		this.CurrentFrameStep = 0;
 		this.CurrentAnimation = StateMap[this.State];
+	}
+	
+	if ( typeof FacingLeft != "undefined" ) {
+		this.FacingLeft = FacingLeft;
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -51,26 +59,38 @@ cPlayer.prototype.Step = function() {
 		}
 	}
 	//console.log( this.CurrentFrameStep );
-	
+
 	var Diff = Sub(this.Pos,this.TargetPos);
 	var Length = Diff.NormalizeRet();
+
 	if ( Length > 2 ) {
-		var Scaled = MultScalar(Diff,2);
-		this.Pos = Sub(this.Pos, Diff );
-		this.SetState( ST_MOVING );
-		this.FacingLeft = Diff.x > 0;
+		if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onaction') ) {
+			this.CurrentFrameStep = 0;
+			this.CurrentAnimation = ManAnim[this.CurrentAnimation].onaction[0];
+		}
 	}
-	else {
-		this.Pos = this.TargetPos.clone();
-		this.SetState( ST_IDLE );
-		
-		if ( Player.Focus != null ) {
-			if ( Player.Focus.hasOwnProperty('onaction') ) {
-				Player.Focus.onaction();
+	
+	if ( !ManAnim[this.CurrentAnimation].hasOwnProperty('priority') ) {
+		if ( Length > 2 ) {
+			var Scaled = MultScalar(Diff,2);
+			this.Pos = Sub(this.Pos, Diff );
+			this.SetState( ST_MOVING );
+			this.FacingLeft = Diff.x > 0;
+		}
+		else {
+			this.Pos = this.TargetPos.clone();
+			if ( (this.State == ST_MOVING) || (this.State == ST_IDLE) ) {
+				this.SetState( ST_IDLE );
+				
+				if ( Player.Focus != null ) {
+					if ( Player.Focus.hasOwnProperty('onaction') ) {
+						Player.Focus.onaction();
+					}
+				}
+			
+				Player.Focus = null;
 			}
 		}
-		
-		Player.Focus = null;
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -211,7 +231,7 @@ function Step() {
 			
 			// TODO: Add properties for adjusting the target position offset //
 
-			Player.TargetPos.x = IX+(IW>>1);
+			Player.TargetPos.x = IX+(IW>>1)+ArtFile.offset_x;
 			Player.Focus = MouseFocus;
 			MouseClickedCount = 128;
 		}
