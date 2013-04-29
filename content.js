@@ -24,20 +24,21 @@ var ArtFiles = [
 	{ name:"Chair", value:"item/item_chair.png", anchor_y:48, offset_x:-7 },
 	{ name:"Soda", value:"item/item_soda.png", anchor_y:12 },
 
-	{ name:"Trash", value:"item/item_trashcan.png", tile_w:64, anchor_y:64, margin_left:-16,margin_right:-16,margin_top:-16 },
+	{ name:"Trash", value:"item/item_trashcan.png", tile_w:64, anchor_y:64, margin_left:-16,margin_right:-16,margin_top:-16, offset_x:-20 },
 
 	{ name:"Cupboards", value:"item/item_cupboards.png", anchor_y:122 },
-	{ name:"CupboardTop", value:"item/item_cupboards_upper.png", anchor_y:38 },
-	{ name:"CupboardBot", value:"item/item_cupboards_lowe.png", anchor_y:38 },
+	{ name:"CupboardTop", value:"item/item_cupboards_upper.png", anchor_y:38, offset_x:-6 },
+	{ name:"CupboardBot", value:"item/item_cupboards_lowe.png", anchor_y:38, offset_x:-6 },
+	{ name:"Oven", value:"item/item_oven_door.png", anchor_y:40 },
 	{ name:"Toaster", value:"item/item_toaster.png", anchor_y:14 },
 	{ name:"CoffeeMaker", value:"item/item_coffee_maker.png", anchor_y:24 },
 	{ name:"CoffeePot", value:"item/item_coffee_pot.png", tile_w:20, anchor_y:12 },
 
 	{ name:"Fridge", value:"item/item_fridge.png", anchor_y:128 },
-	{ name:"FridgeTop", value:"item/item_fridge_freezerdoor.png", anchor_y:34 },
-	{ name:"FridgeBot", value:"item/item_fridge_fridgedoor.png", anchor_y:60 },
+	{ name:"FridgeTop", value:"item/item_fridge_freezerdoor.png", anchor_y:34, offset_x:-20 },
+	{ name:"FridgeBot", value:"item/item_fridge_fridgedoor.png", anchor_y:60, offset_x:-20 },
 
-	{ name:"Fishbowl", value:"item/item_fishbowl.png", tile_w:32, tile_h:64, anchor_y:64 },
+	{ name:"Fishbowl", value:"item/item_fishbowl.png", tile_w:32, tile_h:64, anchor_y:64, offset_x:-20 },
 	{ name:"Coffee", value:"item/item_coffee_mug.png", anchor_y:10 },
 	{ name:"Desk", value:"item/item_PC.png", tile_w:128, anchor_y:96, margin_left:-12,margin_right:-12,margin_top:-24 },
 
@@ -62,8 +63,7 @@ function ToggleState() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 function CabToggleState() {
-	//ToggleState();
-	this.state ^= 1;
+	ToggleState.call(this);
 	if ( this.state )
 		sndPlay("Cab_Open");
 	else 
@@ -91,7 +91,7 @@ var RoomBGLayer = [
 
 	{ img:"Table",x:-170,y:78 },
 	{ img:"Chair",nice:"Chair",x:-154,y:78,onaction:function(){Player.SetState(ST_SIT_CHAIR,false);} },
-	{ img:"Soda",nice:"Soda",x:-190,y:78-38 },
+	{ img:"Soda",nice:"Soda",id:"Soda1",x:-190,y:78-38,active:false },
 
 	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onaction:CabToggleState },
 
@@ -100,14 +100,15 @@ var RoomBGLayer = [
 	{ img:"FridgeBot",nice:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
 
 	{ img:"Cupboards",x:-24,y:78 },
-	{ img:"CupboardTop",nice:"Cupboard",x:-47,y:78-80,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
+	{ img:"CupboardTop",nice:"Cupboard",x:-47,y:78-80,states:[{frame:[-1]},{frame:[0]}],
+		onaction:function(){if (this.state == 0) Player.SetAnimation("Cupboard1_Open",true); else Player.SetAnimation("Cupboard1_Close",true); CabToggleState.call(this);} },
 	{ img:"CupboardTop",nice:"Cupboard",x:-47+52,y:78-80,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
 	{ img:"CupboardBot",nice:"Cupboard",x:-47,y:78-2,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
-	{ img:"CupboardBot",nice:"Oven",x:-47+52,y:78-2,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
+	{ img:"Oven",nice:"Oven",x:-46+52,y:78,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
 	
-	{ img:"Toaster",nice:"Toaster",x:-46,y:78-44 },
+	{ img:"Toaster",nice:"Toaster",x:-46,y:78-44,onaction:function(){var Thing = FindById("Soda1"); Thing.active = !Thing.active;} },
 	{ img:"CoffeeMaker",x:13,y:78-44 },
-	{ img:"CoffeePot",nice:"Coffee Pot",x:8,y:78-44-6,frame:[0,1,2,3,4,3,2,1] },
+	{ img:"CoffeePot",nice:"Coffee Pot",x:8,y:78-44-6,state:4,states:[{frame:[0]},{frame:[1]},{frame:[2]},{frame:[3]},{frame:[4]}] },
 
 	{ img:"Desk",x:230,y:78,frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0] },
 	{ img:"Fishbowl",nice:"Fish Bowl",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
@@ -136,6 +137,13 @@ var ItemLayers = [
 	RoomFGLayer
 ];
 // - ------------------------------------------------------------------------------------------ - //
+var AllLayers = [
+	BGLayer,
+	FGLayer,
+	RoomBGLayer,
+	RoomFGLayer
+];
+// - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
 var ManAnim = {
@@ -150,10 +158,10 @@ var ManAnim = {
 	Couch_Stand:{frame:[47,47],priority:true,onloop:["Idle"]},
 	Couch_Idle:{frame:[48],onaction:["Couch_Stand"]},
 	Couch_WatchTV:{frame:[49,49,50,50,49,49,50,50,50,50,50,50,50,50,50,50,49,50,49,49,50,49,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48,48],onaction:["Couch_Stand"]},
-	Cupboard1_Open:{frame:[51,51,51,51,51,51,51,51,51,51,52,53,53,53,53,53,54,54,54,54,54,54,54,54,54,54,52,51,51,51,51]},
-	Cupboard1_Close:{frame:[51,51,51,51,51,51,51,51,51,51,52,53,53,53,53,53,52,52,52,52,52,51,51,51,51]},
-	Cupboard2_Open:{frame:[51,51,51,51,51,51,51,51,51,51,55,56,56,56,56,56,57,57,57,57,57,57,57,57,57,57,55,55,51,51,51,51]},
-	Cupboard2_Close:{frame:[51,51,51,51,51,51,51,51,51,51,55,57,57,57,57,57,52,52,52,52,52,55,51,51,51,51]},
+	Cupboard1_Open:{frame:[51,51,51,51,51,51,51,51,51,51,52,53,53,53,53,53,54,54,54,54,54,54,54,54,54,54,52,51,51,51,51],priority:true,onloop:["Idle"]},
+	Cupboard1_Close:{frame:[51,51,51,51,51,51,51,51,51,51,52,53,53,53,53,53,52,52,52,52,52,51,51,51,51],priority:true,onloop:["Idle"]},
+	Cupboard2_Open:{frame:[51,51,51,51,51,51,51,51,51,51,55,56,56,56,56,56,57,57,57,57,57,57,57,57,57,57,55,55,51,51,51,51],priority:true,onloop:["Idle"]},
+	Cupboard2_Close:{frame:[51,51,51,51,51,51,51,51,51,51,55,57,57,57,57,57,52,52,52,52,52,55,51,51,51,51],priority:true,onloop:["Idle"]},
 	PC_Sit:{frame:[51,51,51,51,51,55,55],priority:true,onloop:["PC_Idle"]},
 	PC_Stand:{frame:[55,55,51,51],priority:true,onloop:["Idle"]},
 	PC_Idle:{frame:[59],onaction:["PC_Stand"]},

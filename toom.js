@@ -46,6 +46,15 @@ cPlayer.prototype.SetState = function( NewState, FacingLeft ) {
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
+cPlayer.prototype.SetAnimation = function( NewAnim, FacingLeft ) {
+	this.CurrentFrameStep = 0;
+	this.CurrentAnimation = NewAnim;
+	
+	if ( typeof FacingLeft != "undefined" ) {
+		this.FacingLeft = FacingLeft;
+	}	
+}
+// - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.GetCurrentFrame = function() {
 	return Math.floor(this.CurrentFrameStep / 6);
 }
@@ -164,7 +173,7 @@ function Step() {
 			var Item = ItemLayers[layer][idx];
 			var ArtFile = Art[Item.img];
 			
-			if ( Item.hasOwnProperty( 'nice' ) ) {
+			if ( Item.hasOwnProperty( 'nice' ) && Item.active ) {
 				var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
 				var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
 				var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
