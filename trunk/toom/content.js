@@ -186,7 +186,7 @@ var RoomBGLayer = [
 
 	{ img:"Head",nice:"Frozen Head",id:"Head1",x:66,y:78-78,hidden:true,
 		onactioncall:function(){this.active=false;Player.AddItem(IT.HEAD);} },
-	{ img:"Soda",nice:"Soda",id:"Soda1",x:76,y:78-18,
+	{ img:"Soda",nice:"Soda",id:"Soda1",x:76,y:78-18,hidden:true,
 		onactioncall:function(){this.active=false;Player.AddItem(IT.SODA);} },
 
 	{ img:"Cupboards",x:-24,y:78 },
