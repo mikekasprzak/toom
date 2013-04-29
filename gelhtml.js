@@ -166,7 +166,7 @@ function gfxDraw( Img, x, y, Index, FlipX, FlipY ) {
 // - ------------------------------------------------------------------------------------------ - //
 function gfxDrawLayer( layer ) {
 	for ( var idx = 0; idx < layer.length; idx++ ) {
-		if ( layer[idx].active ) {
+		if ( layer[idx].active && !layer[idx].hidden ) {
 			var ScaleX = (typeof layer[idx].scalex != "undefined") ? layer[idx].scalex : 1.0;
 			var ScaleY = (typeof layer[idx].scaley != "undefined") ? layer[idx].scaley : 1.0;
 			
@@ -250,9 +250,14 @@ function OnComplete() {
 			if ( !AllLayers[layer][idx].hasOwnProperty('state') ) {
 				AllLayers[layer][idx].state = 0;
 			}
+			// Active means it's enabled //
 			if ( !AllLayers[layer][idx].hasOwnProperty('active') ) {
 				AllLayers[layer][idx].active = true;
-			}			
+			}
+			// Hidden means it's an object obstructed by another object //
+			if ( !AllLayers[layer][idx].hasOwnProperty('hidden') ) {
+				AllLayers[layer][idx].hidden = false;
+			}
 		}
 	}
 	

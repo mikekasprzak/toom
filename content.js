@@ -35,8 +35,8 @@ var ArtFiles = [
 	{ name:"CoffeePot", value:"item/item_coffee_pot.png", tile_w:20, anchor_y:12 },
 
 	{ name:"Fridge", value:"item/item_fridge.png", anchor_y:128 },
-	{ name:"FridgeTop", value:"item/item_fridge_freezerdoor.png", anchor_y:34, offset_x:-20 },
-	{ name:"FridgeBot", value:"item/item_fridge_fridgedoor.png", anchor_y:60, offset_x:-20 },
+	{ name:"FridgeTop", value:"item/item_fridge_freezerdoor.png", anchor_y:34, offset_x:-30, margin_right:-24 },
+	{ name:"FridgeBot", value:"item/item_fridge_fridgedoor.png", anchor_y:60, offset_x:-30, margin_right:-24 },
 
 	{ name:"Fishbowl", value:"item/item_fishbowl.png", tile_w:32, tile_h:64, anchor_y:64, offset_x:-20 },
 	{ name:"Coffee", value:"item/item_coffee_mug.png", anchor_y:10 },
@@ -96,7 +96,8 @@ var RoomBGLayer = [
 	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onaction:CabToggleState },
 
 	{ img:"Fridge",x:62,y:78 },
-	{ img:"FridgeTop",nice:"Freezer",x:62+14,y:78-62-4,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
+	{ img:"FridgeTop",nice:"Freezer",x:62+14,y:78-62-4,states:[{frame:[-1]},{frame:[0]}],
+		onaction:function(){FindById("Head1").hidden=(this.state==1); CabToggleState.call(this);} },
 	{ img:"FridgeBot",nice:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
 
 	{ img:"Cupboards",x:-24,y:78 },
@@ -115,7 +116,7 @@ var RoomBGLayer = [
 	{ img:"Coffee",nice:"Mug",x:198,y:78-38 },
 	{ img:"Chair",nice:"Chair",x:250,y:78,onaction:function(){Player.SetState(ST_SIT_CHAIR,false);} },
 
-	{ img:"Head",nice:"Frozen Head",x:350,y:78 },
+	{ img:"Head",nice:"Frozen Head",id:"Head1",x:66,y:78-78,hidden:true },
 	
 	// Back //
 	{ img:"Teleporter",x:429,y:78,frame:[0] },

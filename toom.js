@@ -63,7 +63,10 @@ cPlayer.prototype.Step = function() {
 	this.CurrentFrameStep++;
 	if ( this.GetCurrentFrame() >= ManAnim[this.CurrentAnimation].frame.length ) {
 		this.CurrentFrameStep = 0;
-		if ( typeof ManAnim[this.CurrentAnimation].onloop != "undefined" ) {
+		if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onloopcall') ) {
+			ManAnim[this.CurrentAnimation].onloopcall();
+		}
+		if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onloop') ) {
 			this.CurrentAnimation = ManAnim[this.CurrentAnimation].onloop[ Math.floor(Math.random() * ManAnim[this.CurrentAnimation].onloop.length) ];
 		}
 	}
@@ -173,7 +176,7 @@ function Step() {
 			var Item = ItemLayers[layer][idx];
 			var ArtFile = Art[Item.img];
 			
-			if ( Item.hasOwnProperty( 'nice' ) && Item.active ) {
+			if ( Item.hasOwnProperty( 'nice' ) && Item.active && !Item.hidden ) {
 				var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
 				var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
 				var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
