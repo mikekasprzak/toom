@@ -90,10 +90,16 @@ function ToggleState() {
 // - ------------------------------------------------------------------------------------------ - //
 function CabToggleState() {
 	ToggleState.call(this);
-	if ( this.state )
+	if ( this.state ) {
 		sndPlay("Cab_Open");
-	else 
+		Player.SetState(ST.TURN,true);
+//		Player.SetAnimation("Turned",true);
+	}
+	else {
 		sndPlay("Cab_Close");
+		Player.SetState(ST.IDLE);
+//		Player.SetAnimation("Idle",true);
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -113,40 +119,40 @@ var FGLayer = [
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var RoomBGLayer = [
-	{ img:"Couch",nice:"Couch",x:-320,y:78,onaction:function(){Player.SetState(ST.SIT_COUCH,true);} },
+	{ img:"Couch",nice:"Couch",x:-320,y:78,onactioncall:function(){Player.SetState(ST.SIT_COUCH,true);} },
 
 	{ img:"Table",x:-170,y:78 },
-	{ img:"Chair",nice:"Chair",x:-154,y:78,onaction:function(){Player.SetState(ST.SIT_TABLE_CHAIR,false);} },
+	{ img:"Chair",nice:"Chair",x:-154,y:78,onactioncall:function(){Player.SetState(ST.SIT_TABLE_CHAIR,false);} },
 	{ img:"Soda",nice:"Soda",id:"Soda1",x:-190,y:78-38,active:false,
-		onaction:function(){this.active=false;Player.AddItem(IT.SODA);} },
+		onactioncall:function(){this.active=false;Player.AddItem(IT.SODA);} },
 
 	{ img:"Soda",id:"Soda2",x:-138,y:78-38,active:false },
 
-	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onaction:CabToggleState },
+	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onactioncall:CabToggleState },
 
 	{ img:"Fridge",x:62,y:78 },
 	{ img:"FridgeTop",nice:"Freezer",x:62+14,y:78-62-4,states:[{frame:[-1]},{frame:[0]}],
-		onaction:function(){FindById("Head1").hidden=(this.state==1); CabToggleState.call(this);} },
-	{ img:"FridgeBot",nice:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
+		onactioncall:function(){FindById("Head1").hidden=(this.state==1); CabToggleState.call(this);} },
+	{ img:"FridgeBot",nice:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],onactioncall:CabToggleState },
 
 	{ img:"Head",nice:"Frozen Head",id:"Head1",x:66,y:78-78,hidden:true,
-		onaction:function(){this.active=false;Player.AddItem(IT.HEAD);} },
+		onactioncall:function(){this.active=false;Player.AddItem(IT.HEAD);} },
 
 	{ img:"Cupboards",x:-24,y:78 },
-	{ img:"CupboardTop",nice:"Cupboard",x:-47,y:78-80,states:[{frame:[-1]},{frame:[0]}],
-		onaction:function(){if (this.state == 0) Player.SetAnimation("Cupboard1_Open",true); else Player.SetAnimation("Cupboard1_Close",true); CabToggleState.call(this);} },
-	{ img:"CupboardTop",nice:"Cupboard",x:-47+52,y:78-80,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
-	{ img:"CupboardBot",nice:"Cupboard",x:-47,y:78-2,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
-	{ img:"Oven",nice:"Oven",x:-46+52,y:78,states:[{frame:[-1]},{frame:[0]}],onaction:CabToggleState },
+	{ img:"CupboardTop",nice:"Cupboard",x:-47,y:78-80,states:[{frame:[-1]},{frame:[0]}],onactioncall:CabToggleState },
+//		onactioncall:function(){if (this.state == 0) Player.SetAnimation("Cupboard1_Open",true); else Player.SetAnimation("Cupboard1_Close",true); CabToggleState.call(this);} },
+	{ img:"CupboardTop",nice:"Cupboard",x:-47+52,y:78-80,states:[{frame:[-1]},{frame:[0]}],onactioncall:CabToggleState },
+	{ img:"CupboardBot",nice:"Cupboard",x:-47,y:78-2,states:[{frame:[-1]},{frame:[0]}],onactioncall:CabToggleState },
+	{ img:"Oven",nice:"Oven",x:-46+52,y:78,states:[{frame:[-1]},{frame:[0]}],onactioncall:CabToggleState },
 	
-	{ img:"Toaster",nice:"Toaster",x:-46,y:78-44,onaction:function(){var Thing = FindById("Soda1"); Thing.active = !Thing.active;} },
+	{ img:"Toaster",nice:"Toaster",x:-46,y:78-44,onactioncall:function(){var Thing = FindById("Soda1"); Thing.active = !Thing.active;} },
 	{ img:"CoffeeMaker",x:13,y:78-44 },
 	{ img:"CoffeePot",nice:"Coffee Pot",x:8,y:78-44-6,state:4,states:[{frame:[0]},{frame:[1]},{frame:[2]},{frame:[3]},{frame:[4]}] },
 
 	{ img:"Desk",x:230,y:78,frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0] },
 	{ img:"Fishbowl",nice:"Fish Bowl",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
 	{ img:"Coffee",nice:"Mug",x:198,y:78-38 },
-	{ img:"Chair",nice:"Chair",x:250,y:78,onaction:function(){Player.SetState(ST.SIT_PC_CHAIR,false);} },
+	{ img:"Chair",nice:"Chair",x:250,y:78,onactioncall:function(){Player.SetState(ST.SIT_PC_CHAIR,false);} },
 
 	
 	// Back //
@@ -157,8 +163,9 @@ var RoomBGLayer = [
 // - ------------------------------------------------------------------------------------------ - //
 var RoomFGLayer = [
 	{ img:"TV",nice:"Television",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0],
-		onaction:function(){Player.RemoveItem(IT.HEAD);} },
-	{ img:"Fan",nice:"Fan",x:-453,y:78-52,frame:[0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5] },
+		onactioncall:function(){Player.RemoveItem(IT.HEAD);} },
+//	{ img:"Fan",nice:"Fan",x:-453,y:78-52,frame:[0,0,0,1,1,1,2,2,2,3,3,3,4,4,4,5,5,5] },
+	{ img:"Fan",nice:"Fan",x:-453,y:78-52,frame:[0,1,2,3,4,5] },
 	// Front Tube //
 	{ img:"Teleporter",nice:"Tube",x:429,y:78,frame:[3] },
 	// Glow //
@@ -187,6 +194,7 @@ var ManAnim = {
 	Idle2:{frame:[13,13,14,14,15,15,16,16,17,17,18,18,17,17,18,18,19,19,20,20,21,21,21,21,22,22,23,23,24,24,25,25,26,26,21,21,21,21,22,22,23,23,24,24,25,25,26,26,21,21,21,21,22,22,23,23,24,24,25,25,26,26],onloop:["Idle"]},
 	Idle3:{frame:[27,28,29,29,30,30,31,31,32,32,33,33,33,33,33,33,33,33,33,33,28,28],onloop:["Idle"]},
 	Idle4:{frame:[34,35,35,36,36,35,35,36,36,37,38,39,40,41,41,41,41,41,41,41,41,41,41,42,43,44,45,46],onloop:["Idle"]},
+	Turn:{frame:[51]},
 	Couch_Sit:{frame:[47,47],priority:true,onloop:["Couch_Idle"]},
 	Couch_Stand:{frame:[47,47],priority:true,onloop:["Idle"]},
 	Couch_Idle:{frame:[48],onaction:["Couch_Stand"]},

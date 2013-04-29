@@ -15,14 +15,18 @@ var ST = {
 	SIT_PC_CHAIR:3,
 	SIT_TABLE_CHAIR:4,
 	SIT_COUCH:5,
+	TURN:6,
 };
 // - ------------------------------------------------------------------------------------------ - //
-var StateMap = [];
-StateMap[ST.IDLE] = "Idle";
-StateMap[ST.MOVING] = "Walk";
-StateMap[ST.SIT_PC_CHAIR] = "PC_Sit";
-StateMap[ST.SIT_TABLE_CHAIR] = "Table_Sit";
-StateMap[ST.SIT_COUCH] = "Couch_Sit";
+var StateMap = [
+	"Idle",	// Null //
+	"Idle",
+	"Walk",
+	"PC_Sit",
+	"Table_Sit",
+	"Couch_Sit",
+	"Turn",
+];
 // - ------------------------------------------------------------------------------------------ - //
 var Player;
 // - ------------------------------------------------------------------------------------------ - //
@@ -118,18 +122,17 @@ cPlayer.prototype.Step = function() {
 		}
 	}
 
-
 	var Diff = Sub(this.Pos,this.TargetPos);
 	var Length = Diff.NormalizeRet();
 
+//	if ( MouseClickedCount == 128 ) {
+//	if ( Mouse.GetNew() ) {
 	if ( Length > 2 ) {
 		if ( ManAnim[this.CurrentAnimation].hasOwnProperty('onaction') ) {
 			this.SetAnimation( ManAnim[this.CurrentAnimation].onaction[0] );
-//			this.CurrentFrameStep = 0;
-//			this.CurrentAnimation = ManAnim[this.CurrentAnimation].onaction[0];
 		}
 	}
-	
+		
 	if ( !ManAnim[this.CurrentAnimation].hasOwnProperty('priority') ) {
 		if ( Length > 2 ) {
 			var Scaled = MultScalar(Diff,2);
@@ -141,14 +144,14 @@ cPlayer.prototype.Step = function() {
 			this.Pos = this.TargetPos.clone();
 			if ( (this.State == ST.MOVING) || (this.State == ST.IDLE) ) {
 				this.SetState( ST.IDLE );
-				
-				if ( Player.Focus != null ) {
-					if ( Player.Focus.hasOwnProperty('onaction') ) {
-						Player.Focus.onaction();
-					}
-				}
-			
+							
 				Player.Focus = null;
+			}
+		}
+
+		if ( Player.Focus != null ) {
+			if ( Player.Focus.hasOwnProperty('onactioncall') ) {
+				Player.Focus.onactioncall();
 			}
 		}
 	}
@@ -214,39 +217,6 @@ var Stepper = 0;
 function Step() {
 	Stepper++;
 	
-	var BMouse = Mouse.Pos.clone();
-	BMouse.x -= BaseX - FCamera.x;
-	BMouse.y -= BaseY - FCamera.y;
-
-	MouseFocus = null;
-	for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
-		for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
-			var Item = ItemLayers[layer][idx];
-			var ArtFile = Art[Item.img];
-			
-			if ( Item.hasOwnProperty( 'nice' ) && Item.active && !Item.hidden ) {
-				var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
-				var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
-				var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
-				var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
-				
-				if ( Test_Sphere_vs_AABB(
-						BMouse,
-						4,
-						IX,
-						IY,
-						IW,
-						IH 
-					)
-				)
-				{
-					MouseFocus = Item;
-//					MouseClickedCount = 128;
-				}
-			}
-		}
-	}
-	
 	// Mouse Cursor Part //
 	var TargetX = ((Mouse.Pos.x-BaseX)/BaseX)*32.0;
 	var TargetY = ((Mouse.Pos.y-BaseY)/BaseY)*32.0;
@@ -273,13 +243,46 @@ function Step() {
 
 	if ( MouseClickedCount )
 		MouseClickedCount--;
+
+	var BMouse = Mouse.Pos.clone();
+	BMouse.x -= BaseX - FCamera.x;
+	BMouse.y -= BaseY - FCamera.y;
+
+	// Check what we're hovering over //
+	MouseFocus = null;
+	for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
+		for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
+			var Item = ItemLayers[layer][idx];
+			var ArtFile = Art[Item.img];
+			
+			if ( Item.hasOwnProperty( 'nice' ) && Item.active && !Item.hidden ) {
+				var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
+				var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
+				var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
+				var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
+				
+				if ( Test_Sphere_vs_AABB(
+						BMouse,
+						4,
+						IX,
+						IY,
+						IW,
+						IH 
+					)
+				)
+				{
+					MouseFocus = Item;
+				}
+			}
+		}
+	}
 	
+	// Check if a button was pressed //
 	if ( Mouse.GetNew() ) {
 		sndPlay( "Click", 0.5 );
 		
 		if ( MouseFocus == null ) {
 			Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
-			Player.Focus = MouseFocus;
 		}
 		else {
 			var Item = MouseFocus;
@@ -289,13 +292,12 @@ function Step() {
 			var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
 			var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
 			var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
-			
-			// TODO: Add properties for adjusting the target position offset //
 
 			Player.TargetPos.x = IX+(IW>>1)+ArtFile.offset_x;
-			Player.Focus = MouseFocus;
-			MouseClickedCount = 128;
 		}
+
+		Player.Focus = MouseFocus;
+		MouseClickedCount = 128;
 		
 		AddCP( Mouse.Pos.x+Camera.x, Mouse.Pos.y+Camera.y );
 
@@ -306,43 +308,9 @@ function Step() {
 			Player.TargetPos.x = -(HalfLimit-54-16);
 		if ( Player.TargetPos.x > (HalfLimit-54) )
 			Player.TargetPos.x = (HalfLimit-54);
-
-
-//		BX = BaseX;
-//		BY = BaseY;
-//
-//		MouseTarget = null;
-//		for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
-//			for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
-//				var Item = ItemLayers[layer][idx];
-//				var ArtFile = Art[Item.img];
-//				
-//				if ( Test_Sphere_vs_AABB(
-//						Mouse.Pos,
-//						0,
-//						-BX+Item.x-ArtFile.anchor_x,
-//						-BY+Item.y-ArtFile.anchor_y,
-//						ArtFile.tile_w,
-//						ArtFile.tile_h 
-//					)
-//				)
-//				{
-//					MouseTarget = ItemLayers[layer][idx];
-//				}
-//			}
-//		}
+	}
 
 		
-//		for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
-//			for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
-//				//Art[ItemLayers[layer][idx].img]
-//				if ( 
-//			}
-//			if ( MouseTarget != null ) 
-//				break;
-//		}
-	}
-	
 	Player.Step();
 	
 	// *** //
