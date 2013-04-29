@@ -16,16 +16,28 @@ var ST = {
 	SIT_TABLE_CHAIR:4,
 	SIT_COUCH:5,
 	TURN:6,
+	TURN_FREEZER:7,
+	TURN_FRIDGE:8,
+	TURN_CAB1:9,
+	TURN_CAB2:10,
+	TURN_CAB3:11,
+	TURN_OVEN:12,
 };
 // - ------------------------------------------------------------------------------------------ - //
 var StateMap = [
-	"Idle",	// Null //
-	"Idle",
-	"Walk",
-	"PC_Sit",
-	"Table_Sit",
-	"Couch_Sit",
-	"Turn",
+	{anim:"Idle"},	// Null //
+	{anim:"Idle"},
+	{anim:"Walk"},
+	{anim:"PC_Sit"},
+	{anim:"Table_Sit"},
+	{anim:"Couch_Sit"},
+	{anim:"Turn"},
+	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Freezer"));}},
+	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Fridge"));}},
+	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Cab1"));}},
+	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Cab2"));}},
+	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Cab3"));}},
+	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Oven"));}},
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var Player;
@@ -47,10 +59,16 @@ function cPlayer() {
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.SetState = function( NewState, FacingLeft ) {
 	if ( this.State != NewState ) {
+		if ( StateMap[this.State].hasOwnProperty('onexitcall') ) {
+			StateMap[this.State].onexitcall();
+		}
+		
 		this.State = NewState;
-		this.SetAnimation( StateMap[this.State] );
-//		this.CurrentFrameStep = 0;
-//		this.CurrentAnimation = StateMap[this.State];
+		this.SetAnimation( StateMap[this.State].anim );
+
+		if ( StateMap[this.State].hasOwnProperty('onstartcall') ) {
+			StateMap[this.State].onstartcall();
+		}
 	}
 	
 	if ( typeof FacingLeft != "undefined" ) {
@@ -142,17 +160,16 @@ cPlayer.prototype.Step = function() {
 		}
 		else {
 			this.Pos = this.TargetPos.clone();
-			if ( (this.State == ST.MOVING) || (this.State == ST.IDLE) ) {
+			if ( (this.State == ST.MOVING) ) {
 				this.SetState( ST.IDLE );
-							
-				Player.Focus = null;
 			}
-		}
+			if ( Player.Focus != null ) {
+				if ( Player.Focus.hasOwnProperty('onactioncall') ) {
+					Player.Focus.onactioncall();
+				}
+			}
 
-		if ( Player.Focus != null ) {
-			if ( Player.Focus.hasOwnProperty('onactioncall') ) {
-				Player.Focus.onactioncall();
-			}
+			Player.Focus = null;
 		}
 	}
 }

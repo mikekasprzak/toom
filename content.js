@@ -100,6 +100,48 @@ function CabToggleState() {
 		Player.SetState(ST.IDLE);
 //		Player.SetAnimation("Idle",true);
 	}
+	
+	if ( this.hasOwnProperty('onupdatecall') ) {
+		this.onupdatecall();
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+function ItToggleState(State) {
+	ToggleState.call(this);
+	if ( this.state ) {
+		sndPlay("Cab_Open");
+		Player.SetState(State,true);
+	}
+	else {
+		sndPlay("Cab_Close");
+		Player.SetState(ST.IDLE);
+	}
+
+	if ( this.hasOwnProperty('onupdatecall') ) {
+		this.onupdatecall();
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+function ItOpenState(State) {
+	this.state = 1;
+
+	sndPlay("Cab_Open");
+	Player.SetState(State,true);
+
+	if ( this.hasOwnProperty('onupdatecall') ) {
+		this.onupdatecall();
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+function ItCloseState() {
+	this.state = 0;
+
+	sndPlay("Cab_Close");
+//	Player.SetState(ST.IDLE);
+
+	if ( this.hasOwnProperty('onupdatecall') ) {
+		this.onupdatecall();
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -131,19 +173,29 @@ var RoomBGLayer = [
 	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onactioncall:CabToggleState },
 
 	{ img:"Fridge",x:62,y:78 },
-	{ img:"FridgeTop",nice:"Freezer",x:62+14,y:78-62-4,states:[{frame:[-1]},{frame:[0]}],
-		onactioncall:function(){FindById("Head1").hidden=(this.state==1); CabToggleState.call(this);} },
-	{ img:"FridgeBot",nice:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],onactioncall:CabToggleState },
+	{ img:"FridgeTop",nice:"Freezer",id:"Freezer",x:62+14,y:78-62-4,states:[{frame:[-1]},{frame:[0]}],
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_FREEZER);},
+		onupdatecall:function(){FindById("Head1").hidden=(this.state==0);} },
+	{ img:"FridgeBot",nice:"Fridge",id:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_FRIDGE);} },
 
 	{ img:"Head",nice:"Frozen Head",id:"Head1",x:66,y:78-78,hidden:true,
 		onactioncall:function(){this.active=false;Player.AddItem(IT.HEAD);} },
 
 	{ img:"Cupboards",x:-24,y:78 },
-	{ img:"CupboardTop",nice:"Cupboard",x:-47,y:78-80,states:[{frame:[-1]},{frame:[0]}],onactioncall:CabToggleState },
+	{ img:"CupboardTop",nice:"Cupboard",id:"Cab1",x:-47,y:78-80,states:[{frame:[-1]},{frame:[0]}],
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_CAB1);} },
+//		onactioncall:CabToggleState },
 //		onactioncall:function(){if (this.state == 0) Player.SetAnimation("Cupboard1_Open",true); else Player.SetAnimation("Cupboard1_Close",true); CabToggleState.call(this);} },
-	{ img:"CupboardTop",nice:"Cupboard",x:-47+52,y:78-80,states:[{frame:[-1]},{frame:[0]}],onactioncall:CabToggleState },
-	{ img:"CupboardBot",nice:"Cupboard",x:-47,y:78-2,states:[{frame:[-1]},{frame:[0]}],onactioncall:CabToggleState },
-	{ img:"Oven",nice:"Oven",x:-46+52,y:78,states:[{frame:[-1]},{frame:[0]}],onactioncall:CabToggleState },
+	{ img:"CupboardTop",nice:"Cupboard",id:"Cab2",x:-47+52,y:78-80,states:[{frame:[-1]},{frame:[0]}],
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_CAB2);} },
+//		onactioncall:CabToggleState },
+	{ img:"CupboardBot",nice:"Cupboard",id:"Cab3",x:-47,y:78-2,states:[{frame:[-1]},{frame:[0]}],
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_CAB3);} },
+//		onactioncall:CabToggleState },
+	{ img:"Oven",nice:"Oven",id:"Oven",x:-46+52,y:78,states:[{frame:[-1]},{frame:[0]}],
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_OVEN);} },
+//		onactioncall:CabToggleState },
 	
 	{ img:"Toaster",nice:"Toaster",x:-46,y:78-44,onactioncall:function(){var Thing = FindById("Soda1"); Thing.active = !Thing.active;} },
 	{ img:"CoffeeMaker",x:13,y:78-44 },
