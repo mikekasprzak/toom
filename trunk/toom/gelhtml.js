@@ -216,30 +216,40 @@ function sndLooped( SoundName, Volume ) {
 function OnComplete() {
 	// Copy Properties //
 	for ( var idx = 0; idx < ArtFiles.length; idx++ ) {
-		if ( ArtFiles[idx].hasOwnProperty('tile_w') ) {
+		if ( ArtFiles[idx].hasOwnProperty('tile_w') )
 			Art[ArtFiles[idx].name].tile_w = ArtFiles[idx].tile_w;
-		}
-		else {
+		else
 			Art[ArtFiles[idx].name].tile_w = Art[ArtFiles[idx].name].width;
-		}
-		if ( ArtFiles[idx].hasOwnProperty('tile_h') ) {
+		if ( ArtFiles[idx].hasOwnProperty('tile_h') )
 			Art[ArtFiles[idx].name].tile_h = ArtFiles[idx].tile_h;
-		}
-		else {
+		else
 			Art[ArtFiles[idx].name].tile_h = Art[ArtFiles[idx].name].height;
-		}
-		if ( ArtFiles[idx].hasOwnProperty('anchor_x') ) {
+
+		if ( ArtFiles[idx].hasOwnProperty('anchor_x') )
 			Art[ArtFiles[idx].name].anchor_x = ArtFiles[idx].anchor_x;
-		}
-		else {
+		else
 			Art[ArtFiles[idx].name].anchor_x = Art[ArtFiles[idx].name].tile_w>>1;
-		}
-		if ( ArtFiles[idx].hasOwnProperty('anchor_y') ) {
+		if ( ArtFiles[idx].hasOwnProperty('anchor_y') )
 			Art[ArtFiles[idx].name].anchor_y = ArtFiles[idx].anchor_y;
-		}
-		else {
+		else
 			Art[ArtFiles[idx].name].anchor_y = Art[ArtFiles[idx].name].tile_h>>1;
-		}
+
+		if ( ArtFiles[idx].hasOwnProperty('margin_left') )
+			Art[ArtFiles[idx].name].margin_left = ArtFiles[idx].margin_left;
+		else
+			Art[ArtFiles[idx].name].margin_left = 0;
+		if ( ArtFiles[idx].hasOwnProperty('margin_right') )
+			Art[ArtFiles[idx].name].margin_right = ArtFiles[idx].margin_right;
+		else
+			Art[ArtFiles[idx].name].margin_right = 0;
+		if ( ArtFiles[idx].hasOwnProperty('margin_top') )
+			Art[ArtFiles[idx].name].margin_top = ArtFiles[idx].margin_top;
+		else
+			Art[ArtFiles[idx].name].margin_top = 0;
+		if ( ArtFiles[idx].hasOwnProperty('margin_bottom') )
+			Art[ArtFiles[idx].name].margin_bottom = ArtFiles[idx].margin_bottom;
+		else
+			Art[ArtFiles[idx].name].margin_bottom = 0;
 	}	
 	
 	console.log("begin game");
