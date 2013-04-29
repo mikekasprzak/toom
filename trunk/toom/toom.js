@@ -63,6 +63,7 @@ cPlayer.prototype.Step = function() {
 	else {
 		this.Pos = this.TargetPos.clone();
 		this.SetState( ST_IDLE );
+		Player.Focus = null;
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -171,7 +172,23 @@ function Step() {
 	FCamera.y = Math.floor(Camera.y);
 	
 	if ( Mouse.GetNew() ) {
-		Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
+		if ( MouseFocus == null ) {
+			Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
+		}
+		else {
+			var Item = MouseFocus;
+			var ArtFile = Art[Item.img];
+
+			var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
+			var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
+			var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
+			var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
+			
+			// TODO: Add properties for adjusting the target position offset //
+
+			Player.TargetPos.x = IX+(IW>>1);
+			Player.Focus = MouseFocus;			
+		}
 		
 		AddCP( Mouse.Pos.x+Camera.x, Mouse.Pos.y+Camera.y );
 
@@ -270,6 +287,25 @@ function Draw() {
 //		ctx.fillText(Text, Mouse.Pos.x+Camera.x-(TD.width>>1), Mouse.Pos.y+Camera.y-20);
 	}
 
+	if ( Player.Focus != null ) {
+		var Item = Player.Focus;
+		var ArtFile = Art[Item.img];
+
+		var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
+		var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
+		var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
+		var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
+
+		ctx.fillStyle = RGB(255,255,0);
+		ctx.font = '20px Pixel';
+		var Text = Item.img; // should be nice name
+		var TD = ctx.measureText(Text);
+		ctx.fillText(Text, 
+			BX+IX+(IW>>1) - (TD.width>>1),
+			BY+IY - 15
+			);
+	}
+
 	if ( ShowDebug ) {
 		var OldAlpha = ctx.globalAlpha;
 		ctx.globalAlpha = 0.8;
@@ -300,7 +336,7 @@ function Draw() {
 				ctx.strokeStyle = RGB(255,255,255);
 				ctx.strokeRect( 
 					BX+IX+(IW>>1),
-					BY+IY+(IW>>1),
+					BY+IY+(IH>>1),
 					4,
 					4 );
 			}
