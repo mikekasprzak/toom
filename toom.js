@@ -63,6 +63,13 @@ cPlayer.prototype.Step = function() {
 	else {
 		this.Pos = this.TargetPos.clone();
 		this.SetState( ST_IDLE );
+		
+		if ( Player.Focus != null ) {
+			if ( Player.Focus.hasOwnProperty('onaction') ) {
+				Player.Focus.onaction();
+			}
+		}
+		
 		Player.Focus = null;
 	}
 }
@@ -120,6 +127,9 @@ function LoseFocus() {
 // - ------------------------------------------------------------------------------------------ - //
 
 // - ------------------------------------------------------------------------------------------ - //
+var MouseMoveCount = 0;
+var MouseClickedCount = 0;
+// - ------------------------------------------------------------------------------------------ - //
 var Stepper = 0;
 function Step() {
 	Stepper++;
@@ -133,28 +143,28 @@ function Step() {
 		for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
 			var Item = ItemLayers[layer][idx];
 			var ArtFile = Art[Item.img];
-
-			var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
-			var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
-			var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
-			var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
 			
-			if ( Test_Sphere_vs_AABB(
-					BMouse,
-					4,
-					IX,
-					IY,
-					IW,
-					IH 
+			if ( Item.hasOwnProperty( 'nice' ) ) {
+				var IX = Item.x-ArtFile.anchor_x-ArtFile.margin_left;
+				var IY = Item.y-ArtFile.anchor_y-ArtFile.margin_top;
+				var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
+				var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
+				
+				if ( Test_Sphere_vs_AABB(
+						BMouse,
+						4,
+						IX,
+						IY,
+						IW,
+						IH 
+					)
 				)
-			)
-			{
-				MouseFocus = Item;
-//				break;
+				{
+					MouseFocus = Item;
+//					MouseClickedCount = 128;
+				}
 			}
 		}
-//		if ( MouseFocus != null ) 
-//			break;
 	}
 	
 	// Mouse Cursor Part //
@@ -171,7 +181,22 @@ function Step() {
 	FCamera.x = Math.floor(Camera.x);
 	FCamera.y = Math.floor(Camera.y);
 	
+	if ( Mouse.Diff().Magnitude() != 0 ) {
+		MouseMoveCount += 16;
+		if ( MouseMoveCount > 128 )
+			MouseMoveCount = 128;
+	}
+	else {
+		if ( MouseMoveCount )
+			MouseMoveCount--;
+	}
+
+	if ( MouseClickedCount )
+		MouseClickedCount--;
+	
 	if ( Mouse.GetNew() ) {
+		sndPlay( "Click", 0.5 );
+		
 		if ( MouseFocus == null ) {
 			Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
 		}
@@ -187,7 +212,8 @@ function Step() {
 			// TODO: Add properties for adjusting the target position offset //
 
 			Player.TargetPos.x = IX+(IW>>1);
-			Player.Focus = MouseFocus;			
+			Player.Focus = MouseFocus;
+			MouseClickedCount = 128;
 		}
 		
 		AddCP( Mouse.Pos.x+Camera.x, Mouse.Pos.y+Camera.y );
@@ -274,9 +300,12 @@ function Draw() {
 		var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
 		var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
 
+		var OldAlpha = ctx.globalAlpha;
+		ctx.globalAlpha = MouseMoveCount > 64 ? 1 : MouseMoveCount / 64;
+
 		ctx.fillStyle = RGB(0,255,255);
 		ctx.font = '20px Pixel';
-		var Text = Item.img; // should be nice name
+		var Text = Item.nice;//Item.img;
 		var TD = ctx.measureText(Text);
 		ctx.fillText(Text, 
 			BX+IX+(IW>>1) - (TD.width>>1),
@@ -285,6 +314,8 @@ function Draw() {
 //			Mouse.Pos.x-(TD.width>>1), 
 //			Mouse.Pos.y-15
 //		ctx.fillText(Text, Mouse.Pos.x+Camera.x-(TD.width>>1), Mouse.Pos.y+Camera.y-20);
+
+		ctx.globalAlpha = OldAlpha;
 	}
 
 	if ( Player.Focus != null ) {
@@ -296,14 +327,19 @@ function Draw() {
 		var IW = ArtFile.tile_w+ArtFile.margin_left+ArtFile.margin_right;
 		var IH = ArtFile.tile_h+ArtFile.margin_top+ArtFile.margin_bottom;
 
+		var OldAlpha = ctx.globalAlpha;
+		ctx.globalAlpha = MouseClickedCount > 64 ? 1 : MouseClickedCount / 64;
+
 		ctx.fillStyle = RGB(255,255,0);
 		ctx.font = '20px Pixel';
-		var Text = Item.img; // should be nice name
+		var Text = Item.nice;//Item.img;
 		var TD = ctx.measureText(Text);
 		ctx.fillText(Text, 
 			BX+IX+(IW>>1) - (TD.width>>1),
 			BY+IY - 15
 			);
+
+		ctx.globalAlpha = OldAlpha;
 	}
 
 	if ( ShowDebug ) {

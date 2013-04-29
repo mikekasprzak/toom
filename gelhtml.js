@@ -186,6 +186,22 @@ function gfxDrawLayer( layer ) {
 			
 			CurrentFrame = layer[idx].frame[Index];
 		}
+		else if ( typeof layer[idx].states != "undefined" ) {
+			var Length = layer[idx].states[layer[idx].state].frame.length;
+			if ( typeof layer[idx].FrameStep === "undefined" ) {
+				layer[idx].FrameStep = 0;
+			}
+			else {
+				layer[idx].FrameStep++;
+			}
+			var Index = Math.floor(layer[idx].FrameStep / 6);
+			if ( Index >= Length ) {
+				Index = 0;
+				layer[idx].FrameStep = 0;
+			}
+			
+			CurrentFrame = layer[idx].states[layer[idx].state].frame[Index];			
+		}
 		
 		if ( CurrentFrame >= 0 ) {
 			gfxDraw( 
@@ -214,6 +230,15 @@ function sndLooped( SoundName, Volume ) {
 
 // - ------------------------------------------------------------------------------------------ - //
 function OnComplete() {
+	// Initialize some defaults in Layers //
+	for ( var layer = 0; layer < ItemLayers.length; layer++ ) {
+		for ( var idx = 0; idx < ItemLayers[layer].length; idx++ ) {
+			if ( !ItemLayers[layer][idx].hasOwnProperty('state') ) {
+				ItemLayers[layer][idx].state = 0;
+			}
+		}
+	}
+	
 	// Copy Properties //
 	for ( var idx = 0; idx < ArtFiles.length; idx++ ) {
 		if ( ArtFiles[idx].hasOwnProperty('tile_w') )
