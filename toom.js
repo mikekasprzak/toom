@@ -64,14 +64,14 @@ var StateMap = [
 var Player;
 // - ------------------------------------------------------------------------------------------ - //
 function cPlayer() {
-	this.Pos = new Vector2D(0,0);
+	this.Pos = new Vector2D(-326,0);
 	this.TargetPos = this.Pos.clone();
-	this.FacingLeft = false;
+	this.FacingLeft = true;
 
 	this.State = ST.IDLE;
 	this.CurrentFrameStep = 0;
 	this.CurrentAnimation = "Idle";
-	this.SetState( ST.IDLE );
+	this.SetState( ST.SIT_COUCH );
 	
 	this.Focus = null;
 	

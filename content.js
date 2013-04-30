@@ -62,6 +62,9 @@ var ArtFiles = [
 	{ name:"Items", value:"item/inventory_items.png", tile_w:42*2, tile_h:35*2 },
 	{ name:"ItemsLit", value:"item/inventory_items_highlight.png", tile_w:42*2, tile_h:35*2 },
 	{ name:"Inventory", value:"item/inventory_bar.png", tile_w:42*2, tile_h:42*2 },
+	
+	{ name:"Logo", value:"item/title.png", anchor_y:111 },
+	
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var AudioFiles = [
@@ -318,6 +321,8 @@ var RoomFGLayer = [
 			}
 		}
 	},
+
+	{ img:"Logo",nice:"Woohoo! We Finished!",x:-429+20+50,y:-78-54 },
 	
 	// Front Tube //
 	{ img:"Teleporter",nice:"Hyper Tube",x:429,y:78,frame:[3] },
