@@ -73,20 +73,20 @@ var AudioFiles = [
 	{ name:"Cab_Open", value:"audio/cab_open.ogg|audio/cab_open.mp3" },
 	{ name:"Cab_Close", value:"audio/cab_close.ogg|audio/cab_close.mp3" },
 
-	{ name:"Pickup", value:"audio/pickup_01.mp3" },
+	{ name:"Pickup", value:"audio/pickup_01.ogg|audio/pickup_01.mp3" },
 //	{ name:"Pickup", value:"audio/pickup_02.mp3" },
-	{ name:"Use", value:"audio/drop_01.mp3" },
+	{ name:"Use", value:"audio/drop_01.ogg|audio/drop_01.mp3" },
 
-	{ name:"ComputerStart", value:"audio/PC_Start.mp3" },
-	{ name:"ComputerWork", value:"audio/typing.mp3" },
-	{ name:"Printer", value:"audio/printer.mp3" },
-	{ name:"Tube", value:"audio/tube_activate_01.mp3" },
+	{ name:"ComputerStart", value:"audio/PC_Start.ogg|audio/PC_Start.mp3" },
+	{ name:"ComputerWork", value:"audio/typing.ogg|audio/typing.mp3" },
+	{ name:"Printer", value:"audio/printer.ogg|audio/printer.mp3" },
+	{ name:"Tube", value:"audio/tube_activate_01.ogg|audio/tube_activate_01.mp3" },
 
-	{ name:"Desk_Open", value:"audio/open_desk.mp3" },
+//	{ name:"Desk_Open", value:"audio/open_desk.mp3" },
 
-	{ name:"Fart1", value:"audio/fart_01.mp3" },
-	{ name:"Fart2", value:"audio/fart_02.mp3" },
-	{ name:"Flush", value:"audio/flush_01.mp3" },
+	{ name:"Fart1", value:"audio/fart_01.ogg|audio/fart_01.mp3" },
+//	{ name:"Fart2", value:"audio/fart_02.mp3" },
+	{ name:"Flush", value:"audio/flush_01.ogg|audio/flush_01.mp3" },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 
