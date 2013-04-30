@@ -117,7 +117,7 @@ cPlayer.prototype.SetAnimation = function( NewAnim, FacingLeft ) {
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.AddItem = function( id ) {
 	// TODO: Play Sound Here //
-	//sndPlay("Take");
+	sndPlay("Pickup");
 	this.Inventory.push( id );
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -131,7 +131,7 @@ cPlayer.prototype.FindItem = function( id ) {
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.RemoveItem = function( id ) {
 	// TODO: Play Sound Here //
-	//sndPlay("Use");
+	sndPlay("Use");
 
 	var Index = this.FindItem( id );
 	if ( Index != null ) {

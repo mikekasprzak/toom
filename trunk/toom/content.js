@@ -72,6 +72,21 @@ var AudioFiles = [
 	{ name:"Click", value:"audio/click.ogg|audio/click.mp3" },
 	{ name:"Cab_Open", value:"audio/cab_open.ogg|audio/cab_open.mp3" },
 	{ name:"Cab_Close", value:"audio/cab_close.ogg|audio/cab_close.mp3" },
+
+	{ name:"Pickup", value:"audio/pickup_01.mp3" },
+//	{ name:"Pickup", value:"audio/pickup_02.mp3" },
+	{ name:"Use", value:"audio/drop_01.mp3" },
+
+	{ name:"ComputerStart", value:"audio/PC_Start.mp3" },
+	{ name:"ComputerWork", value:"audio/typing.mp3" },
+	{ name:"Printer", value:"audio/printer.mp3" },
+	{ name:"Tube", value:"audio/tube_activate_01.mp3" },
+
+	{ name:"Desk_Open", value:"audio/open_desk.mp3" },
+
+	{ name:"Fart1", value:"audio/fart_01.mp3" },
+	{ name:"Fart2", value:"audio/fart_02.mp3" },
+	{ name:"Flush", value:"audio/flush_01.mp3" },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 
@@ -363,7 +378,7 @@ var ManAnim = {
 	Cupboard2_Close:{frame:[51,51,51,51,51,51,51,51,51,51,55,57,57,57,57,57,52,52,52,52,52,55,51,51,51,51],priority:true,onloop:["Idle"]},
 	PC_Sit:{frame:[51,51,51,51,51,55,55],priority:true,
 		onloop:["PC_Idle"],
-		onstartcall:function(){ if (Player.FindItem(IT.DISK)!=null) FindById("Desk").state=1; }
+		onstartcall:function(){ if (Player.FindItem(IT.DISK)!=null) { FindById("Desk").state=1; sndPlay("ComputerStart"); } }
 		},
 	PC_Stand:{frame:[55,55,51,51],priority:true,
 		onloop:["Idle"],
@@ -372,7 +387,7 @@ var ManAnim = {
 	PC_Idle:{frame:[59],
 		onaction:["PC_Stand"],
 		onloopcall:function() {
-			if (Player.FindItem(IT.DISK)!=null) Player.SetAnimation("PC_Work");			
+			if (Player.FindItem(IT.DISK)!=null) { Player.SetAnimation("PC_Work"); sndPlay("ComputerWork"); }
 		}
 	},
 	PC_Work:{frame:[59,59,59,59,58,59,58,59,58,59,58,59,58,59,58,59,58,59,58,59,59,59,59,59,59,59,59],
@@ -384,6 +399,7 @@ var ManAnim = {
 				var Printer = FindById("PrinterOutput");
 				Printer.state = 1;
 				Printer.FrameStep = 0;
+				sndPlay("Printer");
 			}		
 		}
 	},
