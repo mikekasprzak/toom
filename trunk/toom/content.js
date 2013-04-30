@@ -340,9 +340,18 @@ var RoomFGLayer = [
 	{ img:"Logo",nice:"Woohoo! We Finished!",x:-429+20+50,y:-78-54 },
 	
 	// Front Tube //
-	{ img:"Teleporter",nice:"Hyper Tube",x:429,y:78,frame:[3] },
-//	// Glow //
-//	{ img:"Teleporter",x:429,y:78,frame:[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,2,2,2,2,2,2,2,2,2,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1] },
+	{ img:"Teleporter",nice:"Hyper Tube",x:429,y:78,frame:[3],
+		onactioncall:function(){
+			if ( Player.HasItem(IT.MANUAL) ) {
+				var Glow = FindById("Glow");
+				Glow.state = 1;
+			}
+		}
+	},
+	// Glow //
+	{ img:"Teleporter",id:"Glow",x:429,y:78,
+		states:[{frame:[-1]},{frame:[-1,2,-1,2]}],
+	},
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var ItemLayers = [
