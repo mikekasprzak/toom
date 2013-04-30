@@ -76,7 +76,7 @@ function cPlayer() {
 	this.Focus = null;
 	
 	this.Inventory = [];
-	this.AddItem(IT.DISK);
+//	this.AddItem(IT.DISK);
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.SetState = function( NewState, FacingLeft ) {
@@ -610,6 +610,9 @@ function Draw() {
 			Music.setVolume(Fade);
 			gfxClear( RGB(0,0,0) );
 			ctx.globalAlpha = 1.0;
+			if ( Fader == 128 )
+				sndPlay("Fart1");
+
 			if ( Fader == 1 )
 				sndPlay("Flush");
 		}
