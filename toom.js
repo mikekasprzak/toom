@@ -253,7 +253,10 @@ function LoseFocus() {
 var MouseMoveCount = 0;
 var MouseClickedCount = 0;
 // - ------------------------------------------------------------------------------------------ - //
-var Stepper = 0;
+var FadeIn = true;
+var FadeOut = false;
+var Fader = 255;
+// - ------------------------------------------------------------------------------------------ - //
 function Step() {
 	var BMouse = Mouse.Pos.clone();
 	BMouse.x -= BaseX;
@@ -264,7 +267,8 @@ function Step() {
 
 	// *** //
 
-	Stepper++;
+	if ( Fader )
+		Fader--;
 
 	// *** //
 	
@@ -330,7 +334,7 @@ function Step() {
 	}
 		
 	// Check if a button was pressed //
-	if ( Mouse.GetNew() ) {
+	if ( Mouse.GetNew() && !FadeOut ) {
 		if ( Test_Sphere_vs_AABB( BMouse, 2, UIX, UIY, UIW, UIH ) ) {
 			var Lit = null;
 			
@@ -584,13 +588,31 @@ function Draw() {
 
 	// *** //
 
-	var InvFade = (255-Stepper)/255;
-	var Fade = Stepper/255;
-	if ( InvFade > 0 ) {
-		ctx.globalAlpha = InvFade;
-		Music.setVolume(Fade);
-		gfxClear( RGB(0,0,0) );
-		ctx.globalAlpha = 1.0;
+	if ( FadeIn ) {
+		var Fade = Fader/255;
+		var InvFade = (255-Fader)/255;
+		if ( Fade > 0 ) {
+			ctx.globalAlpha = Fade;
+			Music.setVolume(InvFade);
+			gfxClear( RGB(0,0,0) );
+			ctx.globalAlpha = 1.0;
+		}
+		else {
+			FadeIn = false;
+		}
+	}
+
+	if ( FadeOut ) {
+		var Fade = Fader/255;
+		var InvFade = (255-Fader)/255;
+		if ( Fade >= 0 ) {
+			ctx.globalAlpha = InvFade;
+			Music.setVolume(Fade);
+			gfxClear( RGB(0,0,0) );
+			ctx.globalAlpha = 1.0;
+			if ( Fader == 1 )
+				sndPlay("Flush");
+		}
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //

@@ -345,6 +345,8 @@ var RoomFGLayer = [
 			if ( Player.FindItem(IT.MANUAL) ) {
 				var Glow = FindById("Glow");
 				Glow.state = 1;
+				FadeOut = true;
+				Fader = 255;
 			}
 		}
 	},
