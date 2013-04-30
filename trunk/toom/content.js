@@ -55,6 +55,8 @@ var ArtFiles = [
 	{ name:"Printer", value:"item/item_3Dprinter.png", anchor_y:80 },
 	{ name:"PrinterOutput", value:"item/item_3Dprinter_anim.png", tile_w:24, anchor_y:32 },
 
+	{ name:"Key", value:"item/item_key.png", anchor_y:12 },
+
 	{ name:"Teleporter", value:"item/item_teleporter.png", tile_w:128, anchor_y:186, margin_left:-42,margin_right:-18,margin_top:-34 },
 
 	{ name:"Items", value:"item/inventory_items.png", tile_w:42*2, tile_h:35*2 },
@@ -253,10 +255,15 @@ var RoomBGLayer = [
 	{ img:"PrinterOutput",id:"PrinterOutput",x:304+8,y:78-70+32,
 		states:[{frame:[0]},{frame:[1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9]}],
 		onloopcall:function() {
-			this.state=0;
-//			FindById("Key").active=true;
+			if ( this.state == 1 ) {
+				this.state=0;
+				FindById("Key").active=true;
+			}
 		}
 	},
+	{ img:"Key",nice:"Key",id:"Key",x:312,y:78-46,active:false,
+		onactioncall:function(){this.active=false;Player.AddItem(IT.KEY);},
+		},
 	{ img:"Desk",id:"Desk",x:230,y:78,
 		states:[{frame:[0]},{frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0]}],
 	},
@@ -265,12 +272,12 @@ var RoomBGLayer = [
 	{ img:"Chair",nice:"Chair",x:250,y:78,
 		onactioncall:function(){Player.SetState(ST.SIT_PC_CHAIR,false);} 
 		},
-	{ img:"Manual",nice:"Science",id:"Manual",x:208,y:78-28,active:true,hidden:true,
+	{ img:"Manual",nice:"Newspaper",id:"Manual",x:208,y:78-28,active:true,hidden:true,
 		onactioncall:function(){this.active=false;Player.AddItem(IT.MANUAL);},
 		},
 	{ img:"Drawer",nice:"Secret Files",id:"Drawer",x:208,y:78-4,states:[{frame:[-1]},{frame:[0]}],
 		onactioncall:function() {
-			if ( Player.FindItem(IT.SODA) == null ) {
+			if ( Player.FindItem(IT.KEY) == null ) {
 				sndPlay("Cab_Open");
 			}
 			else {
