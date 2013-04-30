@@ -53,6 +53,7 @@ var ArtFiles = [
 	{ name:"Manual", value:"item/item_manual.png", anchor_y:16 },
 
 	{ name:"Printer", value:"item/item_3Dprinter.png", anchor_y:80 },
+	{ name:"PrinterOutput", value:"item/item_3Dprinter_anim.png", tile_w:24, anchor_y:32 },
 
 	{ name:"Teleporter", value:"item/item_teleporter.png", tile_w:128, anchor_y:186, margin_left:-42,margin_right:-18,margin_top:-34 },
 
@@ -249,6 +250,13 @@ var RoomBGLayer = [
 	{ img:"CoffeePot",nice:"Coffee Pot",x:8,y:78-44-6,state:4,states:[{frame:[0]},{frame:[1]},{frame:[2]},{frame:[3]},{frame:[4]}] },
 
 	{ img:"Printer",nice:"Hogwash 4000",x:303,y:78 },
+	{ img:"PrinterOutput",id:"PrinterOutput",x:304+8,y:78-70+32,
+		states:[{frame:[0]},{frame:[1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9]}],
+		onloopcall:function() {
+			this.state=0;
+//			FindById("Key").active=true;
+		}
+	},
 	{ img:"Desk",id:"Desk",x:230,y:78,
 		states:[{frame:[0]},{frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0]}],
 	},
@@ -297,18 +305,17 @@ var RoomFGLayer = [
 		//onactioncall:function(){Player.RemoveItem(IT.HEAD);} 
 		onloopcall:function(){
 			if ( this.state == 1 ) {
-				Log("Hooo");
 				FindById("Disk").active=true;
 				this.state = 0;
-				sndPlay("Cab_Open");
+//				sndPlay("Cab_Open");
 			}
 		}
 	},
 	
 	// Front Tube //
 	{ img:"Teleporter",nice:"Hyper Tube",x:429,y:78,frame:[3] },
-	// Glow //
-	{ img:"Teleporter",x:429,y:78,frame:[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,2,2,2,2,2,2,2,2,2,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1] },
+//	// Glow //
+//	{ img:"Teleporter",x:429,y:78,frame:[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,2,2,2,2,2,2,2,2,2,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1,2,-1] },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var ItemLayers = [
@@ -350,8 +357,24 @@ var ManAnim = {
 		onloop:["Idle"],
 		onstopcall:function(){ FindById("Desk").state=0; }
 		},
-	PC_Idle:{frame:[59],onaction:["PC_Stand"]},
-	PC_Work:{frame:[59,59,59,59,60,59,60,59,60,59,60,59,60,59,60,59,60,59,60,59,9,59,59,59,9,59,59],onaction:["PC_Stand"]},
+	PC_Idle:{frame:[59],
+		onaction:["PC_Stand"],
+		onloopcall:function() {
+			if (Player.FindItem(IT.DISK)!=null) Player.SetAnimation("PC_Work");			
+		}
+	},
+	PC_Work:{frame:[59,59,59,59,58,59,58,59,58,59,58,59,58,59,58,59,58,59,58,59,59,59,59,59,59,59,59],
+		onaction:["PC_Stand"],
+		onloopcall:function() {
+			if (Player.FindItem(IT.DISK)!=null) {
+				Log("HEE");
+				Player.RemoveItem(IT.DISK);
+				var Printer = FindById("PrinterOutput");
+				Printer.state = 1;
+				Printer.FrameStep = 0;
+			}		
+		}
+	},
 	PC_Coffee:{frame:[61,61,62,62,63,63,64,64,64,64,64,64,64,64,64,64,63,63,62,62],onaction:["PC_Stand"]},
 	PC_Desk:{frame:[51,51,51,51,51,51,74,74,74,74,74,74],priority:true,onloop:["Idle"]},
 	Table_Sit:{frame:[51,51,51,51,51,55,55],priority:true,
@@ -380,8 +403,8 @@ var ManAnim = {
 			else {
 				if (Player.FindItem(IT.SODA)!=null) Player.SetAnimation("Table_Drink");
 			}
-			},
 		},
+	},
 	Table_Eat:{frame:[64,65,65,66,66,67,67,68,67,67,69,69,70],
 		onaction:["Table_Stand"],onloop:["Table_Idle"],
 //		onstartcall:function(){ FindById("Meat2").active = false; },
