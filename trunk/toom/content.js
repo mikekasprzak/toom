@@ -178,6 +178,7 @@ var RoomBGLayer = [
 	{ img:"Table",x:-170,y:78 },
 	{ img:"Chair",nice:"Chair",x:-154,y:78,onactioncall:function(){Player.SetState(ST.SIT_TABLE_CHAIR,false);} },
 
+	{ img:"Head",id:"Head2",x:-178,y:78-38,active:false },
 	{ img:"Meat",id:"Meat2",x:-178,y:78-38,active:false },
 	{ img:"Soda",id:"Soda2",x:-186,y:78-38,active:false },
 
@@ -349,12 +350,14 @@ var ManAnim = {
 		onstartcall:function(){
 			if (Player.FindItem(IT.SODA)!=null) FindById("Soda2").active = true; 
 			if (Player.FindItem(IT.COOKED_MEAT)!=null) FindById("Meat2").active = true; 
+			if (Player.FindItem(IT.HEAD)!=null) FindById("Head2").active = true; 
 			},
 		},
 	Table_Stand:{frame:[55,55,51,51],priority:true,onloop:["Idle"],
 		onstopcall:function(){ 
 			FindById("Soda2").active = false;
 			FindById("Meat2").active = false;
+			FindById("Head2").active = false;
 			},
 		},
 	Table_Idle:{frame:[59,59,59,59,59,59,59,59,59,59],onaction:["Table_Stand"],
@@ -363,6 +366,7 @@ var ManAnim = {
 			this.toggle = !this.toggle;
 			if ( this.toggle ) {
 				if (Player.FindItem(IT.COOKED_MEAT)!=null) Player.SetAnimation("Table_Eat");
+				else if (Player.FindItem(IT.HEAD)!=null) Player.SetAnimation("Table_Eat");
 			}
 			else {
 				if (Player.FindItem(IT.SODA)!=null) Player.SetAnimation("Table_Drink");
