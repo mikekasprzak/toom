@@ -342,7 +342,7 @@ var RoomFGLayer = [
 	// Front Tube //
 	{ img:"Teleporter",nice:"Hyper Tube",x:429,y:78,frame:[3],
 		onactioncall:function(){
-			if ( Player.HasItem(IT.MANUAL) ) {
+			if ( Player.FindItem(IT.MANUAL) ) {
 				var Glow = FindById("Glow");
 				Glow.state = 1;
 			}

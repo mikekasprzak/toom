@@ -76,7 +76,7 @@ function cPlayer() {
 	this.Focus = null;
 	
 	this.Inventory = [];
-//	this.AddItem(IT.DISK);
+	this.AddItem(IT.DISK);
 }
 // - ------------------------------------------------------------------------------------------ - //
 cPlayer.prototype.SetState = function( NewState, FacingLeft ) {
