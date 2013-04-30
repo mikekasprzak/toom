@@ -6,6 +6,8 @@ function cRoom() {
 }
 // - ------------------------------------------------------------------------------------------ - //
 
+var Fin = false;
+var FinDelay = 512;
 
 // - ------------------------------------------------------------------------------------------ - //
 var ST = {
@@ -613,8 +615,23 @@ function Draw() {
 			if ( Fader == 128 )
 				sndPlay("Fart1");
 
-			if ( Fader == 1 )
+			if ( Fader == 1 ) {
 				sndPlay("Flush");
+				DoFin = true;
+			}
+		}
+	}
+	
+	if ( DoFin ) {
+		if ( FinDelay ) {
+			FinDelay--;
+		}
+		else {
+			ctx.fillStyle = RGB(255,255,255);
+			ctx.font = '20px Pixel';
+			var Text = 'Fin';
+			var TD = ctx.measureText(Text);
+			ctx.fillText(Text, BaseX-(TD.width>>1), BaseY);
 		}
 	}
 }
