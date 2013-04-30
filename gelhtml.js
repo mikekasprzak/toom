@@ -184,6 +184,9 @@ function gfxDrawLayer( layer ) {
 				if ( Index >= Length ) {
 					Index = 0;
 					layer[idx].FrameStep = 0;
+					if ( layer[idx].hasOwnProperty('onloopcall') ) {
+						layer[idx].onloopcall();
+					}
 				}
 				
 				CurrentFrame = layer[idx].frame[Index];
@@ -200,6 +203,9 @@ function gfxDrawLayer( layer ) {
 				if ( Index >= Length ) {
 					Index = 0;
 					layer[idx].FrameStep = 0;
+					if ( layer[idx].hasOwnProperty('onloopcall') ) {
+						layer[idx].onloopcall();
+					}
 				}
 				
 				CurrentFrame = layer[idx].states[layer[idx].state].frame[Index];			

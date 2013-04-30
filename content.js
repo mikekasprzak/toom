@@ -16,9 +16,11 @@ var ArtFiles = [
 	{ name:"FG1", value:"art/toombg_fg_01.png" },
 	{ name:"FG2", value:"art/toombg_fg_02.png", anchor_y:304-400 },
 	
-	{ name:"Fan", value:"item/item_fan.png", tile_w:8, anchor_y:64 },
+	{ name:"Fan", value:"item/item_fan.png", tile_w:8, anchor_y:64, offset_x:64 },
 	{ name:"TV", value:"item/item_tv.png", tile_w:104, anchor_y:88, margin_left:-24,margin_right:-24,margin_top:-24 },
 	{ name:"Couch", value:"item/item_couch.png", anchor_y:42, offset_x:-6 },
+	
+	{ name:"Disk", value:"item/item_disk.png", anchor_y:16 },
 
 	{ name:"Table", value:"item/item_table.png", anchor_y:38 },
 	{ name:"Chair", value:"item/item_chair.png", anchor_y:48, offset_x:-7 },
@@ -42,6 +44,7 @@ var ArtFiles = [
 	{ name:"RawMeat", value:"item/item_rawmeat.png", anchor_y:16 },
 	{ name:"FrozenHead", value:"item/item_frozenhead.png", anchor_y:14 },
 	{ name:"Head", value:"item/item_head.png", anchor_y:14 },
+	{ name:"HeadToss", value:"item/item_headtoss.png", tile_w:128,tile_h:150,anchor_y:150 },
 
 	{ name:"Fishbowl", value:"item/item_fishbowl.png", tile_w:32, tile_h:64, anchor_y:64, offset_x:-20 },
 	{ name:"Coffee", value:"item/item_coffee_mug.png", anchor_y:10 },
@@ -97,24 +100,6 @@ var IT = {
 // - ------------------------------------------------------------------------------------------ - //
 function ToggleState() {
 	this.state ^= 1;
-}
-// - ------------------------------------------------------------------------------------------ - //
-function CabToggleState() {
-	ToggleState.call(this);
-	if ( this.state ) {
-		sndPlay("Cab_Open");
-		Player.SetState(ST.TURN,true);
-//		Player.SetAnimation("Turned",true);
-	}
-	else {
-		sndPlay("Cab_Close");
-		Player.SetState(ST.IDLE);
-//		Player.SetAnimation("Idle",true);
-	}
-	
-	if ( this.hasOwnProperty('onupdatecall') ) {
-		this.onupdatecall();
-	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 // Use here instead of CloseState //
@@ -182,7 +167,11 @@ var RoomBGLayer = [
 	{ img:"Meat",id:"Meat2",x:-178,y:78-38,active:false },
 	{ img:"Soda",id:"Soda2",x:-186,y:78-38,active:false },
 
-	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],onactioncall:CabToggleState },
+	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],
+		onactioncall:function() {
+			ItToggleState.call(this,ST.TURN,true);
+		}
+	},
 
 	{ img:"Fridge",x:62,y:78 },
 	{ img:"FridgeTop",nice:"Freezer",id:"Freezer",x:62+14,y:78-62-4,states:[{frame:[-1]},{frame:[0]}],
@@ -295,7 +284,27 @@ var RoomBGLayer = [
 var RoomFGLayer = [
 	{ img:"TV",nice:"Television",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0] },
 	{ img:"Fan",nice:"Fan",x:-453,y:78-52,frame:[0,1,2,3,4,5],
-		onactioncall:function(){Player.RemoveItem(IT.HEAD);} },
+		onactioncall:function(){
+			ItOpenState.call(this,ST.STAND_FAN,false);
+		}
+	},
+
+	{ img:"Disk",nice:"Floppy Disk",id:"Disk",x:-423,y:78-52,active:false,
+		onactioncall:function(){this.active=false;Player.AddItem(IT.DISK);} },
+
+	{ img:"HeadToss",id:"HeadToss",x:-403+16,y:78+12,
+		states:[{frame:[-1]},{frame:[0,1,2,3,4,5]}],
+		//onactioncall:function(){Player.RemoveItem(IT.HEAD);} 
+		onloopcall:function(){
+			if ( this.state == 1 ) {
+				Log("Hooo");
+				FindById("Disk").active=true;
+				this.state = 0;
+				sndPlay("Cab_Open");
+			}
+		}
+	},
+	
 	// Front Tube //
 	{ img:"Teleporter",nice:"Hyper Tube",x:429,y:78,frame:[3] },
 	// Glow //

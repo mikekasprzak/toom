@@ -23,6 +23,7 @@ var ST = {
 	TURN_CAB3:11,
 	TURN_OVEN:12,
 	TURN_DRAWER:13,
+	STAND_FAN:14,
 };
 // - ------------------------------------------------------------------------------------------ - //
 var StateMap = [
@@ -41,11 +42,22 @@ var StateMap = [
 	{anim:"Turn",
 		onexitcall:function(){ItCloseState.call(FindById("Oven"));},
 		onusecall:function(item){ 
-				if ( item == IT.MEAT ) { Player.RemoveItem(item); FindById("RawMeat2").active=true; } 
-				if ( item == IT.FROZEN_HEAD ) { Player.RemoveItem(item); FindById("FrozenHead2").active=true; } 
-			}
-		},
+			if ( item == IT.MEAT ) { Player.RemoveItem(item); FindById("RawMeat2").active=true; } 
+			if ( item == IT.FROZEN_HEAD ) { Player.RemoveItem(item); FindById("FrozenHead2").active=true; } 
+		}
+	},
 	{anim:"Turn",onexitcall:function(){ItCloseState.call(FindById("Drawer"));}},
+	{anim:"Turn",
+		onusecall:function(item){ 
+			if ( item == IT.HEAD ) { 
+				Player.RemoveItem(item); 
+				var HeadToss = FindById("HeadToss");
+				HeadToss.active=true;
+				HeadToss.state = 1;
+				HeadToss.FrameStep = 0;
+			} 
+		}
+	},
 	
 ];
 // - ------------------------------------------------------------------------------------------ - //
