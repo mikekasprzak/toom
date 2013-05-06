@@ -454,7 +454,7 @@ function Step() {
 		else {	
 			sndPlay( "Click", 0.5 );
 			
-			Reader.Add( "Hey Drek,%%%\nare you enjoying life as\nmuch as I am?" );
+			Reader.Add( "Hey Drek,%%%\nare you enjoying your life\nas much as I am?" );
 			
 			if ( MouseFocus == null ) {
 				Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
