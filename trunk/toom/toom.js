@@ -1,13 +1,93 @@
 // - ------------------------------------------------------------------------------------------ - //
 function cReader() {
-	this.Lines = [];
+	this.LineQueue = [];
+	this.CurrentLine = "";
+	this.CurrentChar = 0;
+	this.DisplayLine = "";
+	this.Whitespace = 1;
 	
-	this.CharDelay = 8;
+	this.DefaultCharDelay = 1;
+	this.DefaultWaitDelay = 16;
+	this.CharDelay = this.DefaultCharDelay;
+	
+	this.DelayChar = "%";
 };
 // - ------------------------------------------------------------------------------------------ - //
-cReader.prototype.Step = function() {
-	
+cReader.prototype.Add = function( Text ) {
+	this.LineQueue.push( Text + "%%%%%%%%" );
 }
+// - ------------------------------------------------------------------------------------------ - //
+cReader.prototype.Step = function() {
+	if ( this.CurrentLine.length > this.CurrentChar ) {
+		//console.log("Do!");
+		if ( this.CharDelay )
+			this.CharDelay--;
+		else {
+			var Char = this.CurrentLine[this.CurrentChar];
+			if ( Char == "\n" ) {
+				this.Whitespace++;
+			}
+			else if ( Char == " " ) {
+				this.Whitespace++;
+			}
+			else if ( Char == "\t" ) {
+				this.Whitespace++;
+			}
+			
+			if ( Char == this.DelayChar ) {
+				this.Whitespace++;
+				this.CharDelay = this.DefaultWaitDelay;
+			}
+			else {
+				this.DisplayLine += Char;
+				if ( this.Whitespace > 0 ) {
+					var Num = Math.floor(Math.random()*19)+1;
+					var File = "Voice" + (Num<10 ? "0" : "") + Num;
+					sndPlay( File, 0.5 );
+	//				console.log( "Play " + File );				
+				}
+				this.Whitespace = 0;
+				this.CharDelay = this.DefaultCharDelay;
+			}
+	
+			this.CurrentChar++;
+		}
+	}
+	else {
+		if ( this.LineQueue.length > 0 ) {
+			this.CurrentChar = 0;
+			this.CurrentLine = this.LineQueue.pop();
+			this.CharDelay = this.DefaultCharDelay;
+			this.Whitespace = 1;
+			this.DisplayLine = "";
+			
+			console.log("Hey: " + this.CurrentLine );
+		}
+		else {
+			this.CurrentChar = 0;
+			this.CurrentLine = ""
+			this.CharDelay = this.DefaultCharDelay;
+			this.Whitespace = 0;
+			this.DisplayLine = "";
+		}	
+	}
+}
+// - ------------------------------------------------------------------------------------------ - //
+cReader.prototype.Draw = function() {
+	var PlayerPos = Player.GetPos();
+	
+	ctx.fillStyle = RGB(255,255,255);
+	ctx.font = '20px Pixel';
+	var Text = this.DisplayLine;
+	var TD = ctx.measureText(Text);
+
+//	if ( (Stepper >> 5)&1 ) {
+//		Text = Text + "_";
+//	}
+	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
+}
+// - ------------------------------------------------------------------------------------------ - //
+var Reader = new cReader();
 // - ------------------------------------------------------------------------------------------ - //
 
 
@@ -372,11 +452,9 @@ function Step() {
 			}
 		}
 		else {	
-//			sndPlay( "Click", 0.5 );
-			var Num = Math.floor(Math.random()*19)+1;
-			var File = "Voice" + (Num<10 ? "0" : "") + Num;
-			sndPlay( File, 0.5 );
-			console.log( "Play " + File );
+			sndPlay( "Click", 0.5 );
+			
+			Reader.Add( "Hey Drek,%%%\nare you enjoying life as\nmuch as I am?" );
 			
 			if ( MouseFocus == null ) {
 				Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
@@ -410,6 +488,8 @@ function Step() {
 
 		
 	Player.Step();
+	
+	Reader.Step();
 	
 	// *** //
 
@@ -568,6 +648,8 @@ function Draw() {
 //		Text = Text + "_";
 //	}
 //	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
+
+	Reader.Draw();
 
 	// *** //
 
