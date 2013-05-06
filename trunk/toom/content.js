@@ -87,6 +87,28 @@ var AudioFiles = [
 	{ name:"Fart1", value:"audio/fart_01.ogg|audio/fart_01.mp3" },
 //	{ name:"Fart2", value:"audio/fart_02.mp3" },
 	{ name:"Flush", value:"audio/flush_01.ogg|audio/flush_01.mp3" },
+
+	{ name:"Voice01", value:"audio/Voice/Voice1.ogg" },
+	{ name:"Voice02", value:"audio/Voice/Voice2.ogg" },
+	{ name:"Voice03", value:"audio/Voice/Voice3.ogg" },
+	{ name:"Voice04", value:"audio/Voice/Voice4.ogg" },
+	{ name:"Voice05", value:"audio/Voice/Voice5.ogg" },
+	{ name:"Voice06", value:"audio/Voice/Voice6.ogg" },
+	{ name:"Voice07", value:"audio/Voice/Voice7.ogg" },
+	{ name:"Voice08", value:"audio/Voice/Voice8.ogg" },
+	{ name:"Voice09", value:"audio/Voice/Voice9.ogg" },
+	{ name:"Voice10", value:"audio/Voice/VoiceA.ogg" },
+	{ name:"Voice11", value:"audio/Voice/VoiceB.ogg" },
+	{ name:"Voice12", value:"audio/Voice/VoiceC.ogg" },
+	{ name:"Voice13", value:"audio/Voice/VoiceD.ogg" },
+	{ name:"Voice14", value:"audio/Voice/VoiceE.ogg" },
+	{ name:"Voice15", value:"audio/Voice/VoiceF.ogg" },
+	{ name:"Voice16", value:"audio/Voice/VoiceG.ogg" },
+	{ name:"Voice17", value:"audio/Voice/VoiceH.ogg" },
+	{ name:"Voice18", value:"audio/Voice/VoiceI.ogg" },
+	{ name:"Voice19", value:"audio/Voice/VoiceJ.ogg" },
+//	{ name:"Voice20", value:"audio/Voice/VoiceK.ogg" },
+//	{ name:"Voice21", value:"audio/Voice/VoiceL.ogg" },
 ];
 // - ------------------------------------------------------------------------------------------ - //
 
