@@ -201,7 +201,7 @@ var FGLayer = [
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var RoomBGLayer = [
-	{ img:"Couch",nice:"Couch",x:-320,y:78,onactioncall:function(){Player.SetState(ST.SIT_COUCH,true);} },
+	{ img:"Couch",nice:"Couch",x:-320,y:78,onactioncall:function(){Player.SetState(ST.SIT_COUCH,true);Reader.Add("Comfy.");} },
 
 	{ img:"Table",x:-170,y:78 },
 	{ img:"Chair",nice:"Chair",x:-154,y:78,onactioncall:function(){Player.SetState(ST.SIT_TABLE_CHAIR,false);Reader.Add("I love sitting.");} },
@@ -213,12 +213,13 @@ var RoomBGLayer = [
 	{ img:"Trash",nice:"Trash Can",x:-96,y:78,states:[{frame:[0]},{frame:[1]}],
 		onactioncall:function() {
 			ItToggleState.call(this,ST.TURN,true);
+			Reader.Add("Trashing!@ Trashing!@@@@\nHack the planet!@@\nHack the planet!",RGB(255,0,255));
 		}
 	},
 
 	{ img:"Fridge",x:62,y:78 },
 	{ img:"FridgeTop",nice:"Freezer",id:"Freezer",x:62+14,y:78-62-4,states:[{frame:[-1]},{frame:[0]}],
-		onactioncall:function(){ItToggleState.call(this,ST.TURN_FREEZER,true);},
+		onactioncall:function(){ItToggleState.call(this,ST.TURN_FREEZER,true);Reader.AddImportant("Oh $#IT!@\nWho put that there!?",RGB(255,0,0));},
 		onupdatecall:function(){FindById("FrozenHead1").hidden=(this.state==0);},
 		},
 	{ img:"FridgeBot",nice:"Fridge",id:"Fridge",x:62+14,y:78-4,states:[{frame:[-1]},{frame:[0]}],
@@ -286,12 +287,14 @@ var RoomBGLayer = [
 		},
 	
 	{ img:"Toaster",nice:"Toaster",x:-46,y:78-44,
-//		onactioncall:function(){var Thing = FindById("Soda1"); Thing.active = !Thing.active;} 
+		onactioncall:function(){Reader.Add("Toasty!");}//var Thing = FindById("Soda1"); Thing.active = !Thing.active;} 
 		},
 	{ img:"CoffeeMaker",x:13,y:78-44 },
 	{ img:"CoffeePot",nice:"Coffee Pot",x:8,y:78-44-6,state:4,states:[{frame:[0]},{frame:[1]},{frame:[2]},{frame:[3]},{frame:[4]}] },
 
-	{ img:"Printer",nice:"Hogwash 4000",x:303,y:78 },
+	{ img:"Printer",nice:"Hogwash 4000",x:303,y:78,
+		onactioncall:function() {Reader.Add("I had a pet pig once.@@\nLet me tell you,@\nthis Hogwash didn't\nWash him at all!!@@@@@@\nIt still reeks of bacon.",RGB(255,128,128));}
+	},
 	{ img:"PrinterOutput",id:"PrinterOutput",x:304+8,y:78-70+32,
 		states:[{frame:[0]},{frame:[1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9]}],
 		onloopcall:function() {
@@ -307,7 +310,9 @@ var RoomBGLayer = [
 	{ img:"Desk",id:"Desk",x:230,y:78,
 		states:[{frame:[0]},{frame:[1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0]}],
 	},
-	{ img:"Fishbowl",nice:"Fishy Fish",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13] },
+	{ img:"Fishbowl",nice:"Fishy Fish",x:166,y:78,frame:[0,1,2,3,4,5,6,7,8,9,10,11,12,13],
+		onactioncall:function(){Reader.Add("Soon,@\nif I keep feeding him@\nhe'll be big enough to eat.");}
+	},
 	{ img:"Coffee",nice:"Mug",x:198,y:78-38 },
 	{ img:"Chair",nice:"Chair",x:250,y:78,
 		onactioncall:function(){Player.SetState(ST.SIT_PC_CHAIR,false);Reader.Add("Ouch!@ A thumb tac!",RGB(0,255,0));} 
@@ -337,10 +342,13 @@ var RoomBGLayer = [
 ];
 // - ------------------------------------------------------------------------------------------ - //
 var RoomFGLayer = [
-	{ img:"TV",nice:"Television",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0] },
+	{ img:"TV",nice:"Television",x:-423,y:78,frame:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0],
+		onactioncall:function(){Reader.Add("Never anything good on.");}
+	},
 	{ img:"Fan",nice:"Fan",x:-453,y:78-52,frame:[0,1,2,3,4,5],
 		onactioncall:function(){
 			ItOpenState.call(this,ST.STAND_FAN,false);
+			Reader.Add("Fanny.");
 		}
 	},
 
