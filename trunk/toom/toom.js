@@ -2,6 +2,7 @@
 function cReader() {
 	this.LineQueue = [];
 	this.CurrentLine = "";
+	this.CurrentColor = RGB(255,255,255);
 	this.CurrentChar = 0;
 	this.DisplayLine = "";
 	this.Whitespace = 1;
@@ -14,28 +15,36 @@ function cReader() {
 	this.Flicker = 0;
 	
 	this.Erasing = false;
+	
+	this.OldLines = [];
 };
 // - ------------------------------------------------------------------------------------------ - //
-cReader.prototype.Add = function( Text ) {
-	this.LineQueue.push( "@@" + Text + "@@@@@@@@@@" );
+cReader.prototype.Add = function( Text, Color ) {
+	this.LineQueue.push( 
+		{
+			text:"@@" + Text + "@@@@@@@@@@",
+			color:((typeof Color === "undefined") ? RGB(255,255,255) : Color)
+		}
+	);
 }
 // - ------------------------------------------------------------------------------------------ - //
-cReader.prototype.AddImportant = function( Text ) {
+cReader.prototype.AddImportant = function( Text, Color ) {
 	this.LineQueue.length = 0; // Apparently how you clear an array //
 	this.CurrentLine = ""; // Blank the string so to start an erase //
-	this.Add(Text);
+	this.Add(Text,Color);
 }
 // - ------------------------------------------------------------------------------------------ - //
 cReader.prototype.Step = function() {
 	this.Flicker++;
 	if ( this.CurrentLine.length > this.CurrentChar ) {
-		//console.log("Do!");
 		if ( this.CharDelay )
 			this.CharDelay--;
 		else {
 			var Char = this.CurrentLine[this.CurrentChar];
 			if ( Char == "\n" ) {
 				this.Whitespace++;
+				this.OldLines.push( this.DisplayLine );
+				this.DisplayLine = "";
 			}
 			else if ( Char == " " ) {
 				this.Whitespace++;
@@ -54,7 +63,6 @@ cReader.prototype.Step = function() {
 					var Num = Math.floor(Math.random()*19)+1;
 					var File = "Voice" + (Num<10 ? "0" : "") + Num;
 					sndPlay( File, 0.2 );
-	//				console.log( "Play " + File );				
 				}
 				this.Whitespace = 0;
 				this.CharDelay = this.DefaultCharDelay;
@@ -70,24 +78,32 @@ cReader.prototype.Step = function() {
 		}
 		
 		if ( this.DisplayLine.length == 0 ) {
-			if ( this.LineQueue.length > 0 ) {
-				this.CurrentChar = 0;
-				this.CurrentLine = this.LineQueue.pop();
-				this.CharDelay = this.DefaultCharDelay;
-				this.Whitespace = 1;
-				this.DisplayLine = "";
-				this.Flicker = 0;
-				this.Erase = false;
-				
-				console.log("Hey: " + this.CurrentLine );
+			if ( this.OldLines.length > 0 ) {
+				this.DisplayLine = this.OldLines.pop();
 			}
 			else {
-				this.CurrentChar = 0;
-				this.CurrentLine = ""
-				this.CharDelay = this.DefaultCharDelay;
-				this.Whitespace = 0;
-				this.DisplayLine = "";
-				this.Erase = false;
+				if ( this.LineQueue.length > 0 ) {
+					this.CurrentChar = 0;
+					var Tail = this.LineQueue.pop();
+					this.CurrentColor = Tail.color;
+					this.CurrentLine = Tail.text;
+					this.CharDelay = this.DefaultCharDelay;
+					this.Whitespace = 1;
+					this.DisplayLine = "";
+					this.Flicker = 0;
+					this.Erase = false;
+					
+					console.log("Next Reader: " + this.CurrentLine );
+				}
+				else {
+					this.CurrentChar = 0;
+					this.CurrentColor = RGB(255,255,255);
+					this.CurrentLine = ""
+					this.CharDelay = this.DefaultCharDelay;
+					this.Whitespace = 0;
+					this.DisplayLine = "";
+					this.Erase = false;
+				}
 			}
 		}
 		
@@ -100,8 +116,9 @@ cReader.prototype.Step = function() {
 cReader.prototype.Draw = function() {
 	var PlayerPos = Player.GetPos();
 	
-	ctx.fillStyle = RGB(255,255,255);
+	ctx.fillStyle = this.CurrentColor;
 	ctx.font = '20px Pixel';
+
 	var Text = this.DisplayLine;
 	var TD = ctx.measureText(Text);
 
@@ -109,6 +126,12 @@ cReader.prototype.Draw = function() {
 		Text = Text + "_";
 	}
 	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
+
+	for( var idx = 0; idx < this.OldLines.length; idx++ ) {
+		Text = this.OldLines[this.OldLines.length-1-idx];
+		TD = ctx.measureText(Text);
+		ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100-((1+idx)*20));
+	}
 }
 // - ------------------------------------------------------------------------------------------ - //
 var Reader = new cReader();
@@ -357,6 +380,8 @@ function Init() {
 	
 	Room = new cRoom();
 	Player = new cPlayer();
+	
+	Reader.AddImportant( "Hey Drek,@@@\n@are you enjoying your life\nas much as I am?" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 function GainFocus() {
@@ -477,9 +502,7 @@ function Step() {
 		}
 		else {	
 			sndPlay( "Click", 0.5 );
-			
-			Reader.AddImportant( "Hey Drek,@@@\nare you enjoying your life\nas much as I am?" );
-			
+						
 			if ( MouseFocus == null ) {
 				Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
 			}
