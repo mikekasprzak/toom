@@ -84,7 +84,7 @@ cReader.prototype.Step = function() {
 			else {
 				if ( this.LineQueue.length > 0 ) {
 					this.CurrentChar = 0;
-					var Tail = this.LineQueue.pop();
+					var Tail = this.LineQueue.shift();//this.LineQueue.pop();
 					this.CurrentColor = Tail.color;
 					this.CurrentLine = Tail.text;
 					this.CharDelay = this.DefaultCharDelay;
@@ -145,7 +145,7 @@ cReader.prototype.Draw = function() {
 		var PY2 = PY-((1+idx)*20);
 
 		ctx.fillStyle = BGColor;
-		ctx.globalAlpha = 0.3;
+		ctx.globalAlpha = 0.5;
 		ctx.fillRect( PX-10-(TD.width>>1), PY2+5-(TD.height|0), TD.width+20, TD.height );
 		
 		ctx.globalAlpha = OldAlpha;
