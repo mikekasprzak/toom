@@ -7,15 +7,23 @@ function cReader() {
 	this.Whitespace = 1;
 	
 	this.DefaultCharDelay = 1;
-	this.DefaultWaitDelay = 16;
+	this.DefaultWaitDelay = 20;
 	this.CharDelay = this.DefaultCharDelay;
 	
-	this.DelayChar = "%";
+	this.DelayChar = "@";
 	this.Flicker = 0;
+	
+	this.Erasing = false;
 };
 // - ------------------------------------------------------------------------------------------ - //
 cReader.prototype.Add = function( Text ) {
-	this.LineQueue.push( "%%" + Text + "%%%%%%%%" );
+	this.LineQueue.push( "@@" + Text + "@@@@@@@@@@" );
+}
+// - ------------------------------------------------------------------------------------------ - //
+cReader.prototype.AddImportant = function( Text ) {
+	this.LineQueue.length = 0; // Apparently how you clear an array //
+	this.CurrentLine = ""; // Blank the string so to start an erase //
+	this.Add(Text);
 }
 // - ------------------------------------------------------------------------------------------ - //
 cReader.prototype.Step = function() {
@@ -57,23 +65,35 @@ cReader.prototype.Step = function() {
 		}
 	}
 	else {
-		if ( this.LineQueue.length > 0 ) {
-			this.CurrentChar = 0;
-			this.CurrentLine = this.LineQueue.pop();
-			this.CharDelay = this.DefaultCharDelay;
-			this.Whitespace = 1;
-			this.DisplayLine = "";
-			this.Flicker = 0;
-			
-			console.log("Hey: " + this.CurrentLine );
+		if ( this.DisplayLine.length <= this.CurrentChar ) {
+			this.Erase = true;
 		}
-		else {
-			this.CurrentChar = 0;
-			this.CurrentLine = ""
-			this.CharDelay = this.DefaultCharDelay;
-			this.Whitespace = 0;
-			this.DisplayLine = "";
-		}	
+		
+		if ( this.DisplayLine.length == 0 ) {
+			if ( this.LineQueue.length > 0 ) {
+				this.CurrentChar = 0;
+				this.CurrentLine = this.LineQueue.pop();
+				this.CharDelay = this.DefaultCharDelay;
+				this.Whitespace = 1;
+				this.DisplayLine = "";
+				this.Flicker = 0;
+				this.Erase = false;
+				
+				console.log("Hey: " + this.CurrentLine );
+			}
+			else {
+				this.CurrentChar = 0;
+				this.CurrentLine = ""
+				this.CharDelay = this.DefaultCharDelay;
+				this.Whitespace = 0;
+				this.DisplayLine = "";
+				this.Erase = false;
+			}
+		}
+		
+		if ( this.Erase ) {
+			this.DisplayLine = this.DisplayLine.substr(0,this.DisplayLine.length-1);
+		}
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
@@ -458,7 +478,7 @@ function Step() {
 		else {	
 			sndPlay( "Click", 0.5 );
 			
-			Reader.Add( "Hey Drek,%%%\nare you enjoying your life\nas much as I am?" );
+			Reader.AddImportant( "Hey Drek,@@@\nare you enjoying your life\nas much as I am?" );
 			
 			if ( MouseFocus == null ) {
 				Player.TargetPos.x = (Mouse.Pos.x+Camera.x-BaseX);
