@@ -11,13 +11,15 @@ function cReader() {
 	this.CharDelay = this.DefaultCharDelay;
 	
 	this.DelayChar = "%";
+	this.Flicker = 0;
 };
 // - ------------------------------------------------------------------------------------------ - //
 cReader.prototype.Add = function( Text ) {
-	this.LineQueue.push( Text + "%%%%%%%%" );
+	this.LineQueue.push( "%%" + Text + "%%%%%%%%" );
 }
 // - ------------------------------------------------------------------------------------------ - //
 cReader.prototype.Step = function() {
+	this.Flicker++;
 	if ( this.CurrentLine.length > this.CurrentChar ) {
 		//console.log("Do!");
 		if ( this.CharDelay )
@@ -48,6 +50,7 @@ cReader.prototype.Step = function() {
 				}
 				this.Whitespace = 0;
 				this.CharDelay = this.DefaultCharDelay;
+				this.Flicker = 0;
 			}
 	
 			this.CurrentChar++;
@@ -60,6 +63,7 @@ cReader.prototype.Step = function() {
 			this.CharDelay = this.DefaultCharDelay;
 			this.Whitespace = 1;
 			this.DisplayLine = "";
+			this.Flicker = 0;
 			
 			console.log("Hey: " + this.CurrentLine );
 		}
@@ -81,9 +85,9 @@ cReader.prototype.Draw = function() {
 	var Text = this.DisplayLine;
 	var TD = ctx.measureText(Text);
 
-//	if ( (Stepper >> 5)&1 ) {
-//		Text = Text + "_";
-//	}
+	if ( ((this.Flicker >> 4)&1) == 0 ) {
+		Text = Text + "_";
+	}
 	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
 }
 // - ------------------------------------------------------------------------------------------ - //
