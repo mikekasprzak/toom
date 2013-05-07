@@ -43,7 +43,7 @@ cReader.prototype.Step = function() {
 				if ( this.Whitespace > 0 ) {
 					var Num = Math.floor(Math.random()*19)+1;
 					var File = "Voice" + (Num<10 ? "0" : "") + Num;
-					sndPlay( File, 0.5 );
+					sndPlay( File, 0.2 );
 	//				console.log( "Play " + File );				
 				}
 				this.Whitespace = 0;
