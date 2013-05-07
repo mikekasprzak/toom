@@ -41,19 +41,19 @@ cReader.prototype.Step = function() {
 			this.CharDelay--;
 		else {
 			var Char = this.CurrentLine[this.CurrentChar];
-			if ( Char == "\n" ) {
-				this.Whitespace++;
-				this.OldLines.push( this.DisplayLine );
-				this.DisplayLine = "";
-			}
-			else if ( Char == " " ) {
+			if ( Char == " " ) {
 				this.Whitespace++;
 			}
 			else if ( Char == "\t" ) {
 				this.Whitespace++;
 			}
 			
-			if ( Char == this.DelayChar ) {
+			if ( Char == "\n" ) {
+				this.Whitespace++;
+				this.OldLines.push( this.DisplayLine );
+				this.DisplayLine = "";
+			}
+			else if ( Char == this.DelayChar ) {
 				this.Whitespace++;
 				this.CharDelay = this.DefaultWaitDelay;
 			}
@@ -116,21 +116,41 @@ cReader.prototype.Step = function() {
 cReader.prototype.Draw = function() {
 	var PlayerPos = Player.GetPos();
 	
-	ctx.fillStyle = this.CurrentColor;
+	var BGColor = RGB(0,0,0);
+	var OldAlpha = ctx.globalAlpha;
+	
 	ctx.font = '20px Pixel';
 
 	var Text = this.DisplayLine;
 	var TD = ctx.measureText(Text);
-
+	TD.height = 20;
 	if ( ((this.Flicker >> 4)&1) == 0 ) {
 		Text = Text + "_";
 	}
-	ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100);
+	var PX = BaseX+PlayerPos.x-4;
+	var PY = BaseY+PlayerPos.y-112
+	ctx.fillStyle = BGColor;
+	ctx.globalAlpha = 0.5;
+	ctx.fillRect( PX-10-(TD.width>>1), PY+5-(TD.height|0), TD.width+20+9, TD.height );
+	
+	ctx.globalAlpha = OldAlpha;
+	ctx.fillStyle = this.CurrentColor;
+	ctx.fillText(Text, PX-(TD.width>>1), PY);
 
 	for( var idx = 0; idx < this.OldLines.length; idx++ ) {
 		Text = this.OldLines[this.OldLines.length-1-idx];
 		TD = ctx.measureText(Text);
-		ctx.fillText(Text, BaseX+PlayerPos.x-(TD.width>>1), BaseY+PlayerPos.y-100-((1+idx)*20));
+		TD.height = 20;
+
+		var PY2 = PY-((1+idx)*20);
+
+		ctx.fillStyle = BGColor;
+		ctx.globalAlpha = 0.3;
+		ctx.fillRect( PX-10-(TD.width>>1), PY2+5-(TD.height|0), TD.width+20, TD.height );
+		
+		ctx.globalAlpha = OldAlpha;
+		ctx.fillStyle = this.CurrentColor;
+		ctx.fillText(Text, PX-(TD.width>>1), PY2);
 	}
 }
 // - ------------------------------------------------------------------------------------------ - //
